@@ -9,6 +9,8 @@ Vue.use(Router)
 /* Layout */
 import Layout from '../views/layout/Layout'
 
+import systemadminRouter from './modules/systemadmin'
+
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
 * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -66,6 +68,21 @@ export const constantRouterMap = [
       }
     }]
   },
+
+  // {
+  //   path: '/Systemadmin',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   name: 'Systemadmin',
+  //   meta: { title: 'Systemadmin', icon: 'Systemadmin' },
+  //   children: [{
+  //     path: 'account',
+  //     component: () => import('@/views/SystemAdmin/Account/index'),
+  //     name: 'SystemAdmin-account',
+  //     meta: { title: '账户管理', icon: 'account' }
+  //   }]
+  // },
+  systemadminRouter,
 
   { path: '*', redirect: '/404', hidden: true }
 ]

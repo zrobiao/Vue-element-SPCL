@@ -50,23 +50,24 @@ const webpackConfig = merge(baseWebpackConfig, {
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: config.build.index,
-      template: 'index.html',
-      inject: true,
-      favicon: resolve('favicon.ico'),
-      title: 'vue-admin-template',
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      }
-      // default sort mode uses toposort which cannot handle cyclic deps
-      // in certain cases, and in webpack 4, chunk order in HTML doesn't
-      // matter anyway
-    }),
+    //多页面入口配置注释
+    // new HtmlWebpackPlugin({
+    //   filename: config.build.index,
+    //   template: 'index.html',
+    //   inject: true,
+    //   favicon: resolve('favicon.ico'),
+    //   title: 'vue-admin-template',
+    //   minify: {
+    //     removeComments: true,
+    //     collapseWhitespace: true,
+    //     removeAttributeQuotes: true
+    //     // more options:
+    //     // https://github.com/kangax/html-minifier#options-quick-reference
+    //   }
+    //   // default sort mode uses toposort which cannot handle cyclic deps
+    //   // in certain cases, and in webpack 4, chunk order in HTML doesn't
+    //   // matter anyway
+    // }),
     new ScriptExtHtmlWebpackPlugin({
       //`runtime` must same as runtimeChunk name. default is `runtime`
       inline: /runtime\..*\.js$/
@@ -98,7 +99,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ])
-  ],
+  ].concat(utils.htmlPlugin()),  //多页面添加项目
   optimization: {
     splitChunks: {
       chunks: 'all',

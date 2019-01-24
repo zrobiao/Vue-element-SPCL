@@ -11,6 +11,15 @@ const ordermanageRouter = {
   },
   children: [
     {
+      path: 'validOrder',
+      component: () => import('@/views/OrderManage/validOrder/index'),
+      name: 'OrderManage-validOrder',
+      meta: {
+        title: '有效订单',
+        icon: 'validOrder'
+      }
+    },
+    {
       path: 'archiveOrder',
       component: () => import('@/views/OrderManage/archiveOrder/index'),
       name: 'OrderManage-archiveOrder',
@@ -62,15 +71,6 @@ const ordermanageRouter = {
       meta: {
         title: '开通用户',
         icon: 'userOpen'
-      }
-    },
-    {
-      path: 'validOrder',
-      component: () => import('@/views/OrderManage/validOrder/index'),
-      name: 'OrderManage-validOrder',
-      meta: {
-        title: '有效订单',
-        icon: 'validOrder'
       }
     },
     {

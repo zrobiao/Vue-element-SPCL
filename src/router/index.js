@@ -7,7 +7,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 /* Layout */
-import Layout from '../views/layout/Layout'
+import Layout from '@/views/layout/Layout'
 
 import systemadminRouter from './modules/systemadmin'
 import ordermanageRouter from './modules/ordermanage'
@@ -49,25 +49,6 @@ export const constantRouterMap = [
     children: [{
       path: 'dashboard',
       component: () => import('@/views/dashboard/index')
-    }]
-  },
-
-  {
-    path: '/template',
-    component: Layout,
-    redirect: '/template/index',
-    name: 'template',
-    meta: {
-      title: 'tempalte',
-      icon: 'test'
-    },
-    children: [{
-      path: 'index',
-      component: () => import('@/views/template/index'),
-      name: 'tempalteIndex',
-      meta: {
-        title: '模板'
-      }
     }]
   },
 

@@ -5,6 +5,7 @@ const webpack = require('webpack')
 const config = require('../config')
 const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
@@ -52,14 +53,20 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }),
     new webpack.HotModuleReplacementPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true,
-      favicon: resolve('favicon.ico'),
-      title: 'vue-admin-template'
-    })
-  ]
+    // new HtmlWebpackPlugin({
+    //   filename: 'index.html',
+    //   template: 'index.html',
+    //   inject: true,
+    //   favicon: resolve('favicon.ico'),
+    //   title: 'vue-admin-template'
+    // })
+    // copy custom static assets
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, '../static'),
+      to: config.dev.assetsSubDirectory,
+      ignore: ['.*']
+    }])
+  ].concat(utils.htmlPlugin())
 })
 
 module.exports = new Promise((resolve, reject) => {

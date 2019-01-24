@@ -25,7 +25,7 @@ const ordermanageRouter = {
       name: 'OrderManage-discardOrder',
       meta: {
         title: '废弃订单',
-        icon: 'archiveOrder'
+        icon: 'discardOrder'
       }
     },
     {

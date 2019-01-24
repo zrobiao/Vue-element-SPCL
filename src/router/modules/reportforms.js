@@ -6,7 +6,7 @@ const reportformsRouter = {
   redirect: 'noredirect',
   name: 'reportforms',
   meta: {
-    title: '订单管理',
+    title: '报表统计',
     icon: 'reportforms'
   },
   children: [
@@ -16,7 +16,7 @@ const reportformsRouter = {
       name: 'reportforms-pressStatis-pt',
       meta: {
         title: '压标统计-平台',
-        icon: 'pressStatis-pt'
+        icon: 'pressStatis'
       }
     },
     {
@@ -25,7 +25,7 @@ const reportformsRouter = {
       name: 'reportforms-pressStatis-yb',
       meta: {
         title: '压标统计-人员',
-        icon: 'pressStatis-yb'
+        icon: 'pressStatis'
       }
     },
     {
@@ -34,7 +34,7 @@ const reportformsRouter = {
       name: 'reportforms-userStatis-kf',
       meta: {
         title: '用户统计-客户',
-        icon: 'userStatis-kf'
+        icon: 'userStatis'
       }
     },
     {
@@ -43,7 +43,7 @@ const reportformsRouter = {
       name: 'reportforms-userStatis-yy',
       meta: {
         title: '用户统计-运营商',
-        icon: 'userStatis-yy'
+        icon: 'userStatis'
       }
     },
     {
@@ -52,7 +52,7 @@ const reportformsRouter = {
       name: 'reportforms-videoStatis-pt',
       meta: {
         title: '视频制作-平台',
-        icon: 'videoStatis-pt'
+        icon: 'videoStatis'
       }
     },
     {
@@ -61,7 +61,7 @@ const reportformsRouter = {
       name: 'reportforms-videoStatis-zz',
       meta: {
         title: '视频制作-制作人',
-        icon: 'videoStatis-zz'
+        icon: 'videoStatis'
       }
     }
   ]

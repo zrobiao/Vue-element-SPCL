@@ -10,6 +10,8 @@ Vue.use(Router)
 import Layout from '../views/layout/Layout'
 
 import systemadminRouter from './modules/systemadmin'
+import ordermanageRouter from './modules/ordermanage'
+import reportformsRouter from './modules/reportforms'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -69,20 +71,68 @@ export const constantRouterMap = [
     }]
   },
 
-  // {
-  //   path: '/Systemadmin',
-  //   component: Layout,
-  //   redirect: 'noredirect',
-  //   name: 'Systemadmin',
-  //   meta: { title: 'Systemadmin', icon: 'Systemadmin' },
-  //   children: [{
-  //     path: 'account',
-  //     component: () => import('@/views/SystemAdmin/Account/index'),
-  //     name: 'SystemAdmin-account',
-  //     meta: { title: '账户管理', icon: 'account' }
-  //   }]
-  // },
+  ordermanageRouter,
+  reportformsRouter,
   systemadminRouter,
+
+  {
+    path: '/VideoList',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'VideoList',
+    meta: {
+      title: '视频列表',
+      icon: 'VideoList'
+    },
+    children: [{
+      path: 'finishVideo',
+      component: () => import('@/views/VideoList/finishVideo/index'),
+      name: 'finishVideo',
+      meta: {
+        title: '制作完成',
+        icon: 'finishVideo'
+      }
+    },
+    {
+      path: 'pressVideo',
+      component: () => import('@/views/VideoList/pressVideo/index'),
+      name: 'pressVideo',
+      meta: {
+        title: '压标完成',
+        icon: 'pressVideo'
+      }
+    }
+    ]
+  },
+  {
+    path: '/OperationLog',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'OperationLog',
+    meta: {
+      title: '操作日志',
+      icon: 'OperationLog'
+    },
+    children: [{
+      path: 'recordlog',
+      component: () => import('@/views/OperationLog/recordlog/index'),
+      name: 'recordlog',
+      meta: {
+        title: '操作日志',
+        icon: 'recordlog'
+      }
+    },
+    {
+      path: 'videoorder',
+      component: () => import('@/views/OperationLog/videoorder/index'),
+      name: 'videoorder',
+      meta: {
+        title: '订单操作日志',
+        icon: 'videoorder'
+      }
+    }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]

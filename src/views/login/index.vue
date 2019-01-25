@@ -78,6 +78,9 @@ export default {
       immediate: true
     }
   },
+  created() {
+    // console.log(this.$route)
+  },
   methods: {
     showPwd() {
       if (this.pwdType === 'password') {
@@ -87,6 +90,9 @@ export default {
       }
     },
     handleLogin() {
+      // this.$router.push({ path: '/' })
+      console.log(this.$router)
+
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true

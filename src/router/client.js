@@ -3,20 +3,20 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-import Client from '@/client/index'
+import Client from '../client/index'
 
 const clientRouters = [
   {
     path: '/client',
     component: Client,
-    redirect: '/client',
     name: 'client',
     meta: { titile: '客户端' }
-
   }
 ]
 
-export default new Router({
+const router = new Router({
   // mode: 'history', //后端支持可开
   routes: clientRouters
 })
+
+export default router

@@ -8,7 +8,6 @@ import Website from '@/website/index'
 const websiteRouters = [{
   path: '/website',
   component: Website,
-  redirect: '/website',
   name: 'website',
   meta: {
     titile: '客户端'

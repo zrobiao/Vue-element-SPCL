@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="Main">
+    <router-view/>
     <h1>{{ msg }}</h1>
   </div>
 </template>

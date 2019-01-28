@@ -14,7 +14,7 @@ module.exports = {
         target: 'http://192.168.0.119:8082', //代理地址
         changeOrigin: true, //可否跨域
         pathRewrite: {
-          '^/api': '' //重写接口，去掉/api
+          '^/api': '/' //重写接口，去掉/api
         }
       }
     },

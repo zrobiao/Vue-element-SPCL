@@ -4,11 +4,12 @@
   </div>
 </template>
 <script>
-import { getList } from '@/api/order'
+import util from '@/utils/index'
 export default {
   data() {
     return {
-      msg: '这里是显示的模块！'
+      msg: '这里是显示的模块！',
+      userId: 0
     }
   },
   created() {
@@ -16,7 +17,8 @@ export default {
   },
   methods: {
     getOrderList() {
-      getList().then(res => {
+      const params = { limit: 2, page: 5, username: 'admin' }
+      util.Ajax('/api/qycl.web/perssion/user/list?_method=GET', params, res => {
         console.log(res)
       })
     }

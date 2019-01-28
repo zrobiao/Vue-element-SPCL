@@ -6,7 +6,7 @@
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input v-model="loginForm.username" name="username" type="text" auto-complete="on" placeholder="username" />
+        <el-input v-model="loginForm.username" name="username" type="text" auto-complete="on" placeholder="请输入用户名" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
@@ -16,29 +16,46 @@
           :type="pwdType"
           v-model="loginForm.password"
           name="password"
-          auto-complete="on"
-          placeholder="password"
+          placeholder="请输入密码"
           @keyup.enter.native="handleLogin" />
         <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
+      <el-form-item prop="captcha">
+        <span class="svg-container">
+          <svg-icon icon-class="captcha" />
+        </span>
+        <el-input
+          v-model="loginForm.captcha"
+          clearable
+          name="captcha"
+          placeholder="请输入验证码"
+          @keyup.enter.native="handleLogin" />
+      </el-form-item>
+      <el-row>
+        <el-col :span="12">
+          <img :src="captchaImg" alt="点击刷新" @click="refreshCode">
+        </el-col>
+        <el-col :span="12">
+          <h4 class="refreshcode" @click="refreshCode">点击刷新</h4>
+        </el-col>
+      </el-row>
+      <div class="tips">
+        <span style="color:#F56C6C"> {{ errorMsg }}</span>
+      </div>
       <el-form-item>
         <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
-          Sign in
+          登 录
         </el-button>
       </el-form-item>
-      <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: admin</span>
-      </div>
     </el-form>
   </div>
 </template>
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-
+// import util from '@/utils/index'
 export default {
   name: 'Login',
   data() {
@@ -59,7 +76,8 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: 'admin'
+        password: '',
+        captcha: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -67,7 +85,9 @@ export default {
       },
       loading: false,
       pwdType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      captchaImg: null,
+      errorMsg: '这里显示错误信息'
     }
   },
   watch: {
@@ -82,6 +102,10 @@ export default {
     // console.log(this.$route)
   },
   methods: {
+    refreshCode: function() {
+      this.captchaImg = '/api/captcha.jpg?t=' + new Date().getTime()
+      console.log(this.src)
+    },
     showPwd() {
       if (this.pwdType === 'password') {
         this.pwdType = ''
@@ -90,23 +114,23 @@ export default {
       }
     },
     handleLogin() {
-      // this.$router.push({ path: '/' })
-      console.log(this.$router)
+      this.$router.push({ path: '/' })
 
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then(() => {
-            this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      // this.$refs.loginForm.validate(valid => {
+      //   if (valid) {
+      //     this.loading = true
+      //     this.$store.dispatch('Login', this.loginForm).then(() => {
+      //       this.loading = false
+      //       this.$router.push({ path: this.redirect || '/' })
+      //     }).catch(() => {
+      //       this.loading = false
+      //     })
+      //   } else {
+      //     console.log('error submit!!')
+      //     this.refreshCode()
+      //     return false
+      //   }
+      // })
     }
   }
 }
@@ -142,6 +166,7 @@ $light_gray:#eee;
     border-radius: 5px;
     color: #454545;
   }
+  .refreshcode{cursor: pointer;margin: 16px 0;color: #fff}
 }
 
 </style>

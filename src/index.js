@@ -13,7 +13,7 @@ import router from './router/index'
 import store from './store'
 
 import '@/icons' // icon
-import '@/permission' // permission control
+// import '@/permission' // permission control
 
 Vue.use(ElementUI, { locale })
 

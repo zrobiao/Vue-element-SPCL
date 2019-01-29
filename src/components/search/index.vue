@@ -21,7 +21,7 @@
             placeholder="选择日期"/>
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col v-show="showSearch" :span="6">
         <div class="demo-input-suffix">
           <el-input
             v-model="searchMsg"
@@ -30,8 +30,13 @@
             clearable/>
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col v-show="showSearch" :span="3">
         <el-button type="primary" @click="getSearchMsg">查询</el-button>
+      </el-col>
+      <el-col v-show="showBtn" :span="6">
+        <el-button type="primary" icon="el-icon-plus">新增</el-button>
+        <el-button type="warning" icon="el-icon-edit">修改</el-button>
+        <el-button type="danger" icon="el-icon-delete">删除</el-button>
       </el-col>
     </el-row>
   </div>
@@ -40,6 +45,14 @@
 export default {
   props: {
     showDate: {
+      type: Boolean,
+      default: true
+    },
+    showSearch: {
+      type: Boolean,
+      default: true
+    },
+    showBtn: {
       type: Boolean,
       default: true
     }

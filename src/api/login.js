@@ -1,40 +1,31 @@
-// import request from '@/utils/request'
-import util from '@/utils/index'
+import request from '@/utils/request'
+import Vue from 'vue'
 
+const _this = new Vue()
 export function login(username, password, captcha) {
-  const url = '/api/qycl.web/sys/login?_method=POST'
-  const params = {
-    username: username,
-    password: password,
-    captcha: captcha
-  }
-  util.Ajax(url, params, data => {
-    console.log(data)
+  const pragms = _this.qs.stringify({
+    username,
+    password,
+    captcha
+  })
+  return request({
+    url: '/sys/login',
+    method: 'post',
+    data: pragms
   })
 }
 
-// export function login(username, password) {
-//   return request({
-//     url: '/sys/login',
-//     method: 'post',
-//     data: {
-//       username,
-//       password
-//     }
-//   })
-// }
+export function getInfo(token) {
+  return request({
+    url: '/user/info',
+    method: 'get',
+    params: { token }
+  })
+}
 
-// export function getInfo(token) {
-//   return request({
-//     url: '/user/info',
-//     method: 'get',
-//     params: { token }
-//   })
-// }
-
-// export function logout() {
-//   return request({
-//     url: '/user/logout',
-//     method: 'post'
-//   })
-// }
+export function logout() {
+  return request({
+    url: '/user/logout',
+    method: 'post'
+  })
+}

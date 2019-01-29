@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import util from '@/utils/index'
+import { getList } from '@/api/order'
 export default {
   data() {
     return {
@@ -17,8 +17,9 @@ export default {
   },
   methods: {
     getOrderList() {
+      console.log(this.$store)
       const params = { limit: 2, page: 5, username: 'admin' }
-      util.Ajax('/api/qycl.web/perssion/user/list?_method=GET', params, res => {
+      getList(params).then(res => {
         console.log(res)
       })
     }

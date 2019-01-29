@@ -51,6 +51,21 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index')
     }]
   },
+  {
+    path: '/index',
+    component: Layout,
+    redirect: '/dashboard',
+    name: 'dashboard',
+    meta: { title: '首页' },
+    children: [{
+      path: 'dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: {
+        title: '视频彩铃管理平台',
+        icon: 'cailing'
+      }
+    }]
+  },
 
   ordermanageRouter,
   reportformsRouter,

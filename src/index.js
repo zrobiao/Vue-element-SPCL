@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import axios from 'axios'
+import Qs from 'qs'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
@@ -16,8 +18,10 @@ import '@/icons' // icon
 // import '@/permission' // permission control
 
 Vue.use(ElementUI, { locale })
+Vue.prototype.qs = Qs
 
 Vue.config.productionTip = false
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 new Vue({
   el: '#app',

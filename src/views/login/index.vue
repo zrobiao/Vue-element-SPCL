@@ -56,6 +56,8 @@
 <script>
 import { isvalidUsername } from '@/utils/validate'
 // import util from '@/utils/index'
+
+const testUrl = 'http://192.168.0.119:8082/qycl.web'
 export default {
   name: 'Login',
   data() {
@@ -86,7 +88,7 @@ export default {
       loading: false,
       pwdType: 'password',
       redirect: undefined,
-      captchaImg: null,
+      captchaImg: testUrl + '/captcha.jpg',
       errorMsg: '这里显示错误信息'
     }
   },
@@ -103,7 +105,7 @@ export default {
   },
   methods: {
     refreshCode: function() {
-      this.captchaImg = '/api/captcha.jpg?t=' + new Date().getTime()
+      this.captchaImg = testUrl + '/captcha.jpg?t=' + new Date().getTime()
       console.log(this.src)
     },
     showPwd() {
@@ -114,23 +116,22 @@ export default {
       }
     },
     handleLogin() {
-      this.$router.push({ path: '/' })
-
-      // this.$refs.loginForm.validate(valid => {
-      //   if (valid) {
-      //     this.loading = true
-      //     this.$store.dispatch('Login', this.loginForm).then(() => {
-      //       this.loading = false
-      //       this.$router.push({ path: this.redirect || '/' })
-      //     }).catch(() => {
-      //       this.loading = false
-      //     })
-      //   } else {
-      //     console.log('error submit!!')
-      //     this.refreshCode()
-      //     return false
-      //   }
-      // })
+      // this.$router.push({ path: '/index' })
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('Login', this.loginForm).then(() => {
+            this.loading = false
+            this.$router.push({ path: this.redirect || '/' })
+          }).catch(() => {
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          this.refreshCode()
+          return false
+        }
+      })
     }
   }
 }

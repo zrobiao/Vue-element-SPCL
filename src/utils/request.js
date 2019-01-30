@@ -3,6 +3,9 @@ import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 
+// 允许每次携带cookie信息请求
+axios.defaults.withCredentials = true
+
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
@@ -12,12 +15,16 @@ const service = axios.create({
   // }
 })
 
+// service.defaults.headers.common['token'] = getToken()
+
 // request拦截器
 service.interceptors.request.use(
   config => {
+    console.log('请求信息')
     console.log(config)
     if (store.getters.token) {
-      config.headers['token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+      config.headers['Authorization'] = getToken() // 让每个请求携带自定义token
+      console.log('headers token为：' + config.headers.Authorization)
     }
     return config
   },
@@ -34,6 +41,7 @@ service.interceptors.response.use(
     /**
      * code为非20000是抛错 可结合自己业务进行修改
      */
+    console.log('响应结果')
     console.log(response)
     const res = response.data
     if (res.code !== 0) {

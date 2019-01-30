@@ -34,9 +34,9 @@
         <el-button type="primary" @click="getSearchMsg">查询</el-button>
       </el-col>
       <el-col v-show="showBtn" :span="6">
-        <el-button type="primary" icon="el-icon-plus">新增</el-button>
-        <el-button type="warning" icon="el-icon-edit">修改</el-button>
-        <el-button type="danger" icon="el-icon-delete">删除</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="childAdd(sendParent,sendData)">新增</el-button>
+        <el-button type="warning" icon="el-icon-edit" @click="childEdit(sendParent,sendData)">修改</el-button>
+        <el-button type="danger" icon="el-icon-delete" @click="childRemove(sendParent,sendData)">删除</el-button>
       </el-col>
     </el-row>
   </div>
@@ -46,22 +46,31 @@ export default {
   props: {
     showDate: {
       type: Boolean,
-      default: true
+      default: false
     },
     showSearch: {
       type: Boolean,
-      default: true
+      default: false
     },
     showBtn: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    sendParent: {
+      type: String,
+      default: ''
+    },
+    sendData: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       time1: '',
       time2: '',
-      searchMsg: ''
+      searchMsg: '',
+      msg: 'hi'
     }
   },
   methods: {
@@ -76,6 +85,24 @@ export default {
           })
         }
       })
+    },
+    childAdd(parentData, sendData) {
+      if (parentData === 'menu') {
+        console.log('这里显示的是菜单传过来的值')
+        this.$emit('listenUp', '新增')
+      }
+    },
+    childEdit(parentData, sendData) {
+      if (parentData === 'menu') {
+        console.log('这里显示的是菜单传过来的值')
+        this.$emit('listenUp', '修改')
+      }
+    },
+    childRemove(parentData, sendData) {
+      if (parentData === 'menu') {
+        console.log('这里显示的是菜单传过来的值')
+        this.$emit('listenUp', '删除')
+      }
     }
   }
 }

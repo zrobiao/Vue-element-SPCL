@@ -10,13 +10,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': { //替换代理地址名称
-        target: 'http://192.168.0.119:8082', //代理地址
-        changeOrigin: true, //可否跨域
-        pathRewrite: {
-          '^/api': '/' //重写接口，去掉/api
-        }
-      }
+      // '/api': { //替换代理地址名称
+      //   target: 'http://192.168.0.119:8082', //代理地址
+      //   changeOrigin: true, //可否跨域
+      //   pathRewrite: {
+      //     '^/api': '/' //重写接口，去掉/api
+      //   }
+      // }
     },
 
     // Various Dev Server settings

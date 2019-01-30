@@ -22,6 +22,7 @@ Vue.prototype.qs = Qs
 
 Vue.config.productionTip = false
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+axios.defaults.withCredentials = true
 
 new Vue({
   el: '#app',

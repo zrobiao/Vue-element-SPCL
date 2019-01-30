@@ -31,7 +31,6 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password, userInfo.captcha
         ).then(response => {
-          console.log(response)
           const Token = response.token
           setToken(Token)
           commit('SET_TOKEN', Token)

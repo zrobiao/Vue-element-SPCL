@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import util from '@/utils'
+import { isExternal } from '@/utils'
 
 export default {
   props: {
@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     isExternalLink(routePath) {
-      return util.isExternal(routePath)
+      return isExternal(routePath)
     },
     linkProps(url) {
       if (this.isExternalLink(url)) {

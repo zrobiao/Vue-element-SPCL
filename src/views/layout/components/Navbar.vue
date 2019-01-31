@@ -2,6 +2,7 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <breadcrumb />
+    <div class="username">欢迎&nbsp;<span>{{ name }}</span></div>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img :src="avatar" class="user-avatar">
@@ -10,11 +11,11 @@
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
         <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
-            Home
+            首页
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
-          <span style="display:block;" @click="logout">LogOut</span>
+          <span style="display:block;" @click="logout">退出登录</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -38,7 +39,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'name'
     ])
   },
   methods: {
@@ -46,7 +48,8 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
+      this.$store.dispatch('FedLogOut').then(() => {
+        console.log('现在开始登出')
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
     }
@@ -70,6 +73,16 @@ export default {
     right: 90px;
     top: 16px;
     color: red;
+  }
+  .username{
+    height: 50px;
+    display: inline-block;
+    position: absolute;
+    right: 80px;
+    span{
+      color: #409EFF;
+      padding: 0 8px;
+    }
   }
   .avatar-container {
     height: 50px;

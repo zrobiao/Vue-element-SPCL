@@ -55,8 +55,8 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog :visible.sync="menuDialog" title="菜单操作" width="30%">
-      <dia-log :dia-data="diaTitle"/>
+    <el-dialog :visible.sync="menuDialog" title="菜单操作" width="40%">
+      <dia-log :dia-data="diaTitle" @dialogChild="dialogData"/>
     </el-dialog>
   </div>
 </template>
@@ -94,6 +94,10 @@ export default {
     chindData(data) {
       this.menuDialog = true
       this.diaTitle = data
+    },
+    dialogData(val) {
+      this.menuDialog = !this.menuDialog
+      console.log(val)
     }
   }
 }

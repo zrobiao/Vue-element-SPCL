@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
-import { getToken } from '@/utils/auth'
+// import { getToken } from '@/utils/auth'
 
 // 允许每次携带cookie信息请求
 axios.defaults.withCredentials = true
@@ -9,10 +9,10 @@ axios.defaults.withCredentials = true
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
-  timeout: 5000 // 请求超时时间，
-  // headers: {
-  //   'Content-Type': 'application/x-www-form-urlencoded'
-  // }
+  timeout: 5000, // 请求超时时间，
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }
 })
 
 // service.defaults.headers.common['token'] = getToken()
@@ -20,12 +20,10 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
-    console.log('请求信息')
-    console.log(config)
-    if (store.getters.token) {
-      config.headers['Authorization'] = getToken() // 让每个请求携带自定义token
-      console.log('headers token为：' + config.headers.Authorization)
-    }
+    // if (store.getters.token) {
+    //   config.headers['Authorization'] = getToken() // 让每个请求携带自定义token
+    //   console.log('headers token为：' + config.headers.Authorization)
+    // }
     return config
   },
   error => {
@@ -41,8 +39,6 @@ service.interceptors.response.use(
     /**
      * code为非20000是抛错 可结合自己业务进行修改
      */
-    console.log('响应结果')
-    console.log(response)
     const res = response.data
     if (res.code !== 0) {
       Message({

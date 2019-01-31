@@ -17,15 +17,15 @@ export function login(username, password, captcha) {
 
 export function getInfo(token) {
   return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
+    url: '/perssion/user/info',
+    method: 'get'
+    // params: { token }
   })
 }
 
 export function logout() {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: '/logout',
+    method: 'get'
   })
 }

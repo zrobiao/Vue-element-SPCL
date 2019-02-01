@@ -10,6 +10,7 @@ Vue.use(Router)
 import Layout from '@/views/layout/Layout'
 
 import systemadminRouter from './modules/systemadmin'
+import operationRouter from './modules/operation'
 import ordermanageRouter from './modules/ordermanage'
 import reportformsRouter from './modules/reportforms'
 
@@ -66,27 +67,70 @@ export const constantRouterMap = [
       }
     }]
   },
-
-  ordermanageRouter,
-  reportformsRouter,
   systemadminRouter,
-
+  operationRouter,
   {
     path: '/VideoList',
     component: Layout,
     redirect: 'noredirect',
     name: 'VideoList',
     meta: {
-      title: '视频列表',
+      title: '制作视频',
+      icon: 'VideoList'
+    },
+    children: [
+      {
+        path: 'waitMake',
+        component: () => import('@/views/OrderManage/waitMake/index'),
+        name: 'OrderManage-waitMake',
+        meta: {
+          title: '等待制作',
+          icon: 'waitMake'
+        }
+      },
+      {
+        path: 'finishVideo',
+        component: () => import('@/views/VideoList/finishVideo/index'),
+        name: 'finishVideo',
+        meta: {
+          title: '已完成制作',
+          icon: 'finishVideo'
+        }
+      },
+      {
+        path: 'videoStatis-pt',
+        component: () => import('@/views/reportforms/videoStatis-pt/index'),
+        name: 'reportforms-videoStatis-pt',
+        meta: {
+          title: '视频制作-平台',
+          icon: 'videoStatis'
+        }
+      }, {
+        path: 'videoStatis-zz',
+        component: () => import('@/views/reportforms/videoStatis-zz/index'),
+        name: 'reportforms-videoStatis-zz',
+        meta: {
+          title: '视频制作-制作人',
+          icon: 'videoStatis'
+        }
+      }]
+  },
+  {
+    path: '/Pressmanage',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'VideoList',
+    meta: {
+      title: '压标管理',
       icon: 'VideoList'
     },
     children: [{
-      path: 'finishVideo',
-      component: () => import('@/views/VideoList/finishVideo/index'),
-      name: 'finishVideo',
+      path: 'waitPress',
+      component: () => import('@/views/OrderManage/waitPress/index'),
+      name: 'OrderManage-waitPress',
       meta: {
-        title: '制作完成',
-        icon: 'finishVideo'
+        title: '待压标订单',
+        icon: 'waitPress'
       }
     },
     {
@@ -94,42 +138,31 @@ export const constantRouterMap = [
       component: () => import('@/views/VideoList/pressVideo/index'),
       name: 'pressVideo',
       meta: {
-        title: '压标完成',
+        title: '已完成压标',
         icon: 'pressVideo'
-      }
-    }
-    ]
-  },
-  {
-    path: '/OperationLog',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'OperationLog',
-    meta: {
-      title: '操作日志',
-      icon: 'OperationLog'
-    },
-    children: [{
-      path: 'recordlog',
-      component: () => import('@/views/OperationLog/recordlog/index'),
-      name: 'recordlog',
-      meta: {
-        title: '操作日志',
-        icon: 'recordlog'
       }
     },
     {
-      path: 'videoorder',
-      component: () => import('@/views/OperationLog/videoorder/index'),
-      name: 'videoorder',
+      path: 'pressStatis-pt',
+      component: () => import('@/views/reportforms/pressStatis-pt/index'),
+      name: 'reportforms-pressStatis-pt',
       meta: {
-        title: '订单操作日志',
-        icon: 'videoorder'
+        title: '压标完成统计-平台',
+        icon: 'pressStatis'
+      }
+    }, {
+      path: 'pressStatis-yb',
+      component: () => import('@/views/reportforms/pressStatis-yb/index'),
+      name: 'reportforms-pressStatis-yb',
+      meta: {
+        title: '压标完成统计-人员',
+        icon: 'pressStatis'
       }
     }
     ]
   },
-
+  ordermanageRouter,
+  reportformsRouter,
   { path: '*', redirect: '/404', hidden: true }
 ]
 

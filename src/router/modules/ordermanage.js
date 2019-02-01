@@ -20,66 +20,12 @@ const ordermanageRouter = {
       }
     },
     {
-      path: 'archiveOrder',
-      component: () => import('@/views/OrderManage/archiveOrder/index'),
-      name: 'OrderManage-archiveOrder',
-      meta: {
-        title: '归档订单',
-        icon: 'archiveOrder'
-      }
-    },
-    {
       path: 'discardOrder',
       component: () => import('@/views/OrderManage/discardOrder/index'),
       name: 'OrderManage-discardOrder',
       meta: {
         title: '废弃订单',
         icon: 'discardOrder'
-      }
-    },
-    {
-      path: 'finishOrder',
-      component: () => import('@/views/OrderManage/finishOrder/index'),
-      name: 'OrderManage-finishOrder',
-      meta: {
-        title: '制作完成',
-        icon: 'finishOrder'
-      }
-    },
-    {
-      path: 'finishPress',
-      component: () => import('@/views/OrderManage/finishPress/index'),
-      name: 'OrderManage-finishPress',
-      meta: {
-        title: '压标完成',
-        icon: 'finishPress'
-      }
-    },
-    {
-      path: 'resetVideo',
-      component: () => import('@/views/OrderManage/resetVideo/index'),
-      name: 'OrderManage-resetVideo',
-      meta: {
-        title: '重设视频',
-        icon: 'resetVideo'
-      }
-    },
-    {
-      path: 'userOpen',
-      component: () => import('@/views/OrderManage/userOpen/index'),
-      name: 'OrderManage-userOpen',
-      meta: {
-        title: '开通用户',
-        icon: 'userOpen'
-      }
-    },
-    {
-      path: 'waitMake',
-      component: () => import('@/views/OrderManage/waitMake/index'),
-      name: 'OrderManage-waitMake',
-      meta: {
-        title: '等待制作',
-        icon: 'waitMake'
       }
     },
     {
@@ -92,12 +38,12 @@ const ordermanageRouter = {
       }
     },
     {
-      path: 'waitPress',
-      component: () => import('@/views/OrderManage/waitPress/index'),
-      name: 'OrderManage-waitPress',
+      path: 'userOpen',
+      component: () => import('@/views/OrderManage/userOpen/index'),
+      name: 'OrderManage-userOpen',
       meta: {
-        title: '等待压标',
-        icon: 'waitPress'
+        title: '开通用户',
+        icon: 'userOpen'
       }
     },
     {
@@ -107,6 +53,24 @@ const ordermanageRouter = {
       meta: {
         title: '等待确认',
         icon: 'waitVerify'
+      }
+    },
+    {
+      path: 'archiveOrder',
+      component: () => import('@/views/OrderManage/archiveOrder/index'),
+      name: 'OrderManage-archiveOrder',
+      meta: {
+        title: '归档订单',
+        icon: 'archiveOrder'
+      }
+    },
+    {
+      path: 'resetVideo',
+      component: () => import('@/views/OrderManage/resetVideo/index'),
+      name: 'OrderManage-resetVideo',
+      meta: {
+        title: '重设视频',
+        icon: 'resetVideo'
       }
     }
 

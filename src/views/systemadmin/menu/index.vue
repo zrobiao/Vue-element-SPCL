@@ -20,23 +20,23 @@
               width="55"/>
             <el-table-column
               fixed
-              prop="menuID"
+              prop="menuId"
               label="菜单ID"
               width="50"/>
             <el-table-column
-              prop="menuName"
+              prop="name"
               label="菜单名称"
               width="120"/>
             <el-table-column
-              prop="preMenu"
+              prop="perms"
               label="上级菜单"
               width="120"/>
             <el-table-column
-              prop="menuIcon"
+              prop="icon"
               label="图标"
               width="120"/>
             <el-table-column
-              prop="menuType"
+              prop="type"
               label="类型"
               width="300"/>
             <el-table-column
@@ -44,7 +44,7 @@
               label="排序号"
               width="120"/>
             <el-table-column
-              prop="menuUrl"
+              prop="url"
               label="菜单URL"
               width="250"/>
             <el-table-column
@@ -61,6 +61,7 @@
   </div>
 </template>
 <script>
+import { getMenuList } from '@/api/sysadmin'
 import searchBar from '@/components/search/index'
 import diaLog from './dialog'
 export default {
@@ -78,17 +79,11 @@ export default {
       upData: '父组件传过去的数据',
       menuDialog: false,
       diaTitle: '',
-      tableData: [{
-        menuId: 1,
-        menuName: '运营管理',
-        preMenu: '无',
-        menuIcon: 'manage',
-        menuType: '目录',
-        menuSort: 1,
-        menuUrl: 'modules/perssion/menu.html',
-        menuSign: '暂无'
-      }]
+      tableData: []
     }
+  },
+  created() {
+    this.getMenuList()
   },
   methods: {
     chindData(data) {
@@ -98,6 +93,13 @@ export default {
     dialogData(val) {
       this.menuDialog = !this.menuDialog
       console.log(val)
+    },
+    getMenuList() {
+      getMenuList().then(res => {
+        const listData = res.menuList
+        this.tableData = listData
+        console.log(res)
+      })
     }
   }
 }

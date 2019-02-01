@@ -119,7 +119,7 @@ export const constantRouterMap = [
     path: '/Pressmanage',
     component: Layout,
     redirect: 'noredirect',
-    name: 'VideoList',
+    name: 'PressList',
     meta: {
       title: '压标管理',
       icon: 'VideoList'

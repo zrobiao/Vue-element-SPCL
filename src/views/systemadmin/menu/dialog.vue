@@ -32,7 +32,7 @@
         上级菜单：
       </el-col>
       <el-col :span="12">
-        <el-input v-model="menuName" type="text" placeholder="菜单名称" readonly class="cursor-ipt"/>
+        <el-input v-model="menuName" :disabled="true" type="text" placeholder="菜单名称"/>
       </el-col>
       <el-col :span="4" class="el-col-dafine">
         <el-button type="primary" size="mini" icon="el-icon-edit" @click="openMenu"/>
@@ -198,10 +198,6 @@ $gray-color:#909399;
       margin-bottom: 0;
     }
   }
-.cursor-ipt{
-  cursor: pointer;
-  background: $gray-color;
-}
 .dia-Title{
   p{
     padding:0 0 12px;

@@ -3,10 +3,8 @@
     <div class="block">
       <el-pagination
         :current-page="currentPage4"
-        :page-size="100"
-        :total="400"
-        :page-sizes="[100, 200, 300, 400]"
-        layout="total, sizes, prev, pager, next, jumper"
+        :total="20"
+        layout="total, prev, pager, next"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>

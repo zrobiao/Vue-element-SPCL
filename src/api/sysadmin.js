@@ -6,3 +6,11 @@ export function getMenuList() {
     method: 'get'
   })
 }
+
+export function getRoleList(params) {
+  return request({
+    url: '/perssion/role/list',
+    method: 'get',
+    params
+  })
+}

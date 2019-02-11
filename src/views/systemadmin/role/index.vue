@@ -12,43 +12,35 @@
         <el-col :span="24">
           <el-table
             :data="tableData"
-            border
             stripe
             style="width: 100%">
             <el-table-column
-              type="selection"
-              width="55"/>
+              type="selection"/>
             <el-table-column
               fixed
               prop="deptId"
-              label="菜单ID"
-              width="50"/>
+              label="菜单ID"/>
             <el-table-column
               prop="deptName"
-              label="菜单名称"
-              width="120"/>
+              label="菜单名称"/>
             <el-table-column
               prop="roleId"
-              label="角色Id"
-              width="50"/>
+              label="角色Id"/>
             <el-table-column
               prop="roleName"
-              label="角色名称"
-              width="200"/>
+              label="角色名称"/>
             <el-table-column
               prop="remark"
-              label="角色来源"
-              width="220"/>
+              label="角色来源"/>
             <el-table-column
               prop="createTime"
-              label="创建时间"
-              width="320"/>
+              label="创建时间"/>
           </el-table>
         </el-col>
       </el-row>
       <el-row type="flex" justify="end">
         <el-col :span="9">
-          <pagi-tabs/>
+          <pagi-tabs :curr-page="currPage" :page-size="pageSize" :total-count="totalCount" :total-page="totalPage"/>
         </el-col>
       </el-row>
     </div>
@@ -78,7 +70,11 @@ export default {
       upData: '父组件传过去的数据',
       menuDialog: false,
       diaTitle: '',
-      tableData: []
+      tableData: [],
+      currPage: 1,
+      pageSize: 10,
+      totalCount: 5,
+      totalPage: 1
     }
   },
   created() {
@@ -97,8 +93,13 @@ export default {
       const params = 'admin'
       getRoleList(params).then(res => {
         console.log(res)
+        const pageData = res.page
         const listData = res.page.list
         this.tableData = listData
+        this.currPage = pageData.currPage
+        this.pageSize = pageData.pageSize
+        this.totalCount = pageData.totalCount
+        this.totalPage = pageData.totalPage
       })
     }
   }

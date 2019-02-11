@@ -2,8 +2,9 @@
   <div class="pagination-content">
     <div class="block">
       <el-pagination
-        :current-page="currentPage4"
-        :total="20"
+        :current-page="currPage"
+        :page-size="pageSize"
+        :total="totalCount"
         layout="total, prev, pager, next"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
@@ -12,12 +13,26 @@
 </template>
 <script>
 export default {
+  props: {
+    currPage: {
+      type: Number,
+      default: 1
+    },
+    pageSize: {
+      type: Number,
+      default: 10
+    },
+    totalCount: {
+      type: Number,
+      default: 5
+    },
+    totalPage: {
+      type: Number,
+      default: 1
+    }
+  },
   data() {
     return {
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4
     }
   },
   methods: {

@@ -1,38 +1,26 @@
 <template>
   <div v-if="item.list" class="menu-wrapper">
-
-    <!-- <template v-if="hasOneShowingChild(item.list,item)">
-      <app-link :to="resolvePath(item.name,menuUrl)">
-        <el-menu-item :index="resolvePath(item.name,menuUrl)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item v-if="onlyOneChild.meta" :icon="onlyOneChild.meta.icon||item.meta.icon" :title="onlyOneChild.name" />
-        </el-menu-item>
-      </app-link>
-    </template> -->
-
-    <el-submenu :index="resolvePath(item.name,menuUrl)">
+    <el-submenu :index="item.name">
       <template slot="title">
         <item :icon="item.icon" :title="item.name" />
       </template>
-
       <template v-for="child in item.list">
         <sidebar-item
           v-if="child.list&&child.list.length>0"
           :is-nest="true"
           :item="child"
-          :key="child.path"
-          :base-path="resolvePath(child)"
+          :key="child.menuId"
+          :base-path="resolvePath(child.url)"
           class="nest-menu" />
-        <app-link v-else :to="resolvePath(child.name,menuUrl)" :key="child.name">
-          <el-menu-item :index="resolvePath(child.name,menuUrl)">
+        <app-link v-else :to="resolvePath(child.url)" :key="child.name">
+          <el-menu-item :index="child.name">
             <item :icon="child.icon" :title="child.name" />
           </el-menu-item>
         </app-link>
       </template>
     </el-submenu>
-
   </div>
 </template>
-
 <script>
 import path from 'path'
 import { isExternal } from '@/utils'
@@ -51,10 +39,6 @@ export default {
     isNest: {
       type: Boolean,
       default: false
-    },
-    basePath: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -88,12 +72,11 @@ export default {
 
       return false
     },
-    resolvePath(menuName, routePath) {
-      this.filterMenupath(menuName)
+    resolvePath(routePath) {
       if (this.isExternalLink(routePath)) {
         return routePath
       }
-      return path.resolve(this.basePath, routePath)
+      return path.resolve(routePath)
     },
     isExternalLink(routePath) {
       return isExternal(routePath)
@@ -103,7 +86,90 @@ export default {
         case '菜单管理':
           this.menuUrl = '/systemadmin/menu'
           break
-
+        case '角色管理':
+          this.menuUrl = '/systemadmin/role'
+          break
+        case 'SQL监控':
+          this.menuUrl = '/systemadmin/sqlmonitor'
+          break
+        case '参数管理':
+          this.menuUrl = '/systemadmin/parmanage'
+          break
+        case '字典管理':
+          this.menuUrl = '/systemadmin/dictmanage'
+          break
+        case '系统日志':
+          this.menuUrl = '/systemadmin/recordlog'
+          break
+        case '订单日志':
+          this.menuUrl = '/systemadmin/videoorder'
+          break
+        case '全国区域管理':
+          this.menuUrl = '/systemadmin/areamanage'
+          break
+        case '手机号码段管理':
+          this.menuUrl = '/systemadmin/phomanage'
+          break
+        case '权限管理':
+          this.menuUrl = '/systemadmin/permission'
+          break
+        case '投诉管理':
+          this.menuUrl = '/systemadmin/complain'
+          break
+        case '公告管理':
+          this.menuUrl = '/systemadmin/notice'
+          break
+        case '部门管理':
+          this.menuUrl = '/Operation/organization'
+          break
+        case '运营人员管理':
+          this.menuUrl = '/Operation/Operation'
+          break
+        case '渠道商管理':
+          this.menuUrl = '/Operation/govEpire'
+          break
+        case '视频账户管理':
+          this.menuUrl = '/Operation/account'
+          break
+        case '信息审核':
+          this.menuUrl = '/Operation/msgcheck'
+          break
+        case '待制作视频订单':
+          this.menuUrl = '/VideoList/waitMake'
+          break
+        case '已完成制作订单':
+          this.menuUrl = '/VideoList/finishVideo'
+          break
+        case '制作视频完成统计':
+          this.menuUrl = '/VideoList/videoStatis-pt'
+          break
+        case '待压标订单':
+          this.menuUrl = '/Pressmanage/waitPress'
+          break
+        case '已完成压标订单':
+          this.menuUrl = '/Pressmanage/pressVideo'
+          break
+        case '压标完成统计':
+          this.menuUrl = '/Pressmanage/pressStatis-pt'
+          break
+        case '有效订单':
+          this.menuUrl = '/ordermanage/validOrder'
+          break
+        case '作废订单':
+          this.menuUrl = '/ordermanage/discardOrder'
+          break
+        case '等待开通订单':
+          this.menuUrl = '/ordermanage/waitOpen'
+          break
+        case '开通用户':
+          this.menuUrl = '/ordermanage/userOpen'
+          break
+        case '开通用户统计':
+          this.menuUrl = '/reportforms/userStatis-kf'
+          break
+        case '视频制作统计':
+          this.menuUrl = '/reportforms/videoStatis-pt'
+          break
         default:
           break
       }

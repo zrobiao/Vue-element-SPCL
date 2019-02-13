@@ -1,4 +1,3 @@
-
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
@@ -105,3 +104,4 @@ export function parseTime(time, cFormat) {
   })
   return time_str
 }
+

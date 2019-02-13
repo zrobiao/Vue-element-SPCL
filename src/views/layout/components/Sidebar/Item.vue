@@ -18,6 +18,7 @@ export default {
 
     if (icon) {
       vnodes.push(<i class={icon} ></i>)
+      // vnodes.push(<svg-icon icon-class={icon}/>)
     }
 
     if (title) {
@@ -27,3 +28,4 @@ export default {
   }
 }
 </script>
+

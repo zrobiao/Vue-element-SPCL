@@ -2,14 +2,18 @@
   <el-scrollbar wrap-class="scrollbar-wrapper">
     <el-menu
       :show-timeout="200"
-      :default-active="$route.path"
       :collapse="isCollapse"
+      default-active="/index"
       mode="vertical"
       background-color="#304156"
       text-color="#bfcbd9"
       active-text-color="#409EFF"
     >
-      <sidebar-item v-for="route in sideMenu" :key="route.path" :item="route" :base-path="route.path"/>
+      <el-menu-item index="首页" @click="routeJump(indexTitle.path)">
+        <svg-icon :icon-class="indexTitle.icon" />
+        <span>{{ indexTitle.title }}</span>
+      </el-menu-item>
+      <sidebar-item v-for="route in sideMenu" :key="route.menuId" :item="route"/>
     </el-menu>
   </el-scrollbar>
 </template>
@@ -23,7 +27,12 @@ export default {
   components: { SidebarItem },
   data() {
     return {
-      sideMenu: []
+      sideMenu: [],
+      indexTitle: {
+        title: '视频彩铃平台',
+        icon: 'cailing',
+        path: '/'
+      }
     }
   },
   computed: {
@@ -48,6 +57,9 @@ export default {
         this.sideMenu = listData
         console.log(this.sideMenu)
       })
+    },
+    routeJump(path) {
+      this.$router.replace(path)
     }
   }
 }

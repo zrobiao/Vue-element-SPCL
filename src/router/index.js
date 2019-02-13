@@ -96,23 +96,6 @@ export const constantRouterMap = [
           title: '已完成制作',
           icon: 'finishVideo'
         }
-      },
-      {
-        path: 'videoStatis-pt',
-        component: () => import('@/views/reportforms/videoStatis-pt/index'),
-        name: 'reportforms-videoStatis-pt',
-        meta: {
-          title: '视频制作-平台',
-          icon: 'videoStatis'
-        }
-      }, {
-        path: 'videoStatis-zz',
-        component: () => import('@/views/reportforms/videoStatis-zz/index'),
-        name: 'reportforms-videoStatis-zz',
-        meta: {
-          title: '视频制作-制作人',
-          icon: 'videoStatis'
-        }
       }]
   },
   {

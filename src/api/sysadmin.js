@@ -14,3 +14,18 @@ export function getRoleList(params) {
     params
   })
 }
+
+export function getSelectList() {
+  return request({
+    url: '/perssion/menu/select',
+    methods: 'get'
+  })
+}
+
+export function getMenuInfo(menuId) {
+  return request({
+    url: '/perssion/menu/info/' + menuId,
+    methods: 'get'
+    // params: { menuId }
+  })
+}

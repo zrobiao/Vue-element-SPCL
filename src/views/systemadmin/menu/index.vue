@@ -11,19 +11,30 @@
       <el-row>
         <el-col :span="24">
           <el-table
+            ref="parentMenu"
             :data="tableData"
             stripe
             style="width: 100%">
+            <el-table-column label="选择" width="65">
+              <template slot-scope="scope">
+                <el-radio :label="scope.row.menuId" v-model="parentMenuRadio" @change.native="getParentRow(scope.row.menuId)"> &nbsp; </el-radio>
+              </template>
+            </el-table-column>
             <el-table-column
-              type="selection"/>
+              prop="menuId"
+              label="菜单ID"/>
             <el-table-column type="expand">
               <template slot-scope="childList">
                 <el-table
+                  ref="childMenu"
                   :data="childList.row.list"
                   border
                   style="width:100%">
-                  <el-table-column
-                    type="selection"/>
+                  <el-table-column label="选择" width="65">
+                    <template slot-scope="scope">
+                      <el-radio :label="scope.row.menuId" v-model="parentMenuRadio" @change.native="getParentRow(scope.row.menuId)">&nbsp;</el-radio>
+                    </template>
+                  </el-table-column>
                   <el-table-column
                     prop="menuId"
                     label="菜单ID"/>
@@ -55,10 +66,6 @@
               </template>
             </el-table-column>
             <el-table-column
-              fixed
-              prop="menuId"
-              label="菜单ID"/>
-            <el-table-column
               prop="name"
               label="菜单名称"/>
             <el-table-column
@@ -87,12 +94,12 @@
       </el-row>
     </div>
     <el-dialog :visible.sync="menuDialog" title="菜单操作" width="40%">
-      <dia-log :dia-data="diaTitle" @dialogChild="dialogData"/>
+      <dia-log :dia-data="diaTitle" :menu-info="menuInfo" @dialogChild="dialogData"/>
     </el-dialog>
   </div>
 </template>
 <script>
-import { getMenuList } from '@/api/sysadmin'
+import { getMenuList, getMenuInfo } from '@/api/sysadmin'
 import searchBar from '@/components/search/index'
 import diaLog from './dialog'
 export default {
@@ -107,29 +114,48 @@ export default {
       isSearch: true,
       isBtn: true,
       preParent: 'menu',
-      upData: '父组件传过去的数据',
+      upData: 0,
+      menuId: 0,
+      menuInfo: {},
       menuDialog: false,
       diaTitle: '',
-      tableData: []
+      tableData: [],
+      parentMenuRadio: '一级菜单',
+      childMenuRadio: '二级菜单'
     }
   },
   created() {
     this.getMenuList()
   },
   methods: {
-    chindData(data) {
+    chindData(titName, data) {
+      this.diaTitle = titName
       this.menuDialog = true
-      this.diaTitle = data
+      if (titName === '新增') {
+        this.menuInfo = { type: 0 }
+      } else if (titName === '修改') {
+        this.getMenuInfo(data)
+      } else {
+        this.delMenuInfo(data)
+      }
     },
     dialogData(val) {
+      this.getMenuList()
       this.menuDialog = !this.menuDialog
-      console.log(val)
     },
     getMenuList() {
       getMenuList().then(res => {
         const listData = res.menuList
         this.tableData = listData
         console.log(listData)
+      })
+    },
+    getParentRow(menuId) {
+      this.upData = menuId
+    },
+    getMenuInfo(menuId) {
+      getMenuInfo(menuId).then(res => {
+        this.menuInfo = res.menu
       })
     }
   }

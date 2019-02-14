@@ -1,26 +1,39 @@
 <template>
-  <div v-if="item.list" class="menu-wrapper">
-    <el-submenu :index="item.name">
+  <div v-if="!item.hidden&&item.children" class="menu-wrapper">
+
+    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
+      <app-link :to="resolvePath(onlyOneChild.path)">
+        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
+          <item v-if="onlyOneChild.meta" :icon="onlyOneChild.meta.icon||item.meta.icon" :title="onlyOneChild.meta.title" />
+        </el-menu-item>
+      </app-link>
+    </template>
+
+    <el-submenu v-else ref="submenu" :index="resolvePath(item.path)">
       <template slot="title">
-        <item :icon="item.icon" :title="item.name" />
+        <item v-if="item.meta" :icon="item.meta.icon" :title="item.meta.title" />
       </template>
-      <template v-for="child in item.list">
+
+      <template v-for="child in item.children" v-if="!child.hidden">
         <sidebar-item
-          v-if="child.list&&child.list.length>0"
+          v-if="child.children&&child.children.length>0"
           :is-nest="true"
           :item="child"
-          :key="child.menuId"
-          :base-path="resolvePath(child.url)"
+          :key="child.path"
+          :base-path="resolvePath(child.path)"
           class="nest-menu" />
-        <app-link v-else :to="resolvePath(child.url)" :key="child.name">
-          <el-menu-item :index="child.name">
-            <item :icon="child.icon" :title="child.name" />
+
+        <app-link v-else :to="resolvePath(child.path)" :key="child.name">
+          <el-menu-item :index="resolvePath(child.path)">
+            <item v-if="child.meta" :icon="child.meta.icon" :title="child.meta.title" />
           </el-menu-item>
         </app-link>
       </template>
     </el-submenu>
+
   </div>
 </template>
+
 <script>
 import path from 'path'
 import { isExternal } from '@/utils'
@@ -39,12 +52,15 @@ export default {
     isNest: {
       type: Boolean,
       default: false
+    },
+    basePath: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      onlyOneChild: null,
-      menuUrl: ''
+      onlyOneChild: null
     }
   },
   methods: {
@@ -76,103 +92,10 @@ export default {
       if (this.isExternalLink(routePath)) {
         return routePath
       }
-      return path.resolve(routePath)
+      return path.resolve(this.basePath, routePath)
     },
     isExternalLink(routePath) {
       return isExternal(routePath)
-    },
-    filterMenupath(menuName) {
-      switch (menuName) {
-        case '菜单管理':
-          this.menuUrl = '/systemadmin/menu'
-          break
-        case '角色管理':
-          this.menuUrl = '/systemadmin/role'
-          break
-        case 'SQL监控':
-          this.menuUrl = '/systemadmin/sqlmonitor'
-          break
-        case '参数管理':
-          this.menuUrl = '/systemadmin/parmanage'
-          break
-        case '字典管理':
-          this.menuUrl = '/systemadmin/dictmanage'
-          break
-        case '系统日志':
-          this.menuUrl = '/systemadmin/recordlog'
-          break
-        case '订单日志':
-          this.menuUrl = '/systemadmin/videoorder'
-          break
-        case '全国区域管理':
-          this.menuUrl = '/systemadmin/areamanage'
-          break
-        case '手机号码段管理':
-          this.menuUrl = '/systemadmin/phomanage'
-          break
-        case '权限管理':
-          this.menuUrl = '/systemadmin/permission'
-          break
-        case '投诉管理':
-          this.menuUrl = '/systemadmin/complain'
-          break
-        case '公告管理':
-          this.menuUrl = '/systemadmin/notice'
-          break
-        case '部门管理':
-          this.menuUrl = '/Operation/organization'
-          break
-        case '运营人员管理':
-          this.menuUrl = '/Operation/Operation'
-          break
-        case '渠道商管理':
-          this.menuUrl = '/Operation/govEpire'
-          break
-        case '视频账户管理':
-          this.menuUrl = '/Operation/account'
-          break
-        case '信息审核':
-          this.menuUrl = '/Operation/msgcheck'
-          break
-        case '待制作视频订单':
-          this.menuUrl = '/VideoList/waitMake'
-          break
-        case '已完成制作订单':
-          this.menuUrl = '/VideoList/finishVideo'
-          break
-        case '制作视频完成统计':
-          this.menuUrl = '/VideoList/videoStatis-pt'
-          break
-        case '待压标订单':
-          this.menuUrl = '/Pressmanage/waitPress'
-          break
-        case '已完成压标订单':
-          this.menuUrl = '/Pressmanage/pressVideo'
-          break
-        case '压标完成统计':
-          this.menuUrl = '/Pressmanage/pressStatis-pt'
-          break
-        case '有效订单':
-          this.menuUrl = '/ordermanage/validOrder'
-          break
-        case '作废订单':
-          this.menuUrl = '/ordermanage/discardOrder'
-          break
-        case '等待开通订单':
-          this.menuUrl = '/ordermanage/waitOpen'
-          break
-        case '开通用户':
-          this.menuUrl = '/ordermanage/userOpen'
-          break
-        case '开通用户统计':
-          this.menuUrl = '/reportforms/userStatis-kf'
-          break
-        case '视频制作统计':
-          this.menuUrl = '/reportforms/videoStatis-pt'
-          break
-        default:
-          break
-      }
     }
   }
 }

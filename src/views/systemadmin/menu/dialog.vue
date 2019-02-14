@@ -12,10 +12,10 @@
         菜单类型：
       </el-col>
       <el-col :span="16">
-        <el-radio-group v-model="typeRadio">
-          <el-radio :label="3" @change="changeRadio('catalog')">目录</el-radio>
-          <el-radio :label="6" @change="changeRadio('menu')">菜单</el-radio>
-          <el-radio :label="9" @change="changeRadio('button')">按钮</el-radio>
+        <el-radio-group v-model="menuInfo.type">
+          <el-radio :label="0" @change="changeRadio('catalog')">目录</el-radio>
+          <el-radio :label="1" @change="changeRadio('menu')">菜单</el-radio>
+          <el-radio :label="2" @change="changeRadio('button')">按钮</el-radio>
         </el-radio-group>
       </el-col>
     </el-row>
@@ -24,7 +24,7 @@
         菜单名称：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuInfo.name" type="text" placeholder="请输入菜单名称"/>
       </el-col>
     </el-row>
     <el-row>
@@ -32,7 +32,7 @@
         上级菜单：
       </el-col>
       <el-col :span="12">
-        <el-input v-model="menuName" :disabled="true" type="text" placeholder="菜单名称"/>
+        <el-input v-model="menuInfo.parentName" :disabled="true" type="text" placeholder="菜单名称"/>
       </el-col>
       <el-col :span="4" class="el-col-dafine">
         <el-button type="primary" size="mini" icon="el-icon-edit" @click="openMenu"/>
@@ -43,7 +43,7 @@
         <el-tree
           :data="mergeList"
           :props="defaultProps"
-          node-key="id"
+          node-key="menuId"
           accordion
           @node-click="checkTree"/>
       </el-col>
@@ -53,7 +53,7 @@
         菜单URL：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuInfo.url" type="text" placeholder="请输入菜单名称"/>
       </el-col>
     </el-row>
     <el-row v-show="isMenu&&isButton">
@@ -61,7 +61,7 @@
         授权标识：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuInfo.perms" type="text" placeholder="请输入菜单名称"/>
       </el-col>
     </el-row>
     <el-row v-show="isMenu&&isCatalog">
@@ -69,7 +69,7 @@
         排序号：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuInfo.orderNum" type="text" placeholder="请输入菜单名称"/>
       </el-col>
     </el-row>
     <el-row v-show="isMenu&&isCatalog">
@@ -77,7 +77,7 @@
         图标：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuInfo.icon" type="text" placeholder="请输入菜单名称"/>
       </el-col>
     </el-row>
     <el-row>
@@ -91,18 +91,22 @@
   </div>
 </template>
 <script>
+import { getSelectList } from '@/api/sysadmin'
 export default {
   props: {
     diaData: {
       type: String,
       default: ''
+    },
+    menuInfo: {
+      type: Object,
+      default: function() {}
     }
   },
   data() {
     return {
       msg: '这里显示菜单操作',
       menuName: '',
-      typeRadio: 6,
       isAdd: true,
       isEdit: false,
       isRemove: false,
@@ -110,55 +114,21 @@ export default {
       isMenu: true,
       isButton: true,
       openTree: false,
-      mergeList: [{
-        id: 1,
-        label: '菜单一级',
-        children: [{
-          id: 4,
-          label: '二级1-1',
-          children: [{
-            id: 9,
-            label: '三级1-1-1'
-          }, {
-            id: 10,
-            label: '三级1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '菜单二级',
-        children: [{
-          id: 5,
-          label: '二级2-1'
-        }, {
-          id: 6,
-          label: '二级2-2'
-        }]
-      }, {
-        id: 3,
-        label: '菜单三级',
-        children: [{
-          id: 7,
-          label: '二级3-1'
-        }, {
-          id: 8,
-          label: '二级3-2'
-        }]
-      }],
+      mergeList: [],
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: 'list',
+        label: 'name'
       }
 
     }
   },
   methods: {
-    changeRadio(val) {
-      if (val === 'catalog') {
+    changeRadio(type) {
+      if (type === 'catalog') {
         this.isCatalog = true
         this.isMenu = true
         this.isButton = false
-      } else if (val === 'menu') {
+      } else if (type === 'menu') {
         this.isCatalog = true
         this.isMenu = true
         this.isButton = true
@@ -169,12 +139,15 @@ export default {
       }
     },
     openMenu() {
-      console.log('跳转到树形菜单界面')
+      getSelectList().then(res => {
+        this.mergeList = res.menuList
+        console.log(this.mergeList)
+      })
       this.openTree = true
     },
     checkTree(obj) {
       this.openTree = false
-      this.menuName = obj.label
+      this.menuName = obj.name
       console.log(obj)
     },
     closeDialog() {

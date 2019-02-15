@@ -17,7 +17,7 @@
             style="width: 100%">
             <el-table-column label="选择" width="65">
               <template slot-scope="scope">
-                <el-radio :label="scope.row.menuId" v-model="parentMenuRadio" @change.native="getParentRow(scope.row.menuId)"> &nbsp; </el-radio>
+                <el-radio :label="scope.row.name" v-model="parentMenuRadio" @change.native="getParentRow(scope.row.menuId)"> &nbsp; </el-radio>
               </template>
             </el-table-column>
             <el-table-column
@@ -32,7 +32,7 @@
                   style="width:100%">
                   <el-table-column label="选择" width="65">
                     <template slot-scope="scope">
-                      <el-radio :label="scope.row.menuId" v-model="parentMenuRadio" @change.native="getParentRow(scope.row.menuId)">&nbsp;</el-radio>
+                      <el-radio :label="scope.row.name" v-model="parentMenuRadio" @change.native="getParentRow(scope.row.menuId)">&nbsp;</el-radio>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -48,8 +48,8 @@
                     prop="type"
                     label="类型">
                     <template slot-scope="scope">
-                      <el-tag v-show="scope.row.type ===0" type="primary" disable-transitions>菜单</el-tag>
-                      <el-tag v-show="scope.row.type ===1" type="success" disable-transitions>目录</el-tag>
+                      <el-tag v-show="scope.row.type ===0" type="primary" disable-transitions>目录</el-tag>
+                      <el-tag v-show="scope.row.type ===1" type="success" disable-transitions>菜单</el-tag>
                       <el-tag v-show="scope.row.type ===2" type="warning" disable-transitions>按钮</el-tag>
                     </template>
                   </el-table-column>
@@ -75,8 +75,8 @@
               prop="type"
               label="类型">
               <template slot-scope="scope">
-                <el-tag v-show="scope.row.type ===0" type="primary" disable-transitions>菜单</el-tag>
-                <el-tag v-show="scope.row.type ===1" type="success" disable-transitions>目录</el-tag>
+                <el-tag v-show="scope.row.type ===0" type="primary" disable-transitions>目录</el-tag>
+                <el-tag v-show="scope.row.type ===1" type="success" disable-transitions>菜单</el-tag>
                 <el-tag v-show="scope.row.type ===2" type="warning" disable-transitions>按钮</el-tag>
               </template>
             </el-table-column>
@@ -99,9 +99,10 @@
   </div>
 </template>
 <script>
-import { getMenuList, getMenuInfo } from '@/api/sysadmin'
+import { getMenuList, getMenuInfo, saveMenuInfo, updataMenuInfo, delMenuAbout } from '@/api/sysadmin'
 import searchBar from '@/components/search/index'
 import diaLog from './dialog'
+// import axios from 'axios'
 export default {
   components: {
     searchBar,
@@ -120,8 +121,7 @@ export default {
       menuDialog: false,
       diaTitle: '',
       tableData: [],
-      parentMenuRadio: '一级菜单',
-      childMenuRadio: '二级菜单'
+      parentMenuRadio: '一级菜单'
     }
   },
   created() {
@@ -136,10 +136,24 @@ export default {
       } else if (titName === '修改') {
         this.getMenuInfo(data)
       } else {
+        this.menuDialog = false
         this.delMenuInfo(data)
       }
     },
-    dialogData(val) {
+    dialogData(upOrsave, params) {
+      const Params = JSON.stringify(params)
+      console.log(Params)
+      if (upOrsave === 0) {
+        console.log('新增保存')
+        saveMenuInfo(Params).then(res => {
+          return this.$message.success('保存成功')
+        })
+      } else if (upOrsave === 1) {
+        console.log('更新保存')
+        updataMenuInfo(Params).then(res => {
+          return this.$message.success('更新成功')
+        })
+      }
       this.getMenuList()
       this.menuDialog = !this.menuDialog
     },
@@ -156,6 +170,26 @@ export default {
     getMenuInfo(menuId) {
       getMenuInfo(menuId).then(res => {
         this.menuInfo = res.menu
+      })
+    },
+    delMenuInfo(menuId) {
+      this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delMenuAbout(menuId).then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.getMenuList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }

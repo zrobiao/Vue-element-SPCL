@@ -32,7 +32,7 @@
         上级菜单：
       </el-col>
       <el-col :span="12">
-        <el-input v-model="menuInfo.parentName" :disabled="true" type="text" placeholder="菜单名称"/>
+        <el-input v-model="pareMenuName" :disabled="true" type="text" placeholder="选择上级菜单"/>
       </el-col>
       <el-col :span="4" class="el-col-dafine">
         <el-button type="primary" size="mini" icon="el-icon-edit" @click="openMenu"/>
@@ -53,7 +53,7 @@
         菜单URL：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuInfo.url" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuInfo.url" type="text" placeholder="请输入菜单url"/>
       </el-col>
     </el-row>
     <el-row v-show="isMenu&&isButton">
@@ -61,7 +61,7 @@
         授权标识：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuInfo.perms" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuInfo.perms" type="text" placeholder="多个逗号分隔，例如perssion:menu:list,perssion:menu:info"/>
       </el-col>
     </el-row>
     <el-row v-show="isMenu&&isCatalog">
@@ -69,7 +69,7 @@
         排序号：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuInfo.orderNum" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuInfo.orderNum" type="text" placeholder="请输入菜单排序号"/>
       </el-col>
     </el-row>
     <el-row v-show="isMenu&&isCatalog">
@@ -77,7 +77,8 @@
         图标：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuInfo.icon" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuInfo.icon" type="text" placeholder="请输入icon名称，例如：fa fa-address-book"/>
+        <a href="http://www.fontawesome.com.cn/faicons/" target="_blank">点击获取图标</a>
       </el-col>
     </el-row>
     <el-row>
@@ -85,7 +86,7 @@
         <el-button type="warning" @click="closeDialog">返回</el-button>
       </el-col>
       <el-col :span="6" class="el-col-dafine">
-        <el-button type="primary" @click="sureDialog">确认</el-button>
+        <el-button type="primary" @click="sureDialog()">确认</el-button>
       </el-col>
     </el-row>
   </div>
@@ -100,13 +101,12 @@ export default {
     },
     menuInfo: {
       type: Object,
-      default: function() {}
+      default: () => {}
     }
   },
   data() {
     return {
       msg: '这里显示菜单操作',
-      menuName: '',
       isAdd: true,
       isEdit: false,
       isRemove: false,
@@ -114,6 +114,7 @@ export default {
       isMenu: true,
       isButton: true,
       openTree: false,
+      pareMenuName: this.menuInfo.parentName == null ? '一级菜单' : this.menuInfo.parentName,
       mergeList: [],
       defaultProps: {
         children: 'list',
@@ -121,6 +122,9 @@ export default {
       }
 
     }
+  },
+  created() {
+    console.log(this.menuInfo.parentName)
   },
   methods: {
     changeRadio(type) {
@@ -147,14 +151,20 @@ export default {
     },
     checkTree(obj) {
       this.openTree = false
-      this.menuName = obj.name
-      console.log(obj)
+      this.menuInfo.parentId = obj.parentId
+      this.pareMenuName = obj.name
     },
     closeDialog() {
+      this.openTree = false
       this.$emit('dialogChild')
     },
     sureDialog() {
-      this.$emit('dialogChild', '确认回调')
+      this.openTree = false
+      if (this.diaData === '新增') {
+        this.$emit('dialogChild', 0, this.menuInfo)
+      } else if (this.diaData === '修改') {
+        this.$emit('dialogChild', 1, this.menuInfo)
+      }
     }
   }
 }

@@ -33,7 +33,7 @@
       <el-col v-show="showSearch" :span="3">
         <el-button type="primary" @click="getSearchMsg">查询</el-button>
       </el-col>
-      <el-col v-show="showBtn" :span="6">
+      <el-col v-show="showBtn" :span="8">
         <el-button type="primary" icon="el-icon-plus" @click="childAdd(sendParent,'新增')">新增</el-button>
         <el-button type="warning" icon="el-icon-edit" @click="childEdit(sendParent,'修改',sendData)">修改</el-button>
         <el-button type="danger" icon="el-icon-delete" @click="childRemove(sendParent,'删除',sendData)">删除</el-button>
@@ -101,6 +101,9 @@ export default {
     },
     childRemove(parentData, titName, sendData) {
       if (parentData === 'menu') {
+        if (!sendData) {
+          return this.$message.error('请选择一个菜单进行操作！')
+        }
         this.$emit('listenUp', titName, sendData)
       }
     }

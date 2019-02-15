@@ -1,6 +1,6 @@
 import request from '@/utils/request'
+import loginAjax from '@/utils/login'
 import Vue from 'vue'
-
 const _this = new Vue()
 export function login(username, password, captcha) {
   const pragms = _this.qs.stringify({
@@ -8,7 +8,7 @@ export function login(username, password, captcha) {
     password,
     captcha
   })
-  return request({
+  return loginAjax({
     url: '/sys/login',
     method: 'post',
     data: pragms

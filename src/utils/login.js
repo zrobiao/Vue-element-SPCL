@@ -1,8 +1,5 @@
 import axios from 'axios'
-import {
-  Message,
-  MessageBox
-} from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 // import { getToken } from '@/utils/auth'
 
@@ -13,10 +10,36 @@ axios.defaults.withCredentials = true
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
   timeout: 5000, // 请求超时时间，
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded'
-    // 'Content-Type': 'application/json'/*  */
-  }
+  // headers: {
+  //   'Content-Type': 'application/x-www-form-urlencoded'
+  //   // 'Content-Type': 'application/json'/*  */
+  // }
+  transformRequest: [function transformRequest(data, headers) {
+    normalizeHeaderName(headers, 'Content-Type')
+    if (utils.isFormData(data) ||
+        utils.isArrayBuffer(data) ||
+        utils.isBuffer(data) ||
+        utils.isStream(data) ||
+        utils.isFile(data) ||
+        utils.isBlob(data)
+    ) {
+      return data
+    }
+    if (utils.isArrayBufferView(data)) {
+      return data.buffer
+    }
+    if (utils.isURLSearchParams(data)) {
+      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8')
+      return data.toString()
+    }
+    /* 改了这里*/
+    if (utils.isObject(data)) {
+      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8')
+      const _data = Object.keys(data)
+      return encodeURI(_data.map(name => `${name}=${data[name]}`).join('&'))
+    }
+    return data
+  }]
 })
 
 // service.defaults.headers.common['token'] = getToken()

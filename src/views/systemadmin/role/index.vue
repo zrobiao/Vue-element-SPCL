@@ -11,18 +11,14 @@
       <el-row>
         <el-col :span="24">
           <el-table
-            :data="tableData"
+            :data="roleData"
             stripe
             style="width: 100%">
-            <el-table-column
-              type="selection"/>
-            <el-table-column
-              fixed
-              prop="deptId"
-              label="菜单ID"/>
-            <el-table-column
-              prop="deptName"
-              label="菜单名称"/>
+            <el-table-column label="选择" width="65">
+              <template slot-scope="scope">
+                <el-radio :label="scope.row.roleName" v-model="roleRadio" @change.native="getParentRow(scope.row.roleId)"> &nbsp; </el-radio>
+              </template>
+            </el-table-column>
             <el-table-column
               prop="roleId"
               label="角色Id"/>
@@ -30,8 +26,11 @@
               prop="roleName"
               label="角色名称"/>
             <el-table-column
+              prop="deptName"
+              label="所属部门"/>
+            <el-table-column
               prop="remark"
-              label="角色来源"/>
+              label="来源"/>
             <el-table-column
               prop="createTime"
               label="创建时间"/>
@@ -44,8 +43,8 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog :visible.sync="menuDialog" title="菜单操作" width="40%">
-      <dia-log :dia-data="diaTitle" @dialogChild="dialogData"/>
+    <el-dialog :visible.sync="menuDialog" title="菜单操作" width="50%">
+      <dia-log :dia-data="diaTitle" :menu-info="menuInfo" @dialogChild="dialogData"/>
     </el-dialog>
   </div>
 </template>
@@ -67,20 +66,25 @@ export default {
       isSearch: true,
       isBtn: true,
       preParent: 'menu',
-      upData: '父组件传过去的数据',
+      upData: 0,
       menuDialog: false,
       diaTitle: '',
-      tableData: [],
+      roleData: [],
+      roleRadio: '角色选择',
       currPage: 1,
       pageSize: 10,
       totalCount: 5,
-      totalPage: 1
+      totalPage: 1,
+      menuInfo: {}
     }
   },
   created() {
     this.getRoleList()
   },
   methods: {
+    getParentRow(menuId) {
+      this.upData = menuId
+    },
     chindData(data) {
       this.menuDialog = true
       this.diaTitle = data
@@ -95,7 +99,7 @@ export default {
         console.log(res)
         const pageData = res.page
         const listData = res.page.list
-        this.tableData = listData
+        this.roleData = listData
         this.currPage = pageData.currPage
         this.pageSize = pageData.pageSize
         this.totalCount = pageData.totalCount

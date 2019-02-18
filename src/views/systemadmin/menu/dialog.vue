@@ -78,7 +78,7 @@
       </el-col>
       <el-col :span="16">
         <el-input v-model="menuInfo.icon" type="text" placeholder="请输入icon名称，例如：fa fa-address-book"/>
-        <a href="http://www.fontawesome.com.cn/faicons/" target="_blank">点击获取图标</a>
+        <a href="http://www.fontawesome.com.cn/faicons/" target="_blank">点击获取图标，例：fa fa-address-book</a>
       </el-col>
     </el-row>
     <el-row>
@@ -101,7 +101,9 @@ export default {
     },
     menuInfo: {
       type: Object,
-      default: () => {}
+      default: () => {
+        return { type: 0, parentId: -1 }
+      }
     }
   },
   data() {
@@ -124,7 +126,7 @@ export default {
     }
   },
   created() {
-    console.log(this.menuInfo.parentName)
+    console.log(this.menuInfo.parentId)
   },
   methods: {
     changeRadio(type) {

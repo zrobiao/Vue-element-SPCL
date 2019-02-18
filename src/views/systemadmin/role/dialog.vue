@@ -4,35 +4,22 @@
       <el-col :span="24" class="dia-Title">
         <p v-if="diaData == '新增'" class="dia-title-add">{{ diaData }}</p>
         <p v-if="diaData == '修改'" class="dia-title-edit">{{ diaData }}</p>
-        <p v-if="diaData == '删除'" class="dia-title-remove">{{ diaData }}</p>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="6" class="el-col-dafine">
-        菜单类型：
+        角色名称：
       </el-col>
       <el-col :span="16">
-        <el-radio-group v-model="typeRadio">
-          <el-radio :label="3" @change="changeRadio('catalog')">目录</el-radio>
-          <el-radio :label="6" @change="changeRadio('menu')">菜单</el-radio>
-          <el-radio :label="9" @change="changeRadio('button')">按钮</el-radio>
-        </el-radio-group>
+        <el-input v-model="menuName" type="text" placeholder="请输入角色名称"/>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="6" class="el-col-dafine">
-        菜单名称：
-      </el-col>
-      <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="6" class="el-col-dafine">
-        上级菜单：
+        所属部门：
       </el-col>
       <el-col :span="12">
-        <el-input v-model="menuName" :disabled="true" type="text" placeholder="菜单名称"/>
+        <el-input v-model="menuName" :disabled="true" type="text" placeholder="部门名称"/>
       </el-col>
       <el-col :span="4" class="el-col-dafine">
         <el-button type="primary" size="mini" icon="el-icon-edit" @click="openMenu"/>
@@ -48,36 +35,12 @@
           @node-click="checkTree"/>
       </el-col>
     </el-row>
-    <el-row v-show="isMenu&&isCatalog&&isButton">
+    <el-row>
       <el-col :span="6" class="el-col-dafine">
-        菜单URL：
+        备注：
       </el-col>
       <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
-      </el-col>
-    </el-row>
-    <el-row v-show="isMenu&&isButton">
-      <el-col :span="6" class="el-col-dafine">
-        授权标识：
-      </el-col>
-      <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
-      </el-col>
-    </el-row>
-    <el-row v-show="isMenu&&isCatalog">
-      <el-col :span="6" class="el-col-dafine">
-        排序号：
-      </el-col>
-      <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
-      </el-col>
-    </el-row>
-    <el-row v-show="isMenu&&isCatalog">
-      <el-col :span="6" class="el-col-dafine">
-        图标：
-      </el-col>
-      <el-col :span="16">
-        <el-input v-model="menuName" type="text" placeholder="请输入菜单名称"/>
+        <el-input v-model="menuName" type="text" placeholder="请输入备注信息"/>
       </el-col>
     </el-row>
     <el-row>
@@ -91,6 +54,7 @@
   </div>
 </template>
 <script>
+import { getRoleSelect } from '@/api/sysadmin'
 export default {
   props: {
     diaData: {
@@ -100,15 +64,7 @@ export default {
   },
   data() {
     return {
-      msg: '这里显示菜单操作',
       menuName: '',
-      typeRadio: 6,
-      isAdd: true,
-      isEdit: false,
-      isRemove: false,
-      isCatalog: true,
-      isMenu: true,
-      isButton: true,
       openTree: false,
       mergeList: [{
         id: 1,
@@ -146,30 +102,18 @@ export default {
         }]
       }],
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: 'list',
+        label: 'roleName'
       }
 
     }
   },
   methods: {
-    changeRadio(val) {
-      if (val === 'catalog') {
-        this.isCatalog = true
-        this.isMenu = true
-        this.isButton = false
-      } else if (val === 'menu') {
-        this.isCatalog = true
-        this.isMenu = true
-        this.isButton = true
-      } else {
-        this.isCatalog = false
-        this.isMenu = true
-        this.isButton = true
-      }
-    },
     openMenu() {
-      console.log('跳转到树形菜单界面')
+      getRoleSelect().then(res => {
+        this.mergeList = res.list
+        console.log(this.mergeList)
+      })
       this.openTree = true
     },
     checkTree(obj) {

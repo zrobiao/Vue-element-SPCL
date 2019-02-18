@@ -93,7 +93,7 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog :visible.sync="menuDialog" title="菜单操作" width="40%">
+    <el-dialog :visible.sync="menuDialog" title="菜单操作" width="50%">
       <dia-log :dia-data="diaTitle" :menu-info="menuInfo" @dialogChild="dialogData"/>
     </el-dialog>
   </div>
@@ -141,16 +141,17 @@ export default {
       }
     },
     dialogData(upOrsave, params) {
-      const Params = JSON.stringify(params)
-      console.log(Params)
+      // const Params = JSON.stringify(params)
+      console.log('in')
+      console.log(params)
       if (upOrsave === 0) {
         console.log('新增保存')
-        saveMenuInfo(Params).then(res => {
+        saveMenuInfo(params).then(res => {
           return this.$message.success('保存成功')
         })
       } else if (upOrsave === 1) {
         console.log('更新保存')
-        updataMenuInfo(Params).then(res => {
+        updataMenuInfo(params).then(res => {
           return this.$message.success('更新成功')
         })
       }

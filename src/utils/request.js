@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
+// import qs from 'qs'
 // import { getToken } from '@/utils/auth'
 
 // 允许每次携带cookie信息请求
@@ -12,7 +13,7 @@ const service = axios.create({
   timeout: 5000, // 请求超时时间，
   headers: {
     // 'Content-Type': 'application/x-www-form-urlencoded'
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json;charset=utf-8'
   }
 })
 
@@ -21,11 +22,14 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
-    console.log(config)
     // if (store.getters.token) {
     //   config.headers['Authorization'] = getToken() // 让每个请求携带自定义token
     //   console.log('headers token为：' + config.headers.Authorization)
     // }
+    // if (config.method === 'post') {
+    //   config.data = qs.stringify(config.data)
+    // }
+    console.log(config)
     return config
   },
   error => {

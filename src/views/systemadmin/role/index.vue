@@ -43,13 +43,13 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog :visible.sync="menuDialog" title="菜单操作" width="50%">
-      <dia-log :dia-data="diaTitle" :menu-info="menuInfo" @dialogChild="dialogData"/>
+    <el-dialog :visible.sync="menuDialog" title="菜单操作" width="90%">
+      <dia-log :dia-data="diaTitle" :role-info="roleInfo" @dialogChild="dialogData"/>
     </el-dialog>
   </div>
 </template>
 <script>
-import { getRoleList } from '@/api/sysadmin'
+import { getRoleList, getRoleInfo, delRoleInfo, saveRoleInfo, updataRoleInfo } from '@/api/sysadmin'
 import searchBar from '@/components/search/index'
 import pagiTabs from '@/components/pagination/index'
 import diaLog from './dialog'
@@ -75,7 +75,7 @@ export default {
       pageSize: 10,
       totalCount: 5,
       totalPage: 1,
-      menuInfo: {}
+      roleInfo: {}
     }
   },
   created() {
@@ -85,18 +85,37 @@ export default {
     getParentRow(menuId) {
       this.upData = menuId
     },
-    chindData(data) {
+    chindData(titName, data) {
+      this.diaTitle = titName
+      if (titName === '新增') {
+        this.roleInfo = {}
+      } else if (titName === '修改') {
+        this.getRoleInfo(data)
+      } else {
+        this.menuDialog = false
+        this.delRoleInfo(data)
+      }
       this.menuDialog = true
-      this.diaTitle = data
     },
-    dialogData(val) {
+    dialogData(upOrsave, params) {
+      if (upOrsave === 0) {
+        console.log('新增保存')
+        saveRoleInfo(params).then(res => {
+          this.$message.success('保存成功')
+          this.getRoleList()
+        })
+      } else if (upOrsave === 1) {
+        console.log('更新保存')
+        updataRoleInfo(params).then(res => {
+          this.$message.success('更新成功')
+          this.getRoleList()
+        })
+      }
       this.menuDialog = !this.menuDialog
-      console.log(val)
     },
     getRoleList() {
-      const params = 'admin'
-      getRoleList(params).then(res => {
-        console.log(res)
+      // const params = 'admin'
+      getRoleList().then(res => {
         const pageData = res.page
         const listData = res.page.list
         this.roleData = listData
@@ -104,6 +123,32 @@ export default {
         this.pageSize = pageData.pageSize
         this.totalCount = pageData.totalCount
         this.totalPage = pageData.totalPage
+      })
+    },
+    getRoleInfo(roleId) {
+      getRoleInfo(roleId).then(res => {
+        this.roleInfo = res.role
+      })
+    },
+    delRoleInfo(roleId) {
+      // const _this = this
+      this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delRoleInfo(roleId).then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.getRoleList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }

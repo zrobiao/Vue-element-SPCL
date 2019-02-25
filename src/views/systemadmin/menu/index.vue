@@ -147,12 +147,12 @@ export default {
       if (upOrsave === 0) {
         console.log('新增保存')
         saveMenuInfo(params).then(res => {
-          return this.$message.success('保存成功')
+          this.$message.success('保存成功')
         })
       } else if (upOrsave === 1) {
         console.log('更新保存')
         updataMenuInfo(params).then(res => {
-          return this.$message.success('更新成功')
+          this.$message.success('更新成功')
         })
       }
       this.getMenuList()

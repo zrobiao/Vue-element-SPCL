@@ -22,7 +22,7 @@ export function getMenuInfo(menuId) {
   return request({
     url: '/perssion/menu/info/' + menuId,
     method: 'get'
-    // params: { menuId }
+  // params: { menuId }
   })
 }
 
@@ -95,5 +95,87 @@ export function updataRoleInfo(params) {
     url: '/perssion/role/update',
     method: 'post',
     data: params
+  })
+}
+
+// 参数管理界面接口地址
+// 获取参数信息列表
+export function getParmasList(params) {
+  return request({
+    url: 'perssion/config/list',
+    method: 'get',
+    data: { params }
+  })
+}
+// 保存参数信息
+export function saveParmasInfo(params) {
+  return request({
+    url: 'perssion/config/save',
+    method: 'post',
+    data: { params }
+  })
+}
+// 更新保存参数信息
+export function updateParmasInfo(params) {
+  return request({
+    url: 'perssion/config/update',
+    method: 'post',
+    data: { params }
+  })
+}
+// 删除参数信息
+export function delParmasInfo(params) {
+  return request({
+    url: 'perssion/config/delete',
+    method: 'post',
+    data: [params]
+  })
+}
+// 获取参数详细信息
+export function getParmasInfo(params) {
+  return request({
+    url: 'perssion/config/info/' + params,
+    method: 'get'
+  })
+}
+
+// 字典管理界面接口地址
+// 获取字典信息列表
+export function getDictList(params) {
+  return request({
+    url: 'perssion/dict/list',
+    method: 'get',
+    data: { params }
+  })
+}
+// 保存字典信息
+export function saveDictInfo(params) {
+  return request({
+    url: 'perssion/dict/save',
+    method: 'post',
+    data: { params }
+  })
+}
+// 更新保存字典信息
+export function updateDictInfo(params) {
+  return request({
+    url: 'perssion/dict/update',
+    method: 'post',
+    data: { params }
+  })
+}
+// 删除字典信息
+export function delDictInfo(params) {
+  return request({
+    url: 'perssion/dict/delete',
+    method: 'post',
+    data: [params]
+  })
+}
+// 获取字典详细信息
+export function getDictInfo(params) {
+  return request({
+    url: 'perssion/dict/info/' + params,
+    method: 'get'
   })
 }

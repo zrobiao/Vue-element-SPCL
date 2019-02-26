@@ -8,32 +8,18 @@
     </el-row>
     <el-row>
       <el-col :span="4" class="el-col-dafine">
-        角色名称：
+        参数名：
       </el-col>
       <el-col :span="10">
-        <el-input v-model="roleInfo.roleName" type="text" placeholder="请输入角色名称"/>
+        <el-input v-model="roleInfo.paramKey" type="text" placeholder="请输入参数名"/>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="4" class="el-col-dafine">
-        所属部门：
+        参数值：
       </el-col>
-      <el-col :span="8">
-        <el-input v-model="roleInfo.deptName" :disabled="true" type="text" placeholder="部门名称"/>
-      </el-col>
-      <el-col :span="2" class="el-col-dafine">
-        <el-button type="primary" size="mini" icon="el-icon-edit" @click="openMenu"/>
-      </el-col>
-    </el-row>
-    <el-row v-show="openTree">
-      <el-col :span="24">
-        <el-tree
-          ref="roleTree1"
-          :data="mergeList"
-          :props="defaultProps"
-          node-key="deptId"
-          accordion
-          @node-click="checkTree"/>
+      <el-col :span="10">
+        <el-input v-model="roleInfo.paramValue" type="text" placeholder="请输入参数值"/>
       </el-col>
     </el-row>
     <el-row>
@@ -42,26 +28,6 @@
       </el-col>
       <el-col :span="10">
         <el-input v-model="roleInfo.remark" type="text" placeholder="请输入备注信息"/>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="12">
-        <el-tree
-          ref="menuTree"
-          :data="menuDataList"
-          :props="menuProps"
-          node-key="menuId"
-          show-checkbox
-          default-expand-all/>
-      </el-col>
-      <el-col :span="12">
-        <el-tree
-          ref="roleTree2"
-          :data="mergeList"
-          :props="defaultProps"
-          node-key="deptId"
-          show-checkbox
-          default-expand-all/>
       </el-col>
     </el-row>
     <el-row>
@@ -75,7 +41,6 @@
   </div>
 </template>
 <script>
-import { getDeptSelect, getMenuList } from '@/api/sysadmin'
 export default {
   props: {
     diaData: {
@@ -102,55 +67,28 @@ export default {
         label: 'name'
       },
       saveData: {
-        roleName: '',
+        id: Number,
+        paramKey: '',
         remark: '',
-        deptId: Number,
-        menuIdList: [],
-        deptIdList: []
-
+        paramValue: ''
       }
     }
   },
   created() {},
-  mounted() {
-    this.menuDataShow()
-  },
+  mounted() {},
   methods: {
-    menuDataShow() {
-      getMenuList().then(res => {
-        const menuKeys = this.roleInfo.menuIdList
-        console.log(menuKeys)
-        this.menuDataList = res.menuList
-        this.$refs.menuTree.setCheckedKeys(menuKeys)
-      })
-      getDeptSelect().then(res => {
-        const deptKeys = this.roleInfo.deptIdList
-        console.log(deptKeys)
-        this.mergeList = res.dept
-        this.$refs.roleTree2.setCheckedKeys(deptKeys)
-      })
-    },
-    openMenu() {
-      this.openTree = true
-    },
-    checkTree(obj) {
-      this.openTree = false
-      this.roleInfo.deptName = obj.name
-      this.saveData.deptId = obj.deptId
-    },
     closeDialog() {
       this.openTree = false
       this.$emit('dialogChild')
     },
     sureDialog() {
-      if (!this.saveData.deptId) {
-        return this.$message.error('所属部门不能为空！')
+      if (!this.roleInfo.paramKey) {
+        return this.$message.error('所属参数名不能为空！')
       }
-      this.saveData.menuIdList = this.$refs.menuTree.getCheckedKeys()
-      this.saveData.deptIdList = this.$refs.roleTree2.getCheckedKeys()
-      this.saveData.roleName = this.roleInfo.roleName
+      this.saveData.paramKey = this.roleInfo.paramKey
+      this.saveData.paramValue = this.roleInfo.paramValue
+      this.saveData.id = this.roleInfo.id
       this.saveData.remark = this.roleInfo.remark
-      console.log(this.roleInfo)
       console.log(this.saveData)
       if (this.diaData === '新增') {
         this.$emit('dialogChild', 0, this.saveData)

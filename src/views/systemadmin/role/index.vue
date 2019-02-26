@@ -43,7 +43,7 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog :visible.sync="menuDialog" title="菜单操作" width="90%">
+    <el-dialog :visible.sync="menuDialog" title="角色操作" width="90%">
       <dia-log :dia-data="diaTitle" :role-info="roleInfo" @dialogChild="dialogData"/>
     </el-dialog>
   </div>

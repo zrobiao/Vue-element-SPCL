@@ -91,15 +91,15 @@ const systemadminRouter = {
       }
     },
 
-    {
-      path: 'permission',
-      component: () => import('@/views/systemadmin/permission/index'),
-      name: 'systemAdmin-permission',
-      meta: {
-        title: '权限管理',
-        icon: 'permission'
-      }
-    },
+    // {
+    //   path: 'permission',
+    //   component: () => import('@/views/systemadmin/permission/index'),
+    //   name: 'systemAdmin-permission',
+    //   meta: {
+    //     title: '权限管理',
+    //     icon: 'permission'
+    //   }
+    // },
     {
       path: 'complain',
       component: () => import('@/views/systemadmin/complain/index'),

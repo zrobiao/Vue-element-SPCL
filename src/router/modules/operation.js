@@ -6,7 +6,7 @@ const operationRouter = {
   redirect: 'noredirect',
   name: 'OperationLog',
   meta: {
-    title: '运营管理',
+    title: '账户管理',
     icon: 'OperationLog'
   },
   children: [{
@@ -14,7 +14,7 @@ const operationRouter = {
     component: () => import('@/views/systemadmin/organization/index'),
     name: 'systemAdmin-organization',
     meta: {
-      title: '部门管理',
+      title: '组织机构',
       icon: 'organization'
     }
   },
@@ -28,11 +28,20 @@ const operationRouter = {
     }
   },
   {
+    path: 'placemanage',
+    component: () => import('@/views/systemadmin/placemanage/index'),
+    name: 'systemAdmin-placemanage',
+    meta: {
+      title: '渠道商管理',
+      icon: 'placemanage'
+    }
+  },
+  {
     path: 'govEpire',
     component: () => import('@/views/systemadmin/govEpire/index'),
     name: 'systemAdmin-govEpire',
     meta: {
-      title: '渠道商管理',
+      title: '政企用户管理',
       icon: 'govEpire'
     }
   },
@@ -43,6 +52,15 @@ const operationRouter = {
     meta: {
       title: '视频账户管理',
       icon: 'account'
+    }
+  },
+  {
+    path: 'pressaccount',
+    component: () => import('@/views/SystemAdmin/pressaccount/index'),
+    name: 'systemAdmin-pressaccount',
+    meta: {
+      title: '压标账户管理',
+      icon: 'pressaccount'
     }
   },
   {

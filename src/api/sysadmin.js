@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import axios from 'axios'
-// import Vue from 'vue'
-// const _this = new Vue()
+import Vue from 'vue'
+const _this = new Vue()
 // 获取菜单列表信息
 export function getMenuList() {
   return request({
@@ -54,10 +54,48 @@ export function delMenuAbout(menuId) {
 // 获取部门选择列表
 export function getDeptSelect() {
   return request({
-    url: 'perssion/dept/nav',
+    url: '/perssion/dept/nav',
     method: 'get'
   })
 }
+// 获取部门详情信息
+export function getDeptInfo(params) {
+  return request({
+    url: 'perssion/dept/info/' + params,
+    method: 'get'
+  })
+}
+// 删除部门信息
+export function delDeptInfo(deptId) {
+  const param = _this.qs.stringify({
+    deptId
+  })
+  return request({
+    url: '/perssion/dept/delete',
+    method: 'post',
+    data: param,
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded;charset=utf-8;'
+    }
+  })
+}
+// 新增保存部门信息
+export function saveDeptInfo(params) {
+  return request({
+    url: '/perssion/dept/save',
+    method: 'post',
+    data: params
+  })
+}
+// 修改保存部门信息
+export function updataDeptInfo(params) {
+  return request({
+    url: '/perssion/dept/update',
+    method: 'post',
+    data: params
+  })
+}
+
 // 获取角色列表
 export function getRoleList() {
   return request({
@@ -68,15 +106,14 @@ export function getRoleList() {
 // 获取角色详细信息
 export function getRoleInfo(roleId) {
   return request({
-    url: 'perssion/role/info/' + roleId,
+    url: '/perssion/role/info/' + roleId,
     method: 'get'
   })
 }
-
 // 删除角色信息
 export function delRoleInfo(roleId) {
   return request({
-    url: 'perssion/role/delete',
+    url: '/perssion/role/delete',
     method: 'post',
     data: [roleId]
   })
@@ -102,7 +139,7 @@ export function updataRoleInfo(params) {
 // 获取参数信息列表
 export function getParmasList(params) {
   return request({
-    url: 'perssion/config/list',
+    url: '/perssion/config/list',
     method: 'get',
     data: { params }
   })
@@ -118,7 +155,7 @@ export function saveParmasInfo(params) {
 // 更新保存参数信息
 export function updateParmasInfo(params) {
   return request({
-    url: 'perssion/config/update',
+    url: '/perssion/config/update',
     method: 'post',
     data: { params }
   })
@@ -126,7 +163,7 @@ export function updateParmasInfo(params) {
 // 删除参数信息
 export function delParmasInfo(params) {
   return request({
-    url: 'perssion/config/delete',
+    url: '/perssion/config/delete',
     method: 'post',
     data: [params]
   })
@@ -134,7 +171,7 @@ export function delParmasInfo(params) {
 // 获取参数详细信息
 export function getParmasInfo(params) {
   return request({
-    url: 'perssion/config/info/' + params,
+    url: '/perssion/config/info/' + params,
     method: 'get'
   })
 }
@@ -143,7 +180,7 @@ export function getParmasInfo(params) {
 // 获取字典信息列表
 export function getDictList(params) {
   return request({
-    url: 'perssion/dict/list',
+    url: '/perssion/dict/list',
     method: 'get',
     data: { params }
   })
@@ -151,7 +188,7 @@ export function getDictList(params) {
 // 保存字典信息
 export function saveDictInfo(params) {
   return request({
-    url: 'perssion/dict/save',
+    url: '/perssion/dict/save',
     method: 'post',
     data: { params }
   })
@@ -159,7 +196,7 @@ export function saveDictInfo(params) {
 // 更新保存字典信息
 export function updateDictInfo(params) {
   return request({
-    url: 'perssion/dict/update',
+    url: '/perssion/dict/update',
     method: 'post',
     data: { params }
   })
@@ -167,7 +204,7 @@ export function updateDictInfo(params) {
 // 删除字典信息
 export function delDictInfo(params) {
   return request({
-    url: 'perssion/dict/delete',
+    url: '/perssion/dict/delete',
     method: 'post',
     data: [params]
   })
@@ -175,7 +212,70 @@ export function delDictInfo(params) {
 // 获取字典详细信息
 export function getDictInfo(params) {
   return request({
-    url: 'perssion/dict/info/' + params,
+    url: '/perssion/dict/info/' + params,
+    method: 'get'
+  })
+}
+
+// 获取地区信息列表
+export function getAreamsgList(params) {
+  return request({
+    url: '/perssion/sysareainfo/list',
+    method: 'get',
+    data: { params }
+  })
+}
+
+// 获取手机号码段信息列表
+export function getPhoneareaList(params) {
+  return request({
+    url: '/perssion/sysphoneareainfo/list',
+    method: 'get',
+    data: { params }
+  })
+}
+
+// 公告信息管理相关
+// 获取公告列表
+export function getNoticeList(params) {
+  return request({
+    url: 'perssion/sysnotice/list',
+    method: 'get',
+    data: { params }
+  })
+}
+// 保存公告信息
+export function saveNoticeInfo(params) {
+  return request({
+    url: '/perssion/sysnotice/save',
+    method: 'post',
+    data: {
+      params
+    }
+  })
+}
+// 更新保存公告信息
+export function updateNoticeInfo(params) {
+  return request({
+    url: '/perssion/sysnotice/update',
+    method: 'post',
+    data: {
+      params
+    }
+  })
+}
+// 删除公告信息
+export function delNoticeInfo(params) {
+  return request({
+    url: '/perssion/sysnotice/delete',
+    method: 'post',
+    data: [params]
+  })
+}
+// 获取公告详细信息
+export function getNoticeInfo(params) {
+  return request({
+    url: '/perssion/sysnotice/info/' + params,
     method: 'get'
   })
 }

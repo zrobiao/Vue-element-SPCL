@@ -28,7 +28,6 @@
                 <el-table
                   ref="childMenu"
                   :data="childList.row.list"
-                  border
                   style="width:100%">
                   <el-table-column label="选择" width="65">
                     <template slot-scope="scope">
@@ -38,6 +37,47 @@
                   <el-table-column
                     prop="menuId"
                     label="菜单ID"/>
+                  <el-table-column type="expand">
+                    <template slot-scope="childList">
+                      <el-table
+                        ref="childMenu"
+                        :data="childList.row.list"
+                        style="width:100%">
+                        <el-table-column label="选择" width="65">
+                          <template slot-scope="scope">
+                            <el-radio :label="scope.row.name" v-model="parentMenuRadio" @change.native="getParentRow(scope.row.menuId)">&nbsp;</el-radio>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="menuId"
+                          label="菜单ID"/>
+                        <el-table-column
+                          prop="name"
+                          label="菜单名称"/>
+                        <el-table-column
+                          prop="parentName"
+                          label="上级菜单"/>
+                        <el-table-column
+                          prop="type"
+                          label="类型">
+                          <template slot-scope="scope">
+                            <el-tag v-show="scope.row.type ===0" type="primary" disable-transitions>目录</el-tag>
+                            <el-tag v-show="scope.row.type ===1" type="success" disable-transitions>菜单</el-tag>
+                            <el-tag v-show="scope.row.type ===2" type="warning" disable-transitions>按钮</el-tag>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="orderNum"
+                          label="排序号"/>
+                        <el-table-column
+                          prop="url"
+                          label="菜单URL"/>
+                        <el-table-column
+                          prop="perms"
+                          label="授权标识"/>
+                      </el-table>
+                    </template>
+                  </el-table-column>
                   <el-table-column
                     prop="name"
                     label="菜单名称"/>

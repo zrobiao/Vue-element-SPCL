@@ -2,6 +2,19 @@ import request from '@/utils/request'
 // import axios from 'axios'
 import Vue from 'vue'
 const _this = new Vue()
+// 修改账户登陆密码
+export function editUserPsd(params) {
+  const param = _this.qs.stringify(params)
+  return request({
+    url: 'perssion/user/password',
+    method: 'post',
+    data: param,
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded;charset=utf-8;'
+    }
+  })
+}
+
 // 获取菜单列表信息
 export function getMenuList() {
   return request({

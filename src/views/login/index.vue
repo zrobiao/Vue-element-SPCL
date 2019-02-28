@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+// import { isvalidUsername } from '@/utils/validate'  //开启自定的用户名验证
 // import util from '@/utils/index'
 
 const testUrl = 'http://192.168.0.119:8082/qycl.web'
@@ -62,7 +62,8 @@ export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
+      console.log(value)
+      if (!value) {
         callback(new Error('请输入正确的用户名'))
       } else {
         callback()
@@ -118,8 +119,10 @@ export default {
     handleLogin() {
       // this.$router.push({ path: '/index' })
       this.$refs.loginForm.validate(valid => {
+        console.log(valid)
         if (valid) {
           this.loading = true
+          console.log(this.loginForm)
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })

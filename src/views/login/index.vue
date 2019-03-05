@@ -56,6 +56,7 @@
 <script>
 // import { isvalidUsername } from '@/utils/validate'  //开启自定的用户名验证
 // import util from '@/utils/index'
+import md5 from 'js-md5'
 
 const testUrl = 'http://192.168.0.119:8082/qycl.web'
 export default {
@@ -122,7 +123,7 @@ export default {
         console.log(valid)
         if (valid) {
           this.loading = true
-          console.log(this.loginForm)
+          this.loginForm.password = md5(this.loginForm.password)
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })

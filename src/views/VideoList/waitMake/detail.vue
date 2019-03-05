@@ -1,21 +1,23 @@
 <template>
   <div>
     <search-bar
-      :show-date="isDate"
+      :show-enter="isEnter"
       :show-search="isSearch"
-      :show-state="isState"
-      :show-num="isNum"
-      :show-btn="isBtn"
-      :send-parent="preParent"/>
+      :send-parent="preParent"
+      :show-search-btn="isSearchBtn"
+      :show-date="isDate"/>
     <div class="show-container">
       <el-row>
-        <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
-      </el-row>
-      <el-row>
+        <el-col :span="24" class="dia-Title">
+          <el-col v-show="isShow" :span="12">
+            <el-button type="success" icon="el-icon-download" @click="downloadMaterial(sendParent,'下载素材')">下载素材</el-button>
+            <el-button type="primary" icon="el-icon-setting" @click="makeVideos(sendParent,'制作视频',sendData)">制作视频</el-button>
+          </el-col>
+        </el-col>
         <el-col :span="24">
           <el-table
+            ref="parentMenu"
             :data="tableData"
-            border
             stripe
             style="width: 100%">
             <el-table-column
@@ -33,10 +35,6 @@
               label="订单创建日期"
               width="150"/>
             <el-table-column
-              prop="createTime"
-              label="订单压标完成日期"
-              width="180"/>
-            <el-table-column
               prop="enterName"
               label="企业名称"
               width="100"/>
@@ -47,16 +45,48 @@
             <el-table-column
               prop="enterTel"
               label="企业联系电话"
-              width="120"/>
+              width="150"/>
+            <el-table-column
+              prop="province"
+              label="归属省份"
+              width="80"/>
+            <el-table-column
+              prop="city"
+              label="归属城市"
+              width="80"/>
+            <el-table-column
+              prop="qq"
+              label="联系QQ"
+              width="80"/>
+            <el-table-column
+              prop="weixin"
+              label="联系微信"
+              width="80"/>
             <el-table-column
               prop="needRemark"
               label="特需说明"
+              width="150"/>
+            <el-table-column
+              prop="agentId"
+              label="所属代理商"
+              width="100"/>
+            <el-table-column
+              prop="orderResources"
+              label="订单来源"
+              width="100"/>
+            <el-table-column
+              prop="makeUserId"
+              label="视频制作人id"
               width="120"/>
             <el-table-column
-              label="操作"
-              width="100">
+              prop="orderState"
+              label="订单状态"
+              width="100"/>
+            <el-table-column
+              label="历史操作记录"
+              width="150">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="handleClick(scope.row)">详情</el-button>
+                <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -65,15 +95,15 @@
     </div>
     <el-row type="flex" justify="end">
       <el-col :span="9">
-        <paging-tabs :curr-page="currPage" :page-size="pageSize" :total-count="totalCount" :total-page="totalPage"/>
+        <paging-tabs/>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
-import searchBar from './../waitPress/search/index'
+import searchBar from './search.vue'
 import pagingTabs from '@/components/pagination'
-import { resetOpenList } from '@/api/videoList'
+import { getWaitMakeList } from '@/api/videoList'
 export default {
   components: {
     pagingTabs,
@@ -83,45 +113,27 @@ export default {
     return {
       searchMsg: '',
       isSearch: true,
-      isBtn: true,
+      isEnter: true,
+      isShow: true,
       isDate: true,
-      isState: true,
-      isNum: true,
+      isSearchBtn: true,
       preParent: '',
-      tableData: [],
-      currPage: 1,
-      pageSize: 10,
-      totalCount: 10,
-      totalPage: 1
+      number: 20,
+      tableData: []
     }
   },
   created() {
-    this.resetOpenList()
+    this.getWaitMakeList()
   },
   methods: {
-    resetOpenList() {
-      const obj = {
-        pageSize: 5,
-        currPage: 1,
-        'query': {
-          'orderNo': 'ccc'
-        }
-      }
-      console.log(obj)
-      resetOpenList(obj).then(res => {
-        const pageData = res.data.data
-        const listData = pageData.list
+    getWaitMakeList: function() {
+      getWaitMakeList().then(res => {
+        const listData = res.waitMakeList
         this.tableData = listData
-        this.currPage = pageData.currPage
-        this.pageSize = pageData.pageSize
-        this.totalCount = pageData.totalCount
-        this.totalPage = pageData.totalPage
       })
     },
-    handleClick(row) {
-      console.log(row)
-      alert(row.orderId)
-    }
+    downloadMaterial: function() {},
+    makeVideos: function() {}
   }
 }
 </script>

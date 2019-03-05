@@ -243,7 +243,7 @@ export function getAreamsgList(params) {
 export function getPhoneareaList(params) {
   return request({
     url: '/perssion/sysphoneareainfo/list',
-    method: 'get',
+    method: 'post',
     data: { params }
   })
 }

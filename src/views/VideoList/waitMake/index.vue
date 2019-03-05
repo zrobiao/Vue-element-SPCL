@@ -1,11 +1,11 @@
 <template>
   <div>
     <search-bar
-      :show-date="isDate"
+      :show-enter="isEnter"
       :show-search="isSearch"
-      :show-state="isState"
-      :show-num="isNum"
       :show-btn="isBtn"
+      :show-state="isState"
+      :show-search-btn="isSearchBtn"
       :send-parent="preParent"/>
     <div class="show-container">
       <el-row>
@@ -33,10 +33,6 @@
               label="订单创建日期"
               width="150"/>
             <el-table-column
-              prop="createTime"
-              label="订单压标完成日期"
-              width="180"/>
-            <el-table-column
               prop="enterName"
               label="企业名称"
               width="100"/>
@@ -49,14 +45,43 @@
               label="企业联系电话"
               width="120"/>
             <el-table-column
+              prop="province"
+              label="归属省份"
+              width="80"/>
+            <el-table-column
+              prop="city"
+              label="归属城市"
+              width="80"/>
+            <el-table-column
+              prop="qq"
+              label="联系QQ"
+              width="80"/>
+            <el-table-column
+              prop="weixin"
+              label="联系微信"
+              width="80"/>
+            <el-table-column
               prop="needRemark"
               label="特需说明"
               width="120"/>
             <el-table-column
+              prop="agentId"
+              label="所属代理商"
+              width="100"/>
+            <el-table-column
+              prop="orderState"
+              label="订单状态"
+              width="100"/>
+            <el-table-column
+              prop="orderResources"
+              label="订单来源"
+              width="100"/>
+            <el-table-column
               label="操作"
               width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="handleClick(scope.row)">详情</el-button>
+                <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
+                <el-button type="text" size="small">编辑</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -71,9 +96,9 @@
   </div>
 </template>
 <script>
-import searchBar from './../waitPress/search/index'
+import searchBar from './search.vue'
 import pagingTabs from '@/components/pagination'
-import { resetOpenList } from '@/api/videoList'
+import { WaitMakeList } from '@/api/videoList'
 export default {
   components: {
     pagingTabs,
@@ -82,11 +107,11 @@ export default {
   data() {
     return {
       searchMsg: '',
+      isEnter: true,
       isSearch: true,
       isBtn: true,
-      isDate: true,
       isState: true,
-      isNum: true,
+      isSearchBtn: true,
       preParent: '',
       tableData: [],
       currPage: 1,
@@ -96,10 +121,10 @@ export default {
     }
   },
   created() {
-    this.resetOpenList()
+    this.WaitMakeList()
   },
   methods: {
-    resetOpenList() {
+    WaitMakeList() {
       const obj = {
         pageSize: 5,
         currPage: 1,
@@ -108,7 +133,7 @@ export default {
         }
       }
       console.log(obj)
-      resetOpenList(obj).then(res => {
+      WaitMakeList(obj).then(res => {
         const pageData = res.data.data
         const listData = pageData.list
         this.tableData = listData

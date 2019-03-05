@@ -45,16 +45,25 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(response => {
-          const data = response.user
+        getInfo(state.token).then(res => {
+          if (res.code === 0) {
+            const status = res.data.opreaState
+            if (status) {
+              const DataInfo = res.data.data
+              commit('SET_NAME', DataInfo.username)
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
           // if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
           //   commit('SET_ROLES', data.roles)
           // } else {
           //   reject('getInfo: roles must be a non-null array !')
           // }
-          commit('SET_NAME', data.username)
           // commit('SET_AVATAR', data.avatar)
-          resolve(response)
+          resolve(res)
         }).catch(error => {
           reject(error)
         })

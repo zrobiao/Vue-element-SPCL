@@ -211,7 +211,6 @@ export default {
             } else {
               this.$message.error(res.msg)
             }
-            console.log(res)
           })
         } else {
           console.log('error submit!!')

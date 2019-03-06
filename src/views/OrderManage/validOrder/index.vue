@@ -5,6 +5,7 @@
       :show-date="isDate"
       :show-btn="isBtn"
       :send-parent="preParent"
+      :pre-options="preOptions"
       :send-data="upData"
       @listenUp="chindData"/>
     <div class="show-container">
@@ -15,32 +16,60 @@
             :data="tableData"
             stripe
             style="width: 100%">
-            <el-table-column label="选择" width="65">
+            <!-- <el-table-column label="选择" width="65">
               <template slot-scope="scope">
-                <el-radio :label="scope.row.name" v-model="radioStatus" @change.native="getParentRow(scope.row.menuId)"> &nbsp; </el-radio>
+                <el-radio :label="scope.row.order_no" v-model="radioStatus" @change.native="getParentRow(scope.row.order_id)"> &nbsp; </el-radio>
+              </template>
+            </el-table-column> -->
+            <el-table-column
+              prop="orderId"
+              width="80px"
+              label="订单ID"/>
+            <el-table-column
+              prop="orderNo"
+              label="订单编号"/>
+            <el-table-column
+              prop="enterContact"
+              label="企业联系人"/>
+            <el-table-column
+              prop="enterTel"
+              label="企业联系电话"/>
+            <el-table-column
+              prop="makeFlag"
+              label="制作标识">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.makeFlag ===1" type="success" disable-transitions>制作</el-tag>
+                <el-tag v-show="scope.row.makeFlag ===2" type="warning" disable-transitions>成品</el-tag>
               </template>
             </el-table-column>
             <el-table-column
-              prop="menuId"
-              label="订单ID"/>
+              prop="repressFlag"
+              label="是否压标">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.repressFlag ===1" type="success" disable-transitions>是</el-tag>
+                <el-tag v-show="scope.row.repressFlag ===2" type="warning" disable-transitions>否</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column
-              prop="menuId"
-              label="订单编号"/>
+              prop="openType"
+              label="开通类型">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.openType ===1" type="primary" disable-transitions>移动</el-tag>
+                <el-tag v-show="scope.row.openType ===2" type="success" disable-transitions>联通</el-tag>
+                <el-tag v-show="scope.row.openType ===3" type="warning" disable-transitions>电信</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column
-              prop="name"
-              label="联系人"/>
+              prop="createTime"
+              label="创建日期"/>
             <el-table-column
-              prop="parentName"
-              label="联系电话"/>
-            <el-table-column
-              prop="orderNum"
-              label="联系电话归属地"/>
-            <el-table-column
-              prop="url"
-              label="订单开通类型"/>
-            <el-table-column
-              prop="perms"
-              label="操作备注"/>
+              fixed="right"
+              label="操作"
+              width="100">
+              <template slot-scope="scope">
+                <el-button type="text" size="small" @click="detailClick(scope.row.orderId)">查看</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </el-col>
       </el-row>
@@ -50,13 +79,13 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog :visible.sync="menuDialog" title="订单详情" width="90%">
-      <dia-log :dia-data="diaTitle" :dia-info="dialogInfo" @dialogChild="dialogData"/>
+    <el-dialog :visible.sync="menuDialog" title="订单详情" width="90%" top="5vh">
+      <dia-log :dia-info="dialogInfo" @dialogChild="dialogData"/>
     </el-dialog>
   </div>
 </template>
 <script>
-import { getValidList } from '@/api/orderList'
+import { getValidList, getOrderListInfo } from '@/api/orderList'
 import searchBar from '@/components/search'
 import pagiTabs from '@/components/pagination'
 import diaLog from './dialog'
@@ -72,6 +101,40 @@ export default {
       isSearch: true,
       isBtn: false,
       preParent: 'menu',
+      preOptions: [{
+        value: 'orderNo',
+        label: '订单编号'
+      }, {
+        value: 'enterName',
+        label: '企业名称'
+      }, {
+        value: 'enterContact',
+        label: '企业联系人'
+      }, {
+        value: 'enterTel',
+        label: '企业联系电话'
+      }, {
+        value: 'orderState',
+        label: '订单状态',
+        children: [{
+          value: '1',
+          label: '待接单'
+        }]
+      }, {
+        value: 'openType',
+        label: '开通类型',
+        children: [{
+          value: '1',
+          label: '移动'
+        }, {
+          value: '2',
+          label: '联通'
+        }, {
+          value: '3',
+          label: '电信'
+
+        }]
+      }],
       upData: 0,
       diaTitle: '',
       dialogInfo: {},
@@ -81,7 +144,15 @@ export default {
       totalCount: 5,
       totalPage: 1,
       radioStatus: '单选框',
-      tableData: []
+      tableData: [],
+      query: {
+        orderNo: null,
+        enterName: null,
+        enterContact: null,
+        enterTel: null,
+        orderState: null,
+        openType: null
+      }
     }
   },
   computed: {
@@ -94,8 +165,10 @@ export default {
     getTableList() {
       const params = {
         pageSize: this.pageSize,
-        currPage: this.currPage
+        currPage: this.currPage,
+        query: this.query
       }
+      console.log(params)
       getValidList(params).then(res => {
         if (res.code === 0) {
           const status = res.data.opreaState
@@ -106,6 +179,7 @@ export default {
             this.totalCount = orderData.totalCount
             this.totalPage = orderData.totalPage
             this.tableData = orderData.list
+            console.log(this.tableData)
           } else {
             this.$message.error(res.data.msg)
           }
@@ -119,17 +193,28 @@ export default {
       this.currPage = currentPage
       this.getTableList()
     },
-    chindData(titName, data) {
-      this.diaTitle = titName
-      this.menuDialog = true
-      if (titName === '新增') {
-        this.menuInfo = { type: 0 }
-      } else if (titName === '修改') {
-        this.getMenuInfo(data)
-      } else {
-        this.menuDialog = false
-        this.delMenuInfo(data)
+    chindData(selectMsg, searchMsg) {
+      switch (selectMsg) {
+        case 'orderNo':
+          this.query.orderNo = searchMsg
+          break
+        case 'enterName':
+          this.query.enterName = searchMsg
+          break
+        case 'enterContact':
+          this.query.enterContact = searchMsg
+          break
+        case 'enterTel':
+          this.query.enterTel = searchMsg
+          break
+        case 'orderState':
+          this.query.orderState = searchMsg
+          break
+        case 'openType':
+          this.query.openType = searchMsg
+          break
       }
+      this.getTableList()
     },
     dialogData(upOrsave, params) {
       if (upOrsave === 0) {
@@ -139,8 +224,11 @@ export default {
       }
       this.menuDialog = !this.menuDialog
     },
-    getParentRow(menuId) {
-      this.upData = menuId
+    detailClick(orderId) {
+      this.menuDialog = !this.menuDialog
+      getOrderListInfo(orderId).then(res => {
+        this.dialogInfo = res.data
+      })
     },
     handleClick(row) {
       console.log(row)

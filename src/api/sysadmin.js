@@ -234,8 +234,8 @@ export function getDictInfo(params) {
 export function getAreamsgList(params) {
   return request({
     url: '/perssion/sysareainfo/list',
-    method: 'get',
-    data: { params }
+    method: 'post',
+    data: params
   })
 }
 
@@ -244,7 +244,7 @@ export function getPhoneareaList(params) {
   return request({
     url: '/perssion/sysphoneareainfo/list',
     method: 'post',
-    data: { params }
+    data: params
   })
 }
 

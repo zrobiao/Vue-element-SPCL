@@ -1,10 +1,9 @@
 <template>
   <div class="main-content">
     <search-bar
-      :show-date="isShow"
+      :show-date="isDate"
       :show-search="isSearch"
-      :show-agent="isAgent"
-      :show-btn="isBtn"/>
+      :show-search-btn="isSearchBtn"/>
     <div class="show-container">
       <el-row>
         <el-col class="show-title">订单列表显示数据<span>{{ number }}</span>条</el-col>
@@ -68,7 +67,7 @@
   </div>
 </template>
 <script>
-import searchBar from './search/index'
+import searchBar from '@/components/Searchbar/index'
 import pagingTabs from '@/components/pagination'
 export default {
   components: {
@@ -77,10 +76,9 @@ export default {
   },
   data() {
     return {
-      isShow: true,
+      isDate: true,
       isSearch: true,
-      isAgent: true,
-      isBtn: true,
+      isSearchBtn: true,
       number: 1000,
       tableData: [{
         date: '2016-05-03',

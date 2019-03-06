@@ -2,7 +2,8 @@
   <div class="big-container">
     <search-bar
       :show-search="isSearch"
-      :show-date="isDate"/>
+      :show-date="isDate"
+      :show-search-btn="isSearchBtn"/>
     <div class="show-container">
       <el-row>
         <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
@@ -59,8 +60,8 @@
   </div>
 </template>
 <script>
-import { getLogList } from '@/api/log'
-import searchBar from './../search/index'
+import { logList } from '@/api/log'
+import searchBar from '@/components/Searchbar/index'
 import pagiTabs from '@/components/pagination/index'
 export default {
   components: {
@@ -71,6 +72,7 @@ export default {
     return {
       isDate: true,
       isSearch: true,
+      isSearchBtn: true,
       logRadio: '日志选择',
       logData: [],
       upData: 0,
@@ -81,11 +83,11 @@ export default {
     }
   },
   created() {
-    this.getLogList()
+    this.logList()
   },
   methods: {
-    getLogList() {
-      getLogList().then(res => {
+    logList() {
+      logList().then(res => {
         const pageData = res.page
         const listData = pageData.list
         this.logData = listData

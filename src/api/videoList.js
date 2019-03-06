@@ -10,7 +10,7 @@ export function WaitMakeList(params) {
   })
 }
 //  获取有效订单信息列表
-export function getEffectiveList(params) {
+export function effectiveList(params) {
   return request({
     url: '/order/yworderinfo/effectiveList',
     method: 'post',
@@ -26,7 +26,7 @@ export function invalidList(params) {
   })
 }
 //  获取已归档订单信息列表
-export function getArchivedList(params) {
+export function archivedList(params) {
   return request({
     url: '/order/yworderinfo/archivedList',
     method: 'post',
@@ -133,9 +133,8 @@ export function archiveAllOpen(params) {
 // 视频订单归档---订单归档,部分用户开通
 export function archivePartOpen(params) {
   return request({
-    url: '/order/yworderinfo/archivePartOpen/{orderId}',
-    method: 'post',
-    data: params
+    url: '/order/yworderinfo/archivePartOpen/' + params,
+    method: 'post'
   })
 }
 // 视频订单归档---订单归档,全部用户开通失败

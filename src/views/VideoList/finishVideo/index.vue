@@ -1,7 +1,6 @@
 <template>
   <div>
     <search-bar
-      :show-enter="isEnter"
       :show-search="isSearch"
       :show-btn="isBtn"
       :show-search-btn="isSearchBtn"
@@ -95,7 +94,7 @@
   </div>
 </template>
 <script>
-import searchBar from './../waitMake/search.vue'
+import searchBar from '@/components/Searchbar/index'
 import pagingTabs from '@/components/pagination'
 import { finishMakeList } from '@/api/videoList'
 export default {
@@ -160,12 +159,6 @@ export default {
     margin-bottom: 0;
   }
 }
-.dia-Title {
-  margin-top: 0.68rem;
-}
-// .btn-bottom {
-//   margin-left: -9.62rem;
-// }
 .show-container {
   margin-top: 15px;
   .show-title {

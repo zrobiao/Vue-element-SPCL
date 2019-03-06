@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row :gutter="20">
+    <el-row :gutter="15">
       <el-col v-if="showDate" :span="5">
         <div class="block">
           <span class="demonstration">起始日期</span>
@@ -21,7 +21,15 @@
             placeholder="选择日期"/>
         </div>
       </el-col>
-      <el-col v-show="showSearch" :span="6">
+      <el-col v-show="showSearch" :span="5" class="search">
+        <el-cascader
+          v-model="searchSelect"
+          :options="preOptions"
+          expand-trigger="hover"
+          placeholder="请选择"
+          @change="changeHandle"/>
+      </el-col>
+      <el-col v-show="showInput" :span="6">
         <div class="demo-input-suffix">
           <el-input
             v-model="searchMsg"
@@ -63,6 +71,10 @@ export default {
     sendData: {
       type: Number,
       default: 0
+    },
+    preOptions: {
+      type: Array,
+      default: () => {}
     }
   },
   data() {
@@ -70,21 +82,14 @@ export default {
       time1: '',
       time2: '',
       searchMsg: '',
-      msg: 'hi'
+      searchSelect: [],
+      showInput: true,
+      selectMsg: ''
     }
   },
   methods: {
     getSearchMsg() {
-      const hintmsg = `关注与查询相关`
-      this.$alert(`${hintmsg}`, '测试', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'info',
-            message: `callback: ${hintmsg}`
-          })
-        }
-      })
+      this.$emit('listenUp', this.selectMsg, this.searchMsg)
     },
     childAdd(parentData, titName) {
       if (parentData === 'menu') {
@@ -105,6 +110,15 @@ export default {
           return this.$message.error('请选择一个菜单进行操作！')
         }
         this.$emit('listenUp', titName, sendData)
+      }
+    },
+    changeHandle(val) {
+      if (val.length > 1) {
+        this.showInput = false
+        this.selectMsg = val[0]
+        this.searchMsg = val[val.length - 1]
+      } else {
+        this.showInput = true
       }
     }
   }

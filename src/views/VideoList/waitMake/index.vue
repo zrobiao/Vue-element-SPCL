@@ -1,10 +1,9 @@
 <template>
   <div>
     <search-bar
-      :show-enter="isEnter"
       :show-search="isSearch"
       :show-btn="isBtn"
-      :show-state="isState"
+      :show-date="isDate"
       :show-search-btn="isSearchBtn"
       :send-parent="preParent"/>
     <div class="show-container">
@@ -96,7 +95,7 @@
   </div>
 </template>
 <script>
-import searchBar from './search.vue'
+import searchBar from '@/components/Searchbar/index'
 import pagingTabs from '@/components/pagination'
 import { WaitMakeList } from '@/api/videoList'
 export default {
@@ -107,10 +106,9 @@ export default {
   data() {
     return {
       searchMsg: '',
-      isEnter: true,
       isSearch: true,
       isBtn: true,
-      isState: true,
+      isDate: true,
       isSearchBtn: true,
       preParent: '',
       tableData: [],
@@ -157,12 +155,6 @@ export default {
     margin-bottom: 0;
   }
 }
-.dia-Title {
-  margin-top: 0.68rem;
-}
-// .btn-bottom {
-//   margin-left: -9.62rem;
-// }
 .show-container{
     margin-top:15px;
     .show-title{

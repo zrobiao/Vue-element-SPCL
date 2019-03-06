@@ -1,10 +1,10 @@
 <template>
   <div class="main-content">
     <search-bar
-      :show-date="isShow"
-      :show-press="isPress"
+      :show-date="isDate"
+      :show-search="isSearch"
       :show-province="isProvince"
-      :show-btn="isBtn"/>
+      :show-search-btn="isSearchBtn"/>
     <div class="show-container">
       <el-row>
         <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
@@ -55,7 +55,7 @@
   </div>
 </template>
 <script>
-import searchBar from './../userStatis-kf/search/index'
+import searchBar from '@/components/Searchbar/index'
 import pagingTabs from '@/components/pagination'
 export default {
   components: {
@@ -64,10 +64,10 @@ export default {
   },
   data() {
     return {
-      isShow: true,
+      isDate: true,
       isProvince: true,
-      isPress: true,
-      isBtn: true,
+      isSearch: true,
+      isSearchBtn: true,
       totalCount: 0,
       tableData: [{
         date: '2016-05-03',

@@ -3,7 +3,8 @@
     <search-bar
       :show-date="isDate"
       :show-search="isSearch"
-      :show-btn="isBtn"
+      :show-search-btn="isSearchBtn"
+      :show-wait-btn="isWaitBtn"
       :send-parent="preParent"/>
     <div class="show-container">
       <el-row>
@@ -69,7 +70,7 @@
   </div>
 </template>
 <script>
-import searchBar from './search/index'
+import searchBar from '@/components/Searchbar/index'
 import pagingTabs from '@/components/pagination'
 import { waitYaBiaoList } from '@/api/videoList'
 export default {
@@ -81,8 +82,9 @@ export default {
     return {
       searchMsg: '',
       isSearch: true,
-      isBtn: true,
+      isSearchBtn: true,
       isDate: true,
+      isWaitBtn: true,
       preParent: '',
       tableData: [],
       currPage: 1,
@@ -103,7 +105,6 @@ export default {
           'orderNo': 'ccc'
         }
       }
-      console.log(obj)
       waitYaBiaoList(obj).then(res => {
         const pageData = res.data.data
         const listData = pageData.list

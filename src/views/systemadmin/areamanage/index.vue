@@ -135,18 +135,25 @@ export default {
     },
     getRoleList() {
       const params = {
-        limit: this.pageSize,
-        page: this.currPage
+        pageSize: this.pageSize,
+        currPage: this.currPage
       }
-      console.log(params)
       getAreamsgList(params).then(res => {
-        const pageData = res.page
-        const listData = res.page.list
-        this.roleData = listData
-        this.currPage = pageData.currPage
-        this.pageSize = pageData.pageSize
-        this.totalCount = pageData.totalCount
-        this.totalPage = pageData.totalPage
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const pageData = res.data.data
+            this.currPage = pageData.currPage
+            this.pageSize = pageData.pageSize
+            this.totalCount = pageData.totalCount
+            this.totalPage = pageData.totalPage
+            this.roleData = pageData.list
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     getRoleInfo(roleId) {

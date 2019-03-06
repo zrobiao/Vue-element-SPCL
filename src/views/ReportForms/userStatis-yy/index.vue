@@ -2,8 +2,8 @@
   <div class="main-content">
     <search-bar
       :show-date="isShow"
-      :show-agent="isAgent"
-      :show-btn="isBtn"
+      :show-search="isSearch"
+      :show-search-btn="isSearchBtn"
       :show-province="isProvince"/>
     <div class="show-container">
       <el-row>
@@ -60,7 +60,7 @@
   </div>
 </template>
 <script>
-import searchBar from './../userStatis-kf/search/index'
+import searchBar from '@/components/Searchbar/index'
 import pagingTabs from '@/components/pagination'
 export default {
   components: {
@@ -71,8 +71,8 @@ export default {
     return {
       isShow: true,
       isProvince: true,
-      isAgent: true,
-      isBtn: true,
+      isSearch: true,
+      isSearchBtn: true,
       number: 1000,
       tableData: [{
         date: '2016-05-03',

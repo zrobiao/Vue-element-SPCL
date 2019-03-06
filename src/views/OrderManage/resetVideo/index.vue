@@ -3,9 +3,7 @@
     <search-bar
       :show-date="isDate"
       :show-search="isSearch"
-      :show-state="isState"
-      :show-num="isNum"
-      :show-btn="isBtn"
+      :show-search-btn="isBtn"
       :send-parent="preParent"/>
     <div class="show-container">
       <el-row>
@@ -71,7 +69,7 @@
   </div>
 </template>
 <script>
-import searchBar from './../waitPress/search/index'
+import searchBar from '@/components/Searchbar/index'
 import pagingTabs from '@/components/pagination'
 import { resetOpenList } from '@/api/videoList'
 export default {
@@ -85,8 +83,6 @@ export default {
       isSearch: true,
       isBtn: true,
       isDate: true,
-      isState: true,
-      isNum: true,
       preParent: '',
       tableData: [],
       currPage: 1,

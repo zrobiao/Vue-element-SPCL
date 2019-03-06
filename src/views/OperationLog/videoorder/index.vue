@@ -3,7 +3,7 @@
     <search-bar
       :show-date="isDate"
       :show-search="isSearch"
-      :show-order-no="isOrderNo"/>
+      :show-search-btn="isSearchBtn"/>
     <div class="show-container">
       <el-row>
         <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
@@ -72,8 +72,8 @@
   </div>
 </template>
 <script>
-import { getOrderLogList } from '@/api/log'
-import searchBar from './../search/index'
+import { orderLogList } from '@/api/log'
+import searchBar from '@/components/Searchbar/index'
 import pagiTabs from '@/components/pagination/index'
 export default {
   components: {
@@ -84,7 +84,7 @@ export default {
     return {
       isDate: true,
       isSearch: true,
-      isOrderNo: true,
+      isSearchBtn: true,
       orderLogData: [],
       totalCount: 10,
       pageSize: 10,
@@ -94,12 +94,20 @@ export default {
     }
   },
   created() {
-    this.getOrderLogList()
+    this.orderLogList()
   },
   methods: {
-    getOrderLogList() {
-      getOrderLogList().then(res => {
-        const pageDate = res.page
+    orderLogList() {
+      const obj = {
+        pageSize: 5,
+        currPage: 1,
+        query: {
+          orderId: 1,
+          orderNo: 222
+        }
+      }
+      orderLogList(obj).then(res => {
+        const pageDate = res.data.data
         const listData = pageDate.list
         this.orderLogData = listData
         this.totalCount = pageDate.totalCount

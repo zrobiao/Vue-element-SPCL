@@ -1,8 +1,8 @@
 <template>
   <div class="main-content">
     <search-bar
-      :show-enter="isEnter"
-      :show-date="isShow"
+      :show-search="isSearch"
+      :show-date="isDate"
       :show-search-btn="isSearchBtn"/>
     <div class="show-container">
       <el-row>
@@ -49,7 +49,7 @@
   </div>
 </template>
 <script>
-import searchBar from './../waitMake/search'
+import searchBar from '@/components/Searchbar/index'
 import pagingTabs from '@/components/pagination'
 import { finishYaBiaoList } from '@/api/videoList'
 export default {
@@ -59,8 +59,8 @@ export default {
   },
   data() {
     return {
-      isEnter: true,
-      isShow: true,
+      isSearch: true,
+      isDate: true,
       isSearchBtn: true,
       tableData: [],
       pageSize: 10,

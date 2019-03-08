@@ -5,8 +5,10 @@
       :show-date="isDate"
       :show-btn="isBtn"
       :send-parent="preParent"
+      :pre-options="preOptions"
       :send-data="upData"
-      @listenUp="chindData"/>
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
     <div class="show-container">
       <el-row>
         <el-col :span="24">
@@ -64,7 +66,7 @@
   </div>
 </template>
 <script>
-import { getNoticeList, saveNoticeInfo, updateNoticeInfo, delNoticeInfo, getNoticeInfo } from '@/api/sysadmin'
+import { getComplainList, saveComplainInfo, updateComplainInfo, delComplainInfo, handleComplainInfo, getComplainInfo } from '@/api/sysadmin'
 import searchBar from '@/components/search/index'
 import pagiTabs from '@/components/pagination/index'
 import diaLog from './dialog'
@@ -76,12 +78,12 @@ export default {
   },
   data() {
     return {
-      msg: '这里是显示的模块！',
       isDate: false,
-      isSearch: false,
+      isSearch: true,
       isBtn: true,
       preParent: 'menu',
       upData: 0,
+      preOptions: [],
       menuDialog: false,
       diaTitle: '',
       roleData: [],
@@ -90,7 +92,14 @@ export default {
       pageSize: 10,
       totalCount: 5,
       totalPage: 1,
-      roleInfo: {}
+      roleInfo: {},
+      query: {
+        userTel: null,
+        userName: null,
+        plainTitle: null,
+        plainContent: null,
+        plainState: null
+      }
     }
   },
   created() {
@@ -100,7 +109,8 @@ export default {
     getParentRow(menuId) {
       this.upData = menuId
     },
-    chindData(titName, data) {
+    searchSubData() {},
+    btnSubmitData(titName, data) {
       this.diaTitle = titName
       this.menuDialog = true
       if (titName === '新增') {
@@ -115,13 +125,13 @@ export default {
     dialogData(upOrsave, params) {
       if (upOrsave === 0) {
         console.log('新增保存')
-        saveNoticeInfo(params).then(res => {
+        saveComplainInfo(params).then(res => {
           this.$message.success('保存成功')
           this.getRoleList()
         })
       } else if (upOrsave === 1) {
         console.log('更新保存')
-        updateNoticeInfo(params).then(res => {
+        updateComplainInfo(params).then(res => {
           this.$message.success('更新成功')
           this.getRoleList()
         })
@@ -135,23 +145,38 @@ export default {
     },
     getRoleList() {
       const params = {
-        limit: this.pageSize,
-        page: this.currPage
+        pageSize: this.pageSize,
+        currPage: this.currPage,
+        query: this.query
       }
       console.log(params)
-      getNoticeList(params).then(res => {
-        const pageData = res.page
-        const listData = res.page.list
-        this.roleData = listData
-        this.currPage = pageData.currPage
-        this.pageSize = pageData.pageSize
-        this.totalCount = pageData.totalCount
-        this.totalPage = pageData.totalPage
+      getComplainList(params).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const resData = res.data.data
+            this.currPage = resData.currPage
+            this.pageSize = resData.pageSize
+            this.totalCount = resData.totalCount
+            this.totalPage = resData.totalPage
+            this.roleData = resData.list
+            this.query.name = null
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     getRoleInfo(roleId) {
-      getNoticeInfo(roleId).then(res => {
+      getComplainInfo(roleId).then(res => {
         this.roleInfo = res.config
+      })
+    },
+    getHandleComplain() {
+      handleComplainInfo().then(res => {
+
       })
     },
     delRoleInfo(roleId) {
@@ -161,7 +186,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delNoticeInfo(roleId).then(res => {
+        delComplainInfo(roleId).then(res => {
           this.$message({
             type: 'success',
             message: '删除成功!'

@@ -105,3 +105,96 @@ export function parseTime(time, cFormat) {
   return time_str
 }
 
+export function orderStateStus() {
+  const orderState = [
+    {
+      value: '1',
+      label: '待接单'
+    },
+    {
+      value: '11',
+      label: '待接单, 视频更换'
+    },
+    {
+      value: '12',
+      label: '客户成品视频,压标不通过'
+    },
+    {
+      value: '13',
+      label: '制作打回,重新提交'
+    },
+    {
+      value: '2',
+      label: '制作中 '
+    },
+    {
+      value: '21',
+      label: '制作中，视频更换,'
+    },
+    {
+      value: '22',
+      label: '制作中,压标审核不通过'
+    },
+    {
+      value: '23',
+      label: '制作中,运营商审核不通过'
+    },
+    {
+      value: '24',
+      label: '制作中,客户确认视频不通过'
+    },
+    {
+      value: '3',
+      label: '等待客户确认'
+    },
+    {
+      value: '4',
+      label: '等待压标，制作视频 '
+    },
+    {
+      value: '41',
+      label: '成品视频压标'
+    },
+    {
+      value: '5',
+      label: '等待开通 '
+    },
+    {
+      value: '51',
+      label: '等待开通，更换视频'
+    },
+    {
+      value: '52',
+      label: '等待开通,重设全部用户 '
+    },
+    {
+      value: '53',
+      label: '等待开通，重设部分用户'
+    },
+    {
+      value: '54',
+      label: '等待开通，客户成品视频'
+    },
+    {
+      value: '55',
+      label: '等待开通,订单新增用户'
+    },
+    {
+      value: '56',
+      label: '等待开通,订单删除用户'
+    },
+    {
+      value: '6',
+      label: '归档,全部开通'
+    },
+    {
+      value: '61',
+      label: '归档，部分用户开通成功'
+    },
+    {
+      value: '62',
+      label: '归档,全部用户开通失败'
+    }
+  ]
+  return orderState
+}

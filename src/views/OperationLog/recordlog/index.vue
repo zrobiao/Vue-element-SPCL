@@ -1,13 +1,15 @@
-<template>
+﻿<template>
   <div class="big-container">
     <search-bar
       :show-search="isSearch"
       :show-date="isDate"
-      :show-search-btn="isSearchBtn"/>
-    <div class="show-container">
-      <el-row>
-        <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
-      </el-row>
+      :show-btn="isBtn"
+      :send-parent="preParent"
+      :pre-options="preOptions"
+      :send-data="upData"
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
+    <div>
       <el-row>
         <el-col :span="24">
           <el-table
@@ -15,11 +17,6 @@
             border
             stripe
             style="width: 100%">
-            <!-- <el-table-column label="选择" width="65">
-              <template slot-scope="scope">
-                <el-radio :label="scope.row.code" v-model="logRadio" @change.native="getParentRow(scope.row.id)"> &nbsp; </el-radio>
-              </template>
-            </el-table-column> -->
             <el-table-column
               prop="id"
               label="Id"/>
@@ -61,7 +58,7 @@
 </template>
 <script>
 import { logList } from '@/api/log'
-import searchBar from '@/components/Searchbar/index'
+import searchBar from '@/components/search'
 import pagiTabs from '@/components/pagination/index'
 export default {
   components: {
@@ -72,29 +69,58 @@ export default {
     return {
       isDate: true,
       isSearch: true,
-      isSearchBtn: true,
-      logRadio: '日志选择',
-      logData: [],
+      isBtn: false,
+      preParent: 'menu',
       upData: 0,
+      preOptions: [],
+      logData: [],
       currPage: 1,
       pageSize: 10,
       totalCount: 5,
-      totalPage: 1
+      totalPage: 1,
+      query: {
+        username: null,
+        minTime: null,
+        maxTime: null
+      }
     }
   },
   created() {
-    this.logList()
+    this.getlogList()
   },
   methods: {
-    logList() {
-      logList().then(res => {
-        const pageData = res.page
-        const listData = pageData.list
-        this.logData = listData
-        this.currPage = pageData.currPage
-        this.pageSize = pageData.pageSize
-        this.totalCount = pageData.totalCount
-        this.totalPage = pageData.totalPage
+    btnSubmitData() {},
+    searchSubData(selectMsg, searchMsg) {
+      switch (selectMsg) {
+        case 'username':
+          this.query.username = searchMsg
+          break
+      }
+      this.getlogList()
+    },
+    getlogList() {
+      const params = {
+        pageSize: this.pageSize,
+        currPage: this.currPage,
+        query: this.query
+      }
+      logList(params).then(res => {
+        // if (res.code === 0) {
+        //   const status = res.data.opreaState
+        //   if (status) {
+        //     const resData = res.data.data
+        //     this.currPage = resData.currPage
+        //     this.pageSize = resData.pageSize
+        //     this.totalCount = resData.totalCount
+        //     this.totalPage = resData.totalPage
+        //     this.logData = resData.list
+        //     this.query.username = null
+        //   } else {
+        //     this.$message.error(res.data.msg)
+        //   }
+        // } else {
+        //   this.$message.error(res.msg)
+        // }
       })
     }
     // getParentRow(id){
@@ -116,4 +142,3 @@ export default {
     }
   }
 </style>
-

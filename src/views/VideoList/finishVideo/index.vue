@@ -1,14 +1,14 @@
-<template>
+﻿<template>
   <div>
     <search-bar
       :show-search="isSearch"
+      :show-date="isDate"
       :show-btn="isBtn"
-      :show-search-btn="isSearchBtn"
-      :show-date="isDate"/>
+      :send-parent="preParent"
+      :pre-options="preOptions"
+      :send-data="upData"
+      @listenUp="chindData"/>
     <div class="show-container">
-      <el-row>
-        <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
-      </el-row>
       <el-row>
         <el-col :span="24">
           <el-table
@@ -94,9 +94,9 @@
   </div>
 </template>
 <script>
-import searchBar from '@/components/Searchbar/index'
+import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
-import { finishMakeList } from '@/api/videoList'
+import { getFinishMakeList } from '@/api/videoList'
 export default {
   components: {
     pagingTabs,
@@ -104,41 +104,70 @@ export default {
   },
   data() {
     return {
-      searchMsg: '',
-      isEnter: true,
       isSearch: true,
       isDate: true,
       isBtn: false,
-      isSearchBtn: true,
       preParent: '',
+      upData: 0,
+      preOptions: [{
+        value: 'orderNo',
+        label: '订单编号'
+      }], // 设置父级筛选项目
       tableData: [],
       currPage: 1,
-      pageSize: 2,
-      totalCount: 4,
-      totalPage: 2
+      pageSize: 10,
+      totalCount: 0,
+      totalPage: 0,
+      // 设置查询项目query
+      query: {
+        orderNo: null,
+        minTime: null,
+        maxTime: null
+      }
     }
   },
   created() {
     this.finishMakeList()
   },
   methods: {
+    // 子组件传输选择项目给父组件
+    chindData(selectMsg, searchMsg) {
+      switch (selectMsg) {
+        case 'orderNo':
+          this.query.orderNo = searchMsg
+          break
+      }
+      this.finishMakeList()
+    },
     finishMakeList: function() {
       const obj = {
-        'pageSize': 10,
-        'currPage': 1,
-        'query': {
-          'orderNo': 'ccc'
-        }
+        pageSize: this.pageSize,
+        currPage: this.currPage,
+        query: this.query
       }
-      console.log(obj)
-      finishMakeList(obj).then(res => {
-        const pageData = res.data.data
-        const listData = pageData.list
-        this.tableData = listData
-        this.currPage = pageData.currPage
-        this.pageSize = pageData.pageSize
-        this.totalCount = pageData.totalCount
-        this.totalPage = pageData.totalPage
+      getFinishMakeList(obj).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.currPage = orderData.currPage
+            this.pageSize = orderData.pageSize
+            this.totalCount = orderData.totalCount
+            this.totalPage = orderData.totalPage
+            this.tableData = orderData.list
+            // 以下数据根据查询项进行变换绑定
+            // this.query.orderNo = null
+            // this.query.enterName = null
+            // this.query.enterContact = null
+            // this.query.enterTel = null
+            // this.query.openType = null
+            // this.query.orderState = null
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     getParentRow: function(orderId) {
@@ -170,4 +199,3 @@ export default {
   }
 }
 </style>
-

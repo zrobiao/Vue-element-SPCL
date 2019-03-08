@@ -5,8 +5,10 @@
       :show-date="isDate"
       :show-btn="isBtn"
       :send-parent="preParent"
+      :pre-options="preOptions"
       :send-data="upData"
-      @listenUp="chindData"/>
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
     <div class="show-container">
       <el-row>
         <el-col :span="24">
@@ -150,12 +152,12 @@ export default {
   },
   data() {
     return {
-      msg: '这里是显示的模块！',
       isDate: false,
-      isSearch: true,
+      isSearch: false,
       isBtn: true,
       preParent: 'menu',
       upData: 0,
+      preOptions: [],
       menuId: 0,
       menuInfo: {},
       menuDialog: false,
@@ -168,7 +170,8 @@ export default {
     this.getMenuList()
   },
   methods: {
-    chindData(titName, data) {
+    searchSubData() {},
+    btnSubmitData(titName, data) {
       this.diaTitle = titName
       this.menuDialog = true
       if (titName === '新增') {

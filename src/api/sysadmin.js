@@ -153,8 +153,8 @@ export function updataRoleInfo(params) {
 export function getParmasList(params) {
   return request({
     url: '/perssion/config/list',
-    method: 'get',
-    data: { params }
+    method: 'post',
+    data: params
   })
 }
 // 保存参数信息
@@ -162,7 +162,7 @@ export function saveParmasInfo(params) {
   return request({
     url: 'perssion/config/save',
     method: 'post',
-    data: { params }
+    data: params
   })
 }
 // 更新保存参数信息
@@ -170,7 +170,7 @@ export function updateParmasInfo(params) {
   return request({
     url: '/perssion/config/update',
     method: 'post',
-    data: { params }
+    data: params
   })
 }
 // 删除参数信息
@@ -194,8 +194,8 @@ export function getParmasInfo(params) {
 export function getDictList(params) {
   return request({
     url: '/perssion/dict/list',
-    method: 'get',
-    data: { params }
+    method: 'post',
+    data: params
   })
 }
 // 保存字典信息
@@ -253,8 +253,8 @@ export function getPhoneareaList(params) {
 export function getNoticeList(params) {
   return request({
     url: 'perssion/sysnotice/list',
-    method: 'get',
-    data: { params }
+    method: 'post',
+    data: params
   })
 }
 // 保存公告信息
@@ -289,6 +289,55 @@ export function delNoticeInfo(params) {
 export function getNoticeInfo(params) {
   return request({
     url: '/perssion/sysnotice/info/' + params,
+    method: 'get'
+  })
+}
+
+// 投诉管理相关
+// 获取投诉列表
+export function getComplainList(params) {
+  return request({
+    url: '/order/ywcomplain/list',
+    method: 'post',
+    data: params
+  })
+}
+// 保存投诉信息
+export function saveComplainInfo(params) {
+  return request({
+    url: '/order/ywcomplain/save',
+    method: 'post',
+    data: { params }
+  })
+}
+// 更新保存投诉信息
+export function updateComplainInfo(params) {
+  return request({
+    url: '/order/ywcomplain/update',
+    method: 'post',
+    data: { params }
+  })
+}
+// 删除投诉信息
+export function delComplainInfo(params) {
+  return request({
+    url: '/order/ywcomplain/delete',
+    method: 'post',
+    data: [params]
+  })
+}
+// 处理投诉信息
+export function handleComplainInfo(params) {
+  return request({
+    url: '/order/ywcomplain/handleComplain/',
+    method: 'post',
+    data: params
+  })
+}
+// 获取投诉详细信息
+export function getComplainInfo(params) {
+  return request({
+    url: '/order/ywcomplain/info/' + params,
     method: 'get'
   })
 }

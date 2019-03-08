@@ -1,15 +1,14 @@
-<template>
+﻿<template>
   <div>
     <search-bar
-      :show-date="isDate"
       :show-search="isSearch"
-      :show-search-btn="isSearchBtn"
-      :show-wait-btn="isWaitBtn"
-      :send-parent="preParent"/>
+      :show-date="isDate"
+      :show-btn="isBtn"
+      :send-parent="preParent"
+      :pre-options="preOptions"
+      :send-data="upData"
+      @listenUp="chindData"/>
     <div class="show-container">
-      <el-row>
-        <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
-      </el-row>
       <el-row>
         <el-col :span="24">
           <el-table
@@ -70,9 +69,9 @@
   </div>
 </template>
 <script>
-import searchBar from '@/components/Searchbar/index'
+import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
-import { waitYaBiaoList } from '@/api/videoList'
+import { getWaitYaBiaoList } from '@/api/videoList'
 export default {
   components: {
     pagingTabs,
@@ -80,39 +79,85 @@ export default {
   },
   data() {
     return {
-      searchMsg: '',
       isSearch: true,
-      isSearchBtn: true,
       isDate: true,
-      isWaitBtn: true,
+      isBtn: false,
       preParent: '',
+      upData: 0,
+      preOptions: [], // 设置父级筛选项目
       tableData: [],
       currPage: 1,
       pageSize: 10,
-      totalCount: 10,
-      totalPage: 1
+      totalCount: 0,
+      totalPage: 0,
+      // 设置查询项目query
+      query: {
+        orderId: null,
+        orderNo: null,
+        orderName: null,
+        opreaUserName: null,
+        minTime: null,
+        maxTime: null
+      }
     }
   },
   created() {
     this.waitYaBiaoList()
   },
   methods: {
+    // 子组件传输选择项目给父组件
+    chindData(selectMsg, searchMsg) {
+      switch (selectMsg) {
+        case 'orderNo':
+          this.query.orderNo = searchMsg
+          break
+        case 'enterName':
+          this.query.enterName = searchMsg
+          break
+        case 'enterContact':
+          this.query.enterContact = searchMsg
+          break
+        case 'enterTel':
+          this.query.enterTel = searchMsg
+          break
+        case 'orderState':
+          this.query.orderState = searchMsg
+          break
+        case 'openType':
+          this.query.openType = searchMsg
+          break
+      }
+      this.getTableList()
+    },
     waitYaBiaoList() {
       const obj = {
-        pageSize: 5,
-        currPage: 1,
-        'query': {
-          'orderNo': 'ccc'
-        }
+        pageSize: this.pageSize,
+        currPage: this.currPage,
+        query: this.query
       }
-      waitYaBiaoList(obj).then(res => {
-        const pageData = res.data.data
-        const listData = pageData.list
-        this.tableData = listData
-        this.currPage = pageData.currPage
-        this.pageSize = pageData.pageSize
-        this.totalCount = pageData.totalCount
-        this.totalPage = pageData.totalPage
+      getWaitYaBiaoList(obj).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.currPage = orderData.currPage
+            this.pageSize = orderData.pageSize
+            this.totalCount = orderData.totalCount
+            this.totalPage = orderData.totalPage
+            this.tableData = orderData.list
+            // 以下数据根据查询项进行变换绑定
+            // this.query.orderNo = null
+            // this.query.enterName = null
+            // this.query.enterContact = null
+            // this.query.enterTel = null
+            // this.query.openType = null
+            // this.query.orderState = null
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     handleClick(row) {
@@ -146,4 +191,3 @@ export default {
     }
   }
 </style>
-

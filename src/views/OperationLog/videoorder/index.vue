@@ -1,65 +1,66 @@
-<template>
+﻿<template>
   <div class="big-container">
     <search-bar
-      :show-date="isDate"
       :show-search="isSearch"
-      :show-search-btn="isSearchBtn"/>
+      :show-date="isDate"
+      :show-btn="isBtn"
+      :send-parent="preParent"
+      :pre-options="preOptions"
+      :send-data="upData"
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
     <div class="show-container">
-      <el-row>
-        <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
-      </el-row>
       <el-row>
         <el-col :span="24">
           <el-table
             :data="orderLogData"
             stripe
             style="width:100%">
-            <el-table-column label="选择">
+            <el-table-column
+              prop="id"
+              label="Id"/>
+            <el-table-column
+              prop="orderId"
+              label="订单Id"/>
+            <el-table-column
+              prop="orderNo"
+              label="订单编号"
+              width="150"/>
+            <el-table-column
+              prop="orderName"
+              label="流程节点名称"
+              width="180"/>
+            <el-table-column
+              prop="orderOprea"
+              label="订单操作内容"
+              width="180"/>
+            <el-table-column
+              prop="opreaFlag"
+              label="操作平台"
+              width="150">
               <template slot-scope="scope">
-                <el-radio :label="scope.row.code" v-model="orderLogRadio" @change.native="getParentRow(scope.row.id)"/>
+                <el-tag v-show="scope.row.opreaFlag===1">运营</el-tag>
+                <el-tag v-show="scope.row.opreaFlag===2">客户</el-tag>
               </template>
             </el-table-column>
             <el-table-column
-              prop=""
-              label="Id"/>
-            <el-table-column
-              prop=""
-              label="流程节点名称"
-              width="150"/>
-            <el-table-column
-              prop=""
-              label="订单操作内容"
-              width="150"/>
-            <el-table-column
-              prop=""
-              label="操作平台"
-              width="150"/>
-            <el-table-column
-              prop=""
+              prop="opreaUserId"
               label="操作人Id"
               width="150"/>
             <el-table-column
-              prop=""
+              prop="opreaUserName"
               label="操作人账户"
               width="150"/>
             <el-table-column
-              prop=""
-              label="视频订单Id"
-              width="150"/>
-            <el-table-column
-              prop=""
-              label="用户Id"
-              width="150"/>
-            <el-table-column
-              prop=""
-              label="IP地址"
-              width="150"/>
-            <el-table-column
-              prop=""
+              prop="time"
               label="节点耗时(h)"
               width="150"/>
             <el-table-column
-              prop=""
+              prop="ip"
+              label="IP地址"
+              width="200"/>
+            <el-table-column
+              prop="createTime"
               label="创建日期"
               width="150"/>
           </el-table>
@@ -73,8 +74,8 @@
 </template>
 <script>
 import { orderLogList } from '@/api/log'
-import searchBar from '@/components/Searchbar/index'
-import pagiTabs from '@/components/pagination/index'
+import searchBar from '@/components/search'
+import pagiTabs from '@/components/pagination'
 export default {
   components: {
     searchBar,
@@ -82,38 +83,99 @@ export default {
   },
   data() {
     return {
-      isDate: true,
       isSearch: true,
-      isSearchBtn: true,
+      isDate: true,
+      isBtn: false,
+      preParent: '',
+      upData: 0,
+      preOptions: [
+        {
+          value: 'orderId',
+          label: '订单Id'
+        },
+        {
+          value: 'orderNo',
+          label: '订单编号'
+        },
+        {
+          value: 'orderName',
+          label: '流程节点名称'
+        },
+        {
+          value: 'opreaUserName',
+          label: '操作人'
+        }
+      ], // 设置父级筛选项目
+      orderLogRadio: '表单单选',
       orderLogData: [],
-      totalCount: 10,
-      pageSize: 10,
+      totalCount: 0,
       totalPage: 0,
-      currPage: 1
-
+      pageSize: 10,
+      currPage: 1,
+      // 设置查询项目query
+      query: {
+        orderId: null,
+        orderNo: null,
+        orderName: null,
+        opreaUserName: null,
+        minTime: null,
+        maxTime: null
+      }
     }
   },
   created() {
-    this.orderLogList()
+    this.getTableList()
   },
   methods: {
-    orderLogList() {
-      const obj = {
-        pageSize: 5,
-        currPage: 1,
-        query: {
-          orderId: 1,
-          orderNo: 222
-        }
+    // 子组件传输选择项目给父组件
+    searchSubData(selectMsg, searchMsg) {
+      switch (selectMsg) {
+        case 'orderId':
+          this.query.orderId = searchMsg
+          break
+        case 'orderNo':
+          this.query.orderNo = searchMsg
+          break
+        case 'orderName':
+          this.query.orderName = searchMsg
+          break
+        case 'opreaUserName':
+          this.query.opreaUserName = searchMsg
+          break
       }
+      this.getTableList()
+    },
+    btnSubmitData() {},
+    getTableList() {
+      const obj = {
+        pageSize: this.pageSize,
+        currPage: this.currPage,
+        query: this.query
+      }
+      console.log(obj)
       orderLogList(obj).then(res => {
-        const pageDate = res.data.data
-        const listData = pageDate.list
-        this.orderLogData = listData
-        this.totalCount = pageDate.totalCount
-        this.pageSize = pageDate.pageSize
-        this.totalPage = pageDate.totalPage
-        this.currPage = pageDate.currPage
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.currPage = orderData.currPage
+            this.pageSize = orderData.pageSize
+            this.totalCount = orderData.totalCount
+            this.totalPage = orderData.totalPage
+            this.orderLogData = orderData.list
+            // 以下数据根据查询项进行变换绑定
+            // this.query.orderNo = null
+            // this.query.enterName = null
+            // this.query.enterContact = null
+            // this.query.enterTel = null
+            // this.query.openType = null
+            // this.query.orderState = null
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     getParentRow(id) {
@@ -123,15 +185,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.show-container{
-    margin-top:15px;
-    .show-title{
-      font-size: 12px;
-      padding: 5px 0;
-      span{
-        color:#409EFF;
-      }
+.show-container {
+  margin-top: 15px;
+  .show-title {
+    font-size: 12px;
+    padding: 5px 0;
+    span {
+      color: #409eff;
     }
   }
+}
 </style>
-

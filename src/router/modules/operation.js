@@ -11,7 +11,7 @@ const operationRouter = {
   },
   children: [{
     path: 'organization',
-    component: () => import('@/views/systemadmin/organization/index'),
+    component: () => import('@/views/account/organization/index'),
     name: 'systemAdmin-organization',
     meta: {
       title: '组织机构',
@@ -19,17 +19,8 @@ const operationRouter = {
     }
   },
   {
-    path: 'Operation',
-    component: () => import('@/views/systemadmin/Operation/index'),
-    name: 'systemAdmin-Operation',
-    meta: {
-      title: '运营人员管理',
-      icon: 'Operation'
-    }
-  },
-  {
     path: 'placemanage',
-    component: () => import('@/views/systemadmin/placemanage/index'),
+    component: () => import('@/views/account/placemanage/index'),
     name: 'systemAdmin-placemanage',
     meta: {
       title: '渠道商管理',
@@ -38,7 +29,7 @@ const operationRouter = {
   },
   {
     path: 'govEpire',
-    component: () => import('@/views/systemadmin/govEpire/index'),
+    component: () => import('@/views/account/govEpire/index'),
     name: 'systemAdmin-govEpire',
     meta: {
       title: '政企用户管理',
@@ -46,17 +37,35 @@ const operationRouter = {
     }
   },
   {
+    path: 'indvidAccount',
+    component: () => import('@/views/account/indvidAccount/index'),
+    name: 'systemAdmin-indvidAccount',
+    meta: {
+      title: '个体户管理',
+      icon: 'indvidAccount'
+    }
+  },
+  {
+    path: 'Operation',
+    component: () => import('@/views/account/Operation/index'),
+    name: 'systemAdmin-Operation',
+    meta: {
+      title: '运营人员管理',
+      icon: 'Operation'
+    }
+  },
+  {
     path: 'account',
-    component: () => import('@/views/SystemAdmin/Account/index'),
+    component: () => import('@/views/account/videoAccount/index'),
     name: 'systemAdmin-account',
     meta: {
-      title: '视频账户管理',
+      title: '制作账户管理',
       icon: 'account'
     }
   },
   {
     path: 'pressaccount',
-    component: () => import('@/views/SystemAdmin/pressaccount/index'),
+    component: () => import('@/views/account/pressaccount/index'),
     name: 'systemAdmin-pressaccount',
     meta: {
       title: '压标账户管理',
@@ -64,8 +73,17 @@ const operationRouter = {
     }
   },
   {
+    path: 'openaccount',
+    component: () => import('@/views/account/openAccount/index'),
+    name: 'systemAdmin-openaccount',
+    meta: {
+      title: '开通账户管理',
+      icon: 'openaccount'
+    }
+  },
+  {
     path: 'msgcheck',
-    component: () => import('@/views/systemadmin/msgcheck/index'),
+    component: () => import('@/views/account/msgcheck/index'),
     name: 'systemAdmin-msgcheck',
     meta: {
       title: '信息审核',

@@ -141,22 +141,6 @@ export const constantRouterMap = [
         title: '压标完成统计-人员',
         icon: 'pressStatis'
       }
-    }, {
-      path: 'videoStatis-zz',
-      component: () => import('@/views/reportforms/videoStatis-zz/index'),
-      name: 'videoStatis-zz/index',
-      meta: {
-        title: '视频制作数量统计-制作',
-        icon: 'videoStatis'
-      }
-    }, {
-      path: 'videoStatis-pt',
-      component: () => import('@/views/reportforms/videoStatis-pt/index'),
-      name: 'videoStatis-pt/index',
-      meta: {
-        title: '视频制作数量统计-平台',
-        icon: 'videoStatis'
-      }
     }
     ]
   },

@@ -1,20 +1,30 @@
-<template>
+﻿<template>
   <div>
     <search-bar
       :show-search="isSearch"
-      :show-btn="isBtn"
       :show-date="isDate"
-      :show-search-btn="isSearchBtn"
-      :send-parent="preParent"/>
+      :show-btn="isBtn"
+      :send-parent="preParent"
+      :pre-options="preOptions"
+      :send-data="upData"
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
+    <el-row>
+      <el-col :span="24" class="btn">
+        <el-col v-show="showBtn" :span="24">
+          <el-button type="danger" icon="el-icon-error" @click="orderInvalid">作废订单</el-button>
+          <el-button type="warning" icon="el-icon-back" @click="orderBack">订单回退</el-button>
+          <el-button type="success" icon="el-icon-upload" @click="videoUpload">上传成品视频</el-button>
+          <el-button type="primary" icon="el-icon-circle-check" @click="confirmVideo">客户确认视频</el-button>
+          <el-button type="primary" icon="el-icon-download" @click="downloadVideo">下载视频素材</el-button>
+        </el-col>
+      </el-col>
+    </el-row>
     <div class="show-container">
-      <el-row>
-        <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
-      </el-row>
       <el-row>
         <el-col :span="24">
           <el-table
             :data="tableData"
-            border
             stripe
             style="width: 100%">
             <el-table-column
@@ -25,12 +35,8 @@
               label="订单ID"/>
             <el-table-column
               prop="orderNo"
-              label="视频订单号"
-              width="150"/>
-            <el-table-column
-              prop="createTime"
-              label="订单创建日期"
-              width="150"/>
+              label="订单编号"
+              width="180"/>
             <el-table-column
               prop="enterName"
               label="企业名称"
@@ -54,27 +60,119 @@
             <el-table-column
               prop="qq"
               label="联系QQ"
-              width="80"/>
+              width="100"/>
             <el-table-column
               prop="weixin"
               label="联系微信"
-              width="80"/>
+              width="100"/>
+            <el-table-column
+              prop="attchmentId"
+              label="资料关联Id"
+              width="300"/>
             <el-table-column
               prop="needRemark"
               label="特需说明"
-              width="120"/>
+              width="300"/>
             <el-table-column
-              prop="agentId"
-              label="所属代理商"
-              width="100"/>
+              prop="makeFlag"
+              label="制作标识"
+              width="80">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.makeFlag===1">制作</el-tag>
+                <el-tag v-show="scoped.row.makeFlag===2">成品</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="repressFlag"
+              label="是否压标"
+              width="80">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.repressFlag===1">是</el-tag>
+                <el-tag v-show="scoped.row.repressFlag===2">否</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column
               prop="orderState"
               label="订单状态"
               width="100"/>
             <el-table-column
-              prop="orderResources"
-              label="订单来源"
-              width="100"/>
+              prop="openType"
+              label="开通类型"
+              width="80">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.openType===1">移动</el-tag>
+                <el-tag v-show="scoped.row.openType===2">电信</el-tag>
+                <el-tag v-show="scoped.row.openType===3">联通</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="openMoney"
+              label="资费"
+              width="80"/>
+            <el-table-column
+              prop="createTime"
+              label="创建日期"
+              width="150"/>
+            <el-table-column
+              prop="makeMoney"
+              label="制作费"
+              width="80"/>
+            <el-table-column
+              prop="agentId"
+              label="所属代理商"
+              width="150"/>
+            <el-table-column
+              prop="makeTime"
+              label="制作完成日期"
+              width="150"/>
+            <el-table-column
+              prop="makeUserId"
+              label="视频制作人Id"
+              width="150"/>
+            <el-table-column
+              prop="makeUserName"
+              label="视频制作账户"
+              width="150"/>
+            <el-table-column
+              prop="repressTime"
+              label="压标完成日期"
+              width="150"/>
+            <el-table-column
+              prop="repressUserId"
+              label="视频压标人Id"
+              width="150"/>
+            <el-table-column
+              prop="repressUserName"
+              label="视频压标人账户"
+              width="150"/>
+            <el-table-column
+              prop="openTime"
+              label="开通完成日期"
+              width="150"/>
+            <el-table-column
+              prop="openUserId"
+              label="开通完成人Id"
+              width="150"/>
+            <el-table-column
+              prop="openUserName"
+              label="开通人账户"
+              width="150"/>
+            <el-table-column
+              prop="opreaBz"
+              label="订单备注"
+              width="150"/>
+            <el-table-column
+              prop="nodeMaxtime"
+              label="当前节点最晚完成日期"
+              width="150"/>
+            <el-table-column
+              prop="agentTopId"
+              label="所属总代理商Id"
+              width="150"/>
+            <el-table-column
+              prop="changeFileId"
+              label="更换视频关联素材Id"
+              width="180"/>
             <el-table-column
               label="操作"
               width="100">
@@ -95,9 +193,9 @@
   </div>
 </template>
 <script>
-import searchBar from '@/components/Searchbar/index'
+import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
-import { WaitMakeList } from '@/api/videoList'
+import { getWaitMakeList } from '@/api/videoList'
 export default {
   components: {
     pagingTabs,
@@ -105,46 +203,129 @@ export default {
   },
   data() {
     return {
-      searchMsg: '',
       isSearch: true,
-      isBtn: true,
       isDate: true,
-      isSearchBtn: true,
+      isBtn: false,
+      showBtn: 'true',
       preParent: '',
+      upData: 0,
+      preOptions: [{
+        value: 'orderNo',
+        label: '订单编号'
+      }, {
+        value: 'enterName',
+        label: '企业名称'
+      }, {
+        value: 'enterContact',
+        label: '企业联系人'
+      }, {
+        value: 'enterTel',
+        label: '企业联系电话'
+      }, {
+        value: 'orderState',
+        label: '订单状态'
+      }, {
+        value: 'openType',
+        label: '开通类型',
+        children: [{
+          value: '1',
+          label: '移动'
+        }, {
+          value: '2',
+          label: '电信'
+        }, {
+          value: '3',
+          label: '联通'
+        }]
+      }], // 设置父级筛选项目
       tableData: [],
       currPage: 1,
       pageSize: 10,
       totalCount: 10,
-      totalPage: 1
+      totalPage: 1,
+      // 设置查询项目query
+      query: {
+        orderId: null,
+        orderNo: null,
+        orderName: null,
+        opreaUserName: null,
+        minTime: null,
+        maxTime: null
+      }
     }
   },
   created() {
     this.WaitMakeList()
   },
   methods: {
+    // 子组件传输选择项目给父组件
+
+    searchSubData(selectMsg, searchMsg) {
+      switch (selectMsg) {
+        case 'orderNo':
+          this.query.orderNo = searchMsg
+          break
+        case 'enterName':
+          this.query.enterName = searchMsg
+          break
+        case 'enterContact':
+          this.query.enterContact = searchMsg
+          break
+        case 'enterTel':
+          this.query.enterTel = searchMsg
+          break
+        case 'orderState':
+          this.query.orderState = searchMsg
+          break
+        case 'openType':
+          this.query.openType = searchMsg
+          break
+      }
+    },
+    btnSubmitData() {},
     WaitMakeList() {
       const obj = {
-        pageSize: 5,
-        currPage: 1,
-        'query': {
-          'orderNo': 'ccc'
-        }
+        pageSize: this.pageSize,
+        currPage: this.currPage,
+        query: this.query
       }
       console.log(obj)
-      WaitMakeList(obj).then(res => {
-        const pageData = res.data.data
-        const listData = pageData.list
-        this.tableData = listData
-        this.currPage = pageData.currPage
-        this.pageSize = pageData.pageSize
-        this.totalCount = pageData.totalCount
-        this.totalPage = pageData.totalPage
+      getWaitMakeList(obj).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.currPage = orderData.currPage
+            this.pageSize = orderData.pageSize
+            this.totalCount = orderData.totalCount
+            this.totalPage = orderData.totalPage
+            this.tableData = orderData.list
+            // 以下数据根据查询项进行变换绑定
+            //  this.query.orderNo = null
+            // this.query.enterName = null
+            // this.query.enterContact = null
+            // this.query.enterTel = null
+            // this.query.openType = null
+            // this.query.orderState = null
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     handleClick(row) {
       console.log(row)
       alert(row.orderId)
-    }
+    },
+    orderInvalid: function() {
+      alert('作废订单')
+    },
+    orderBack: function() {},
+    videoUpload: function() {},
+    confirmVideo: function() {},
+    downloadVideo: function() {}
   }
 }
 </script>
@@ -165,5 +346,7 @@ export default {
       }
     }
   }
+  .btn {
+    margin-top: 15px;
+  }
 </style>
-

@@ -29,7 +29,7 @@
           placeholder="请选择"
           @change="changeHandle"/>
       </el-col>
-      <el-col v-show="showInput" :span="6">
+      <el-col v-show="showSearch&&showInput" :span="6">
         <div class="demo-input-suffix">
           <el-input
             v-model="searchMsg"
@@ -44,7 +44,7 @@
       <el-col v-show="showBtn" :span="8">
         <el-button type="primary" icon="el-icon-plus" @click="childAdd(sendParent,'新增')">新增</el-button>
         <el-button type="warning" icon="el-icon-edit" @click="childEdit(sendParent,'修改',sendData)">修改</el-button>
-        <el-button type="danger" icon="el-icon-delete" @click="childRemove(sendParent,'删除',sendData)">删除</el-button>
+        <el-button v-show="sendParent!=='account'" type="danger" icon="el-icon-delete" @click="childRemove(sendParent,'删除',sendData)">删除</el-button>
       </el-col>
     </el-row>
   </div>
@@ -87,37 +87,38 @@ export default {
       selectMsg: ''
     }
   },
+  created() {
+    console.log(this.sendParent)
+  },
   methods: {
     getSearchMsg() {
-      this.$emit('listenUp', this.selectMsg, this.searchMsg)
+      this.$emit('listenSearch', this.selectMsg, this.searchMsg)
     },
     childAdd(parentData, titName) {
-      if (parentData === 'menu') {
-        this.$emit('listenUp', titName)
-      }
+      this.$emit('listenBtn', titName)
     },
     childEdit(parentData, titName, sendData) {
-      if (parentData === 'menu') {
-        if (!sendData) {
-          return this.$message.error('请选择一个菜单进行操作！')
-        }
-        this.$emit('listenUp', titName, sendData)
+      if (!sendData) {
+        return this.$message.error('请选择一个数据选择操作！')
+      } else if (sendData === -99) {
+        return this.$message.error('不支持多个数据选择操作！')
       }
+      this.$emit('listenBtn', titName, sendData)
     },
     childRemove(parentData, titName, sendData) {
-      if (parentData === 'menu') {
-        if (!sendData) {
-          return this.$message.error('请选择一个菜单进行操作！')
-        }
-        this.$emit('listenUp', titName, sendData)
+      if (!sendData) {
+        return this.$message.error('请选择一个数据选择操作！')
       }
+      this.$emit('listenBtn', titName, sendData)
     },
     changeHandle(val) {
+      this.searchMsg = ''
       if (val.length > 1) {
         this.showInput = false
-        this.selectMsg = val[0]
+        this.selectMsg = val[val.length - 2]
         this.searchMsg = val[val.length - 1]
       } else {
+        this.selectMsg = val[0]
         this.showInput = true
       }
     }

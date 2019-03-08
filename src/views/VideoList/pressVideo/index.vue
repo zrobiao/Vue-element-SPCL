@@ -1,13 +1,15 @@
-<template>
+﻿<template>
   <div class="main-content">
     <search-bar
       :show-search="isSearch"
       :show-date="isDate"
-      :show-search-btn="isSearchBtn"/>
+      :show-btn="isBtn"
+      :send-parent="preParent"
+      :pre-options="preOptions"
+      :send-data="upData"
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
     <div class="show-container">
-      <el-row>
-        <el-col class="show-title">订单列表显示数据<span>{{ totalCount }}</span>条</el-col>
-      </el-row>
       <el-row>
         <el-col :span="24">
           <el-table
@@ -49,9 +51,9 @@
   </div>
 </template>
 <script>
-import searchBar from '@/components/Searchbar/index'
+import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
-import { finishYaBiaoList } from '@/api/videoList'
+import { getFinishYaBiaoList } from '@/api/videoList'
 export default {
   components: {
     searchBar,
@@ -61,12 +63,24 @@ export default {
     return {
       isSearch: true,
       isDate: true,
-      isSearchBtn: true,
+      isBtn: false,
+      preParent: '',
+      upData: 0,
+      preOptions: [{
+        value: 'orderNo',
+        label: '订单编号'
+      }], // 设置父级筛选项目
       tableData: [],
       pageSize: 10,
       currPage: 1,
-      totalPage: 1,
-      totalCount: 5
+      totalPage: 0,
+      totalCount: 0,
+      // 设置查询项目query
+      query: {
+        orderNo: null,
+        minTime: null,
+        maxTime: null
+      }
     }
   },
   computed: {
@@ -76,23 +90,50 @@ export default {
     this.finishYaBiaoList()
   },
   methods: {
+    // 子组件传输选择项目给父组件
+    searchSubData(selectMsg, searchMsg) {
+      switch (selectMsg) {
+        case 'orderNo':
+          this.query.orderNo = searchMsg
+          break
+        case 'minTime':
+          this.query.minTime = searchMsg
+          break
+        case 'maxTime':
+          this.query.maxTime = searchMsg
+          break
+      }
+    },
+    btnSubmitData() {},
     finishYaBiaoList() {
       const obj = {
-        'pageSize': 5,
-        'currPage': 1,
-        'query': {
-          'orderNo': '444'
-        }
+        pageSize: this.pageSize,
+        currPage: this.currPage,
+        query: this.query
       }
-      console.log(obj)
-      finishYaBiaoList(obj).then(res => {
-        const pageData = res.list
-        const listData = pageData.list
-        this.tableData = listData
-        this.pageSize = pageData.pageSize
-        this.currPage = pageData.currPage
-        this.totalPage = pageData.totalPage
-        this.totalCount = pageData.totalCount
+      getFinishYaBiaoList(obj).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.currPage = orderData.currPage
+            this.pageSize = orderData.pageSize
+            this.totalCount = orderData.totalCount
+            this.totalPage = orderData.totalPage
+            this.tableData = orderData.list
+            // 以下数据根据查询项进行变换绑定
+            // this.query.orderNo = null
+            // this.query.enterName = null
+            // this.query.enterContact = null
+            // this.query.enterTel = null
+            // this.query.openType = null
+            // this.query.orderState = null
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     handleClick(row) {

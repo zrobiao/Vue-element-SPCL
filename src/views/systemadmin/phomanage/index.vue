@@ -5,8 +5,10 @@
       :show-date="isDate"
       :show-btn="isBtn"
       :send-parent="preParent"
+      :pre-options="preOptions"
       :send-data="upData"
-      @listenUp="chindData"/>
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
     <div class="show-container">
       <el-row>
         <el-col :span="24">
@@ -76,12 +78,12 @@ export default {
   },
   data() {
     return {
-      msg: '这里是显示的模块！',
       isDate: false,
       isSearch: false,
       isBtn: false,
       preParent: 'menu',
       upData: 0,
+      preOptions: [],
       menuDialog: false,
       diaTitle: '',
       roleData: [],
@@ -100,18 +102,8 @@ export default {
     getParentRow(menuId) {
       this.upData = menuId
     },
-    chindData(titName, data) {
-      this.diaTitle = titName
-      this.menuDialog = true
-      if (titName === '新增') {
-        this.roleInfo = {}
-      } else if (titName === '修改') {
-        this.getRoleInfo(data)
-      } else {
-        this.delRoleInfo(data)
-        this.menuDialog = false
-      }
-    },
+    searchSubData() {},
+    btnSubmitData() {},
     dialogData(upOrsave, params) {
       if (upOrsave === 0) {
         console.log('新增保存')

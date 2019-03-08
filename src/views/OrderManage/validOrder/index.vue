@@ -7,7 +7,8 @@
       :send-parent="preParent"
       :pre-options="preOptions"
       :send-data="upData"
-      @listenUp="chindData"/>
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
     <div class="show-container">
       <el-row>
         <el-col :span="24">
@@ -29,16 +30,26 @@
               prop="orderNo"
               label="订单编号"/>
             <el-table-column
+              prop="enterName"
+              label="企业名称"/>
+            <el-table-column
               prop="enterContact"
               label="企业联系人"/>
             <el-table-column
               prop="enterTel"
               label="企业联系电话"/>
             <el-table-column
-              prop="makeFlag"
-              label="制作标识">
+              prop="orderState"
+              label="订单状态">
               <template slot-scope="scope">
-                <el-tag v-show="scope.row.makeFlag ===1" type="success" disable-transitions>制作</el-tag>
+                <order-state :order-stus="scope.row.orderState"/>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="makeFlag"
+              label="素材类型">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.makeFlag ===1" type="success" disable-transitions>待制作</el-tag>
                 <el-tag v-show="scope.row.makeFlag ===2" type="warning" disable-transitions>成品</el-tag>
               </template>
             </el-table-column>
@@ -85,15 +96,18 @@
   </div>
 </template>
 <script>
-import { getValidList, getOrderListInfo } from '@/api/orderList'
+import { getValidList, getOrderInfo } from '@/api/videoList'
+import { orderStateStus } from '@/utils/index'
 import searchBar from '@/components/search'
 import pagiTabs from '@/components/pagination'
 import diaLog from './dialog'
+import orderState from './orderstate'
 export default {
   components: {
     searchBar,
     pagiTabs,
-    diaLog
+    diaLog,
+    orderState
   },
   data() {
     return {
@@ -116,10 +130,7 @@ export default {
       }, {
         value: 'orderState',
         label: '订单状态',
-        children: [{
-          value: '1',
-          label: '待接单'
-        }]
+        children: orderStateStus()
       }, {
         value: 'openType',
         label: '开通类型',
@@ -168,7 +179,6 @@ export default {
         currPage: this.currPage,
         query: this.query
       }
-      console.log(params)
       getValidList(params).then(res => {
         if (res.code === 0) {
           const status = res.data.opreaState
@@ -179,7 +189,12 @@ export default {
             this.totalCount = orderData.totalCount
             this.totalPage = orderData.totalPage
             this.tableData = orderData.list
-            console.log(this.tableData)
+            this.query.orderNo = null
+            this.query.enterName = null
+            this.query.enterContact = null
+            this.query.enterTel = null
+            this.query.openType = null
+            this.query.orderState = null
           } else {
             this.$message.error(res.data.msg)
           }
@@ -193,7 +208,8 @@ export default {
       this.currPage = currentPage
       this.getTableList()
     },
-    chindData(selectMsg, searchMsg) {
+    btnSubmitData() {},
+    searchSubData(selectMsg, searchMsg) {
       switch (selectMsg) {
         case 'orderNo':
           this.query.orderNo = searchMsg
@@ -226,12 +242,9 @@ export default {
     },
     detailClick(orderId) {
       this.menuDialog = !this.menuDialog
-      getOrderListInfo(orderId).then(res => {
+      getOrderInfo(orderId).then(res => {
         this.dialogInfo = res.data
       })
-    },
-    handleClick(row) {
-      console.log(row)
     }
   }
 }

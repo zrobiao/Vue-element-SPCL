@@ -5,8 +5,10 @@
       :show-date="isDate"
       :show-btn="isBtn"
       :send-parent="preParent"
+      :pre-options="preOptions"
       :send-data="upData"
-      @listenUp="chindData"/>
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
     <div class="show-container">
       <el-row>
         <el-col :span="24">
@@ -65,19 +67,21 @@ export default {
   data() {
     return {
       isDate: false,
-      isSearch: true,
+      isSearch: false,
       isBtn: true,
       preParent: 'menu',
       upData: 0,
+      preOptions: [],
       menuDialog: false,
       diaTitle: '',
       roleData: [],
       roleRadio: '角色选择',
       currPage: 1,
       pageSize: 10,
-      totalCount: 5,
-      totalPage: 1,
-      roleInfo: {}
+      totalCount: 0,
+      totalPage: 0,
+      roleInfo: {},
+      query: { name: null }
     }
   },
   created() {
@@ -87,7 +91,8 @@ export default {
     getParentRow(menuId) {
       this.upData = menuId
     },
-    chindData(titName, data) {
+    searchSubData() {},
+    btnSubmitData(titName, data) {
       this.diaTitle = titName
       this.menuDialog = true
       if (titName === '新增') {
@@ -116,15 +121,28 @@ export default {
       this.menuDialog = !this.menuDialog
     },
     getRoleList() {
-      // const params = 'admin'
-      getDictList().then(res => {
-        const pageData = res.page
-        const listData = res.page.list
-        this.roleData = listData
-        this.currPage = pageData.currPage
-        this.pageSize = pageData.pageSize
-        this.totalCount = pageData.totalCount
-        this.totalPage = pageData.totalPage
+      const params = {
+        pageSize: this.pageSize,
+        currPage: this.currPage,
+        query: this.query.name
+      }
+      getDictList(params).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const resData = res.data.data
+            this.currPage = resData.currPage
+            this.pageSize = resData.pageSize
+            this.totalCount = resData.totalCount
+            this.totalPage = resData.totalPage
+            this.roleData = resData.list
+            this.query.name = null
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     getRoleInfo(roleId) {

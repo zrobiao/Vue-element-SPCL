@@ -89,6 +89,16 @@ const operationRouter = {
       title: '信息审核',
       icon: 'msgcheck'
     }
+  },
+  {
+    path: 'editAccount',
+    component: () => import('@/views/account/editPswd/index'),
+    name: 'systemAdmin-editAccount',
+    meta: {
+      title: '账户详细',
+      icon: 'editAccount'
+    },
+    hidden: true
   }
   ]
 }

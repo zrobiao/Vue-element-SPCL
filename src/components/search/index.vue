@@ -42,8 +42,8 @@
         <el-button type="primary" @click="getSearchMsg">查询</el-button>
       </el-col>
       <el-col v-show="showBtn" :span="8">
-        <el-button type="primary" icon="el-icon-plus" @click="childAdd(sendParent,'新增')">新增</el-button>
-        <el-button type="warning" icon="el-icon-edit" @click="childEdit(sendParent,'修改',sendData)">修改</el-button>
+        <el-button type="success" icon="el-icon-plus" @click="childAdd(sendParent,'新增')">新增</el-button>
+        <el-button v-show="sendParent!=='account'" type="warning" icon="el-icon-edit" @click="childEdit(sendParent,'修改',sendData)">修改</el-button>
         <el-button v-show="sendParent!=='account'" type="danger" icon="el-icon-delete" @click="childRemove(sendParent,'删除',sendData)">删除</el-button>
       </el-col>
     </el-row>

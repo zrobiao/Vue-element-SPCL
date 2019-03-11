@@ -73,11 +73,11 @@ export function getAccountDelete(params) {
   })
 }
 // 重置用户密码
-export function getAccountResetPass(params) {
+export function getAccountResetPass(params, data) {
   return request({
-    url: '/perssion/user/resetPass',
+    url: '/perssion/user/resetPass/' + params,
     method: 'post',
-    data: params
+    data: data
   })
 }
 // 启用用户
@@ -85,7 +85,7 @@ export function getAccountUseAccount(params) {
   return request({
     url: '/perssion/user/useAccount',
     method: 'post',
-    data: [params]
+    data: params
   })
 }
 // 禁用用户
@@ -93,7 +93,7 @@ export function getAccountStopAccount(params) {
   return request({
     url: '/perssion/user/stopAccount',
     method: 'post',
-    data: [params]
+    data: params
   })
 }
 // 检测用户名是否存在
@@ -104,7 +104,7 @@ export function getAccountCheckUserName(params) {
     data: params
   })
 }
-
+/* ---------------这里是分割线----------------------- */
 // 检测渠道商用户名是否存在
 export function getAgentCheckUserName(params) {
   return request({
@@ -181,7 +181,7 @@ export function getAgentUserUseAccount(params) {
   return request({
     url: '/order/agentuser/useAccount',
     method: 'post',
-    data: [params]
+    data: params
   })
 }
 // 禁用渠道用户
@@ -189,6 +189,6 @@ export function getAgentUserStopAccount(params) {
   return request({
     url: '/order/agentuser/stopAccount',
     method: 'post',
-    data: [params]
+    data: params
   })
 }

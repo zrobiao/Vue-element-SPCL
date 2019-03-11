@@ -155,18 +155,3 @@ export default new Router({
   routes: constantRouterMap
 })
 
-export const asyncRouterMap = [
-  {
-    path: '/Systemadmin',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'Systemadmin',
-    meta: { title: 'Systemadmin', icon: 'Systemadmin' },
-    children: [{
-      path: 'account',
-      component: () => import('@/views/SystemAdmin/Account'),
-      name: 'SystemAdmin-account',
-      meta: { title: '账户管理', icon: 'account' }
-    }]
-  }
-]

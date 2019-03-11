@@ -9,11 +9,11 @@
       :send-data="upData"
       @listenSearch="searchSubData"
       @listenBtn="btnSubmitData"/>
-    <el-row :gutter="15">
+    <el-row :gutter="15" style="padding:10px 0;">
       <el-col>
-        <el-button type="primary" icon="el-icon-plus" @click="useAccount(userIds)">启用</el-button>
-        <el-button type="danger" icon="el-icon-plus" @click="stopAccount(userIds)">禁用</el-button>
-        <el-button type="warning" icon="el-icon-plus" @click="resetPaswd(userIds)">重设密码</el-button>
+        <el-button type="primary" icon="el-icon-check" @click="useAccount(userIds)">启用</el-button>
+        <el-button type="danger" icon="el-icon-close" @click="stopAccount(userIds)">禁用</el-button>
+        <el-button type="warning" icon="el-icon-refresh" @click="resetPaswd(userIds)">重设密码</el-button>
       </el-col>
     </el-row>
     <div class="show-container">
@@ -70,7 +70,7 @@
               label="操作"
               width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="detailClick(scope.row.userId)">查看</el-button>
+                <el-button type="text" size="small" @click="detailClick(scope.row.userId,1)">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -82,32 +82,28 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog :visible.sync="menuDialog" title="订单详情" width="90%" top="5vh">
-      <dia-log :dia-info="dialogInfo" @dialogChild="dialogData"/>
+    <el-dialog :visible.sync="PaswdDialog" title="重设密码" width="50%">
+      <dialog-pswd :dia-info="dialogInfo" @dialogPwdChild="dialogPwdData"/>
     </el-dialog>
+
   </div>
 </template>
 <script>
 import {
   getAccountOperatorList,
   getAccountUserInfo,
-  // getAccountUpdatePw,
-  getAccountSave,
-  getAccountUpdate,
   getAccountResetPass,
   getAccountUseAccount,
   getAccountStopAccount
-  // getAccountCheckUserName
 } from '@/api/account'
 import searchBar from '@/components/search'
 import pagiTabs from '@/components/pagination'
-import diaLog from './dialog'
+import dialogPswd from '../dialogpwd'
 export default {
   components: {
     searchBar,
     pagiTabs,
-    diaLog
-    // orderState
+    dialogPswd
   },
   data() {
     return {
@@ -125,7 +121,7 @@ export default {
       upData: 0,
       diaTitle: '',
       dialogInfo: {},
-      menuDialog: false,
+      PaswdDialog: false,
       currPage: 1,
       pageSize: 10,
       totalCount: 5,
@@ -184,16 +180,14 @@ export default {
     },
     btnSubmitData(titName, data) {
       this.diaTitle = titName
-      this.menuDialog = true
       if (titName === '新增') {
-        this.menuInfo = { type: 0 }
-      } else if (titName === '修改') {
-        getAccountUserInfo(data).then(res => {
-          this.dialogInfo = res.data
+        this.$router.push({
+          path: '/Operation/editAccount',
+          name: 'systemAdmin-editAccount',
+          params: {
+            userId: -11
+          }
         })
-      } else {
-        this.menuDialog = false
-        this.delMenuInfo(data)
       }
     },
     searchSubData(selectMsg, searchMsg) {
@@ -207,24 +201,25 @@ export default {
       }
       this.getTableList()
     },
-    dialogData(upOrsave, params) {
-      if (upOrsave === 0) {
-        console.log('新增保存')
-        getAccountSave(params).then(res => {
-          console.log(res)
+    dialogPwdData(userId, repass) {
+      this.PaswdDialog = !this.PaswdDialog
+      getAccountResetPass(userId, repass).then(res => {
+        console.log(res)
+        this.$message({
+          type: 'success',
+          message: '重设密码成功!'
         })
-      } else if (upOrsave === 1) {
-        console.log('更新保存')
-        getAccountUpdate(params).then(res => {
-          console.log(res)
-        })
-      }
-      this.menuDialog = !this.menuDialog
+      })
+      this.getTableList()
     },
-    detailClick(orderId) {
-      this.menuDialog = !this.menuDialog
-      getAccountUserInfo(orderId).then(res => {
-        this.dialogInfo = res.data
+    detailClick(orderId, type) {
+      this.$router.push({
+        path: '/Operation/editAccount',
+        name: 'systemAdmin-editAccount',
+        params: {
+          userId: orderId,
+          type: type
+        }
       })
     },
     useAccount(userIds) {
@@ -274,26 +269,12 @@ export default {
       })
     },
     resetPaswd(userIds) {
-      if (userIds.length === 0) {
+      if (userIds.length !== 1) {
         return this.$message.error('请选择一个数据选择操作！')
       }
-      this.$confirm('此操作将选择用户重设密码为：123123, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        getAccountResetPass(userIds).then(res => {
-          this.$message({
-            type: 'success',
-            message: '重设密码成功!'
-          })
-          this.getTableList()
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消重设密码'
-        })
+      this.PaswdDialog = !this.PaswdDialog
+      getAccountUserInfo(userIds).then(res => {
+        this.dialogInfo = res.data.data
       })
     },
     handleSelectionChange(val) {
@@ -303,11 +284,11 @@ export default {
         ids.push(item.userId)
       })
       if (ids.length > 1) {
-        this.userIds = ids
         this.upData = -99
       } else {
         this.upData = ids[0]
       }
+      this.userIds = ids
     }
   }
 }

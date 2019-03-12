@@ -14,44 +14,38 @@
         <el-col :span="24">
           <el-table
             :data="tableData"
-            border
             stripe
             style="width: 100%">
             <el-table-column
-              type="selection"
-              width="55"/>
-            <el-table-column
               fixed
-              prop="date"
-              label="日期"
-              width="150"/>
+              prop="username"
+              label="客户账户"/>
             <el-table-column
-              prop="name"
-              label="客户类型"
-              width="120"/>
-            <el-table-column
-              prop="name"
-              label="客户账户"
-              width="120"/>
-            <el-table-column
-              prop="name"
-              label="所属客户"
-              width="120"/>
+              prop="nickname"
+              label="客户名称"/>
             <el-table-column
               prop="province"
-              label="归属地"
-              width="120"/>
+              label="归属地"/>
             <el-table-column
-              prop="address"
-              label="开通成功量"
-              width="300"/>
+              prop="mobileNum"
+              label="移动用户量"/>
             <el-table-column
-              prop="zip"
-              label="开通失败量"
-              width="120"/>
+              prop="telecomNum"
+              label="电信用户量"/>
             <el-table-column
-              label="操作"
-              width="100">
+              prop="unicomNum"
+              label="联通用户量"/>
+            <el-table-column
+              prop="successNum"
+              label="成功用户量"/>
+            <el-table-column
+              prop="failNum"
+              label="失败用户量"/>
+            <el-table-column
+              prop="countNum"
+              label="总用户量"/>
+            <el-table-column
+              label="操作">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
                 <el-button type="text" size="small">编辑</el-button>
@@ -61,16 +55,12 @@
         </el-col>
       </el-row>
     </div>
-    <el-row type="flex" justify="end">
-      <el-col :span="9">
-        <paging-tabs/>
-      </el-col>
-    </el-row>
   </div>
 </template>
 <script>
 import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
+import { getCountByUser } from '@/api/reportForms'
 export default {
   components: {
     searchBar,
@@ -83,7 +73,36 @@ export default {
       isBtn: false,
       preParent: '',
       upData: 0,
-      preOptions: [], // 设置父级筛选项目
+      preOptions: [{
+        value: 'userType',
+        label: '客户类型',
+        children: [{
+          value: '1',
+          label: '个体客户'
+        }, {
+          value: '2',
+          label: '政企合作户'
+        }, {
+          value: '3',
+          label: '渠道商'
+        }]
+      }, {
+        value: 'username',
+        label: '客户账户'
+      }, {
+        value: 'phoneType',
+        label: '运营商',
+        children: [{
+          value: '1',
+          label: '移动'
+        }, {
+          value: '2',
+          label: '电信'
+        }, {
+          value: '3',
+          label: '联通'
+        }]
+      }], // 设置父级筛选项目
       tableData: [],
       currPage: 1,
       pageSize: 10,
@@ -91,12 +110,10 @@ export default {
       totalPage: 0,
       // 设置查询项目query
       query: {
-        orderId: null,
-        orderNo: null,
-        orderName: null,
-        opreaUserName: null,
-        minTime: null,
-        maxTime: null
+        userType: null,
+        username: null,
+        phoneType: null,
+        chooseDate: null
       }
     }
   },
@@ -104,33 +121,39 @@ export default {
 
   },
   created() {
-
+    this.countByUser()
   },
   methods: {
+    countByUser() {
+      getCountByUser().then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const listData = res.data
+            this.tableData = listData.data
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
     // 子组件传输选择项目给父组件
     btnSubmitData() {},
     searchSubData(selectMsg, searchMsg) {
       switch (selectMsg) {
-        case 'orderNo':
-          this.query.orderNo = searchMsg
+        case 'userType':
+          this.query.userType = searchMsg
           break
-        case 'enterName':
-          this.query.enterName = searchMsg
+        case 'username':
+          this.query.username = searchMsg
           break
-        case 'enterContact':
-          this.query.enterContact = searchMsg
-          break
-        case 'enterTel':
-          this.query.enterTel = searchMsg
-          break
-        case 'orderState':
-          this.query.orderState = searchMsg
-          break
-        case 'openType':
-          this.query.openType = searchMsg
+        case 'phoneType':
+          this.query.phoneType = searchMsg
           break
       }
-      this.getTableList()
+      this.countByUser()
     },
     handleClick(row) {
       alert(row)

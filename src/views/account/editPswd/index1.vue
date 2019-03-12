@@ -39,10 +39,9 @@
       <el-col :span="12" class="ipt-box">
         <label>用户类型：</label>
         <el-col>
-          <el-radio v-model="accountInfo.userType" :label="1">运营人员</el-radio>
-          <el-radio v-model="accountInfo.userType" :label="2">视频制作人员</el-radio>
-          <el-radio v-model="accountInfo.userType" :label="3">视频压标人员</el-radio>
-          <el-radio v-model="accountInfo.userType" :label="4">视频开通人员</el-radio>
+          <!-- <el-radio v-model="accountInfo.userType" :label="1">个体用户</el-radio>
+          <el-radio v-model="accountInfo.userType" :label="2">政企合作户</el-radio> -->
+          <el-radio v-model="accountInfo.userType" :label="3">渠道商</el-radio>
         </el-col>
       </el-col>
       <el-col :span="12" class="ipt-box">
@@ -63,13 +62,13 @@
         </el-col>
       </el-col>
     </el-row>
-    <el-row>
+    <!-- <el-row>
       <el-col :span="8" class="ipt-box">
         <label>所属部门：</label>
         <el-input v-model="accountInfo.deptName" name="username" type="text" readonly/>
         <el-button type="primary" icon="el-icon-edit" circle @click="getDeptSelect"/>
       </el-col>
-    </el-row>
+    </el-row> -->
     <el-row v-if="showDeptTree" style="border:1px solid #333;">
       <el-col :span="24">
         <el-tree
@@ -86,10 +85,10 @@
     <el-row :gutter="15">
       <el-col :span="8" class="ipt-box">
         <label>账户密码：</label>
-        <el-input v-model="accountInfo.password" name="username" type="text" clearable placeholder="请输入账户密码"/>
+        <el-input v-model="accountInfo.password" name="password" type="text" clearable placeholder="请输入账户密码"/>
       </el-col>
     </el-row>
-    <el-row v-if="accountInfo.userType!==1" :gutter="15">
+    <el-row :gutter="15">
       <h3 class="infotitle">其它信息</h3>
       <el-col :span="6" class="ipt-box">
         <label>所属省/市：</label>
@@ -114,14 +113,14 @@
       </el-col>
       <el-col :span="6" class="ipt-box">
         <label>详细地址：</label>
-        <el-input v-model="accountInfo.username" name="username" type="text" clearable placeholder="请输入详细地址"/>
+        <el-input v-model="accountInfo.address" name="address" type="text" clearable placeholder="请输入详细地址"/>
       </el-col>
       <el-col :span="6" class="ipt-box">
         <label>联系微信：</label>
-        <el-input v-model="accountInfo.username" name="username" type="text" clearable placeholder="请输入联系微信"/>
+        <el-input v-model="accountInfo.weiXin" name="weiXin" type="text" clearable placeholder="请输入联系微信"/>
       </el-col>
     </el-row>
-    <el-row v-if="accountInfo.userType!==1" :gutter="15">
+    <el-row v-if="accountInfo.userType!==3" :gutter="15">
       <el-col :span="6" class="ipt-box">
         <label>真实姓名：</label>
         <el-input v-model="accountInfo.usename" name="username" type="text" clearable placeholder="请输入账户密码"/>
@@ -135,7 +134,7 @@
         <el-input v-model="accountInfo.username" name="username" type="text" clearable placeholder="请输入联系QQ"/>
       </el-col>
     </el-row>
-    <el-row v-if="accountInfo.userType!==1" :gutter="15">
+    <el-row :gutter="15">
       <el-col :span="12" class="ipt-box">
         <label>企业资质：</label>
         <el-upload
@@ -172,10 +171,10 @@
 </template>
 <script>
 import {
-  getAccountUserInfo,
-  getAccountCheckUserName,
-  getAccountSave,
-  getAccountUpdate
+  getAgentUserInfo,
+  getAgentCheckUserName,
+  getAgentUserSave,
+  getAgentUserUpdate
 } from '@/api/account'
 import { getDeptSelect, getRoleList } from '@/api/sysadmin'
 export default {
@@ -233,7 +232,7 @@ export default {
   },
   methods: {
     getEditInfo(userId) {
-      getAccountUserInfo(userId).then(res => {
+      getAgentUserInfo(userId).then(res => {
         if (res.code === 0) {
           const status = res.data.opreaState
           if (status) {
@@ -270,7 +269,7 @@ export default {
       if (!username) {
         this.hintMsg = '用户名不能为空！'
       } else {
-        getAccountCheckUserName(username).then(res => {
+        getAgentCheckUserName(username).then(res => {
           if (res.code === 0) {
             this.hintMsg = res.data.data
           }
@@ -299,14 +298,14 @@ export default {
       console.log(this.optValue)
       this.accountInfo.roleIdList = this.optValue
       if (userId === null) {
-        getAccountSave(this.accountInfo).then(res => {
+        getAgentUserSave(this.accountInfo).then(res => {
           if (res.code === 0) {
-            this.$message.success('账户信息更新成功！')
+            this.$message.success('账户信息保存成功！')
             this.goRouteBack()
           }
         })
       } else {
-        getAccountUpdate(this.accountInfo).then(res => {
+        getAgentUserUpdate(this.accountInfo).then(res => {
           if (res.code === 0) {
             this.$message.success('账户信息更新成功！')
             this.goRouteBack()

@@ -1,379 +1,328 @@
 <template>
-  <div>
-    <el-form :inline="true" :model="query" class="query-form" size="mini">
-      <el-form-item class="query-form-item">
-        <el-input v-model="query.username" placeholder="用户名"/>
-      </el-form-item>
-      <el-form-item class="query-form-item">
-        <el-select v-model="query.status" placeholder="状态">
-          <el-option label="全部" value=""/>
-          <el-option label="禁用" value="0"/>
-          <el-option label="正常" value="1"/>
-          <el-option label="未验证" value="2"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item class="query-form-item">
-        <el-select v-model="query.role_id" placeholder="角色">
-          <el-option label="全部角色" value=""/>
-          <el-option v-for="item in roles" :key="item.id" :label="item.name" :value="item.id"/>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item>
-        <el-button-group>
-          <el-button type="primary" icon="el-icon-refresh" @click="onReset"/>
-          <el-button type="primary" icon="search" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click.native="handleForm(null,null)">新增</el-button>
-        </el-button-group>
-      </el-form-item>
-    </el-form>
-    <el-table
-      v-loading="loading"
-      :data="list"
-      style="width: 100%;"
-      max-height="500">
-      <el-table-column
-        label="用户 ID"
-        prop="id"
-        fixed/>
-      <el-table-column
-        label="用户名"
-        prop="username"
-        fixed/>
-      <el-table-column
-        label="状态">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilterType">{{ scope.row.status | statusFilterName }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :show-overflow-tooltip="true"
-        label="登录时间"
-        with="300">
-        <template slot-scope="scope">
-          <i class="el-icon-time"/>
-          <span>{{ scope.row.last_login_time }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="登录IP">
-        <template slot-scope="scope">
-          <span>{{ scope.row.last_login_ip }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="操作"
-        fixed="right">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click.native="handleForm(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button type="text" size="small" @click.native="handleDel(scope.$index, scope.row)">删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <el-pagination
-      :page-size="query.limit"
-      :total="total"
-      layout="prev, pager, next"
-      @current-change="handleCurrentChange"/>
-
-    <!--表单-->
-    <el-dialog
-      :title="formMap[formName]"
-      :visible.sync="formVisible"
-      :before-close="hideForm"
-      width="50%"
-      top="5vh">
-      <el-form ref="dataForm" :model="formData" :rules="formRules">
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="formData.username" auto-complete="off"/>
-        </el-form-item>
-        <el-form-item label="登录密码" prop="password">
-          <el-input v-model="formData.password" type="password" auto-complete="off"/>
-        </el-form-item>
-        <el-form-item label="确认密码" prop="checkPassword">
-          <el-input v-model="formData.checkPassword" type="password" auto-complete="off"/>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="0">禁用</el-radio>
-            <el-radio :label="1">正常</el-radio>
-            <el-radio :label="2">未验证</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="角色">
-          <el-checkbox-group v-model="formData.roles">
-            <el-checkbox v-for="item in roles" :key="item.id" :label="item.id">{{ item.name }}</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="hideForm">取消</el-button>
-        <el-button :loading="formLoading" type="primary" @click.native="formSubmit()">提交</el-button>
-      </div>
+  <div class="main-content">
+    <search-bar
+      :show-search="isSearch"
+      :show-date="isDate"
+      :show-btn="isBtn"
+      :send-parent="preParent"
+      :pre-options="preOptions"
+      :send-data="upData"
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
+    <el-row :gutter="15" style="padding:10px 0;">
+      <el-col>
+        <el-button type="primary" icon="el-icon-check" @click="useAccount(userIds)">启用</el-button>
+        <el-button type="danger" icon="el-icon-close" @click="stopAccount(userIds)">禁用</el-button>
+        <el-button type="warning" icon="el-icon-refresh" @click="resetPaswd(userIds)">重设密码</el-button>
+      </el-col>
+    </el-row>
+    <div class="show-container">
+      <el-row>
+        <el-col :span="24">
+          <el-table
+            ref="parentMenu"
+            :data="tableData"
+            stripe
+            style="width: 100%"
+            @selection-change="handleSelectionChange">
+            <el-table-column
+              type="selection"
+              width="55"/>
+            <el-table-column
+              prop="userId"
+              width="80px"
+              label="账户ID"/>
+            <el-table-column
+              prop="username"
+              label="账户名称"/>
+            <el-table-column
+              prop="mobile"
+              label="手机号码"/>
+            <el-table-column
+              prop="email"
+              label="邮箱"/>
+            <el-table-column
+              prop="deptName"
+              label="部门名称"/>
+            <el-table-column
+              prop="status"
+              label="账户状态">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.status ===0" type="warning" disable-transitions>禁用</el-tag>
+                <el-tag v-show="scope.row.status ===1" type="success" disable-transitions>正常</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="userType"
+              label="用户类型">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.userType ===1" type="primary" disable-transitions>运营人员</el-tag>
+                <el-tag v-show="scope.row.userType ===2" type="primary" disable-transitions>视频制作人员</el-tag>
+                <el-tag v-show="scope.row.userType ===3" type="primary" disable-transitions>视频压标人员</el-tag>
+                <el-tag v-show="scope.row.userType ===4" type="primary" disable-transitions>视频开通人员</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="createTime"
+              label="创建日期"/>
+            <el-table-column
+              fixed="right"
+              label="操作"
+              width="100">
+              <template slot-scope="scope">
+                <el-button type="text" size="small" @click="detailClick(scope.row.userId,1)">查看</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-col>
+      </el-row>
+      <el-row type="flex" justify="end">
+        <el-col :span="9">
+          <pagi-tabs :curr-page="currPage" :page-size="pageSize" :total-count="totalCount" :total-page="totalPage" @pageChild="pageChildFn"/>
+        </el-col>
+      </el-row>
+    </div>
+    <el-dialog :visible.sync="PaswdDialog" title="重设密码" width="50%">
+      <dialog-pswd :dia-info="dialogInfo" @dialogPwdChild="dialogPwdData"/>
     </el-dialog>
+
   </div>
-
 </template>
-
 <script>
-// import {
-//   authAdminList,
-//   authAdminRoleList,
-//   authAdminSave,
-//   authAdminDelete
-// } from '../../../api/auth/authAdmin'
-const formJson = {
-  id: '',
-  password: '',
-  username: '',
-  checkPassword: '',
-  status: 1,
-  roles: []
-}
+import {
+  getAccountMakeList,
+  getAccountUserInfo,
+  getAccountResetPass,
+  getAccountUseAccount,
+  getAccountStopAccount
+} from '@/api/account'
+import searchBar from '@/components/search'
+import pagiTabs from '@/components/pagination'
+import dialogPswd from '../dialogpwd'
 export default {
-  filters: {
-    statusFilterType(status) {
-      const statusMap = {
-        0: 'gray',
-        1: 'success',
-        2: 'danger'
-      }
-      return statusMap[status]
-    },
-    statusFilterName(status) {
-      const statusMap = {
-        0: '禁用',
-        1: '正常',
-        2: '未验证'
-      }
-      return statusMap[status]
-    }
+  components: {
+    searchBar,
+    pagiTabs,
+    dialogPswd
   },
   data() {
-    const validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'))
-      } else {
-        callback()
-      }
-    }
-    const validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'))
-      } else if (value !== this.formData.password) {
-        callback(new Error('两次输入密码不一致!'))
-      } else {
-        callback()
-      }
-    }
     return {
-      roles: [],
+      isDate: false,
+      isSearch: true,
+      isBtn: true,
+      preParent: 'account',
+      preOptions: [{
+        value: 'username',
+        label: '账户名称'
+      }, {
+        value: 'mobile',
+        label: '手机号'
+      }],
+      upData: 0,
+      diaTitle: '',
+      dialogInfo: {},
+      PaswdDialog: false,
+      currPage: 1,
+      pageSize: 10,
+      totalCount: 5,
+      totalPage: 1,
+      radioStatus: '单选框',
+      tableData: [],
       query: {
-        username: '',
-        status: '',
-        page: 1,
-        limit: 20,
-        role_id: ''
+        username: null,
+        mobile: null
       },
-      list: [],
-      total: 0,
-      loading: true,
-      index: null,
-      formName: null,
-      formMap: {
-        add: '新增',
-        edit: '编辑'
-      },
-      formLoading: false,
-      formVisible: false,
-      formData: formJson,
-      formRules: {},
-      addRules: {
-        username: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { validator: validatePass, trigger: 'blur' }
-        ],
-        checkPassword: [
-          {
-            required: true,
-            message: '请再次输入密码',
-            trigger: 'blur'
-          },
-          { validator: validatePass2, trigger: 'blur' }
-        ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' }
-        ]
-      },
-      editRules: {
-        username: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
-        ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' }
-        ]
-      },
-      deleteLoading: false
+      userIds: [],
+      multipleSelection: []
     }
   },
-  mounted() {},
+  computed: {
+
+  },
   created() {
-    // 将参数拷贝进查询对象
-    const query = this.$route.query
-    this.query = Object.assign(this.query, query)
-    this.query.limit = parseInt(this.query.limit)
-    // 加载表格数据
-    this.getList()
-    // 加载角色列表
-    this.getRoleList()
+    this.getTableList()
   },
   methods: {
-    onReset() {
-      this.$router.push({
-        path: ''
-      })
-      this.query = {
-        username: '',
-        status: '',
-        page: 1,
-        limit: 20,
-        role_id: ''
-      }
-      this.getList()
-    },
-    onSubmit() {
-      this.$router.push({
-        path: '',
+    getTableList() {
+      const params = {
+        pageSize: this.pageSize,
+        currPage: this.currPage,
         query: this.query
-      })
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      this.query.page = val
-      this.getList()
-    },
-    getList() {
-      this.loading = false
-      // authAdminList(this.query)
-      //   .then(response => {
-      //     this.loading = false
-      //     this.list = response.data.list || []
-      //     this.total = response.data.total || 0
-      //   })
-      //   .catch(() => {
-      //     this.loading = false
-      //     this.list = []
-      //     this.total = 0
-      //     this.roles = []
-      //   })
-    },
-    getRoleList() {
-      // authAdminRoleList(this.query)
-      //   .then(response => {
-      //     this.roles = response.data.list || []
-      //   })
-      //   .catch(() => {
-      //     this.roles = []
-      //   })
-    },
-    // 刷新表单
-    resetForm() {
-      if (this.$refs['dataForm']) {
-        // 清空验证信息表单
-        this.$refs['dataForm'].clearValidate()
-        // 刷新表单
-        this.$refs['dataForm'].resetFields()
       }
-    },
-    // 隐藏表单
-    hideForm() {
-      // 更改值
-      this.formVisible = !this.formVisible
-      // 清空表单
-      this.$refs['dataForm'].resetFields()
-      return true
-    },
-    // 显示表单
-    handleForm(index, row) {
-      this.formVisible = true
-      this.formData = JSON.parse(JSON.stringify(formJson))
-      if (row !== null) {
-        this.formData = Object.assign({}, row)
-      }
-      this.formName = 'add'
-      this.formRules = this.addRules
-      if (index !== null) {
-        this.index = index
-        this.formName = 'edit'
-        this.formRules = this.editRules
-      }
-    },
-    formSubmit() {
-      this.$refs['dataForm'].validate(valid => {
-        if (valid) {
-          this.formLoading = true
-          // const data = Object.assign({}, this.formData)
-          // authAdminSave(data, this.formName).then(response => {
-          //   this.formLoading = false
-          //   if (response.code) {
-          //     this.$message.error(response.message)
-          //     return false
-          //   }
-          //   this.$message.success('操作成功')
-          //   this.formVisible = false
-          //   if (this.formName === 'add') {
-          //     // 向头部添加数据
-          //     if (response.data && response.data.id) {
-          //       data.id = response.data.id
-          //       this.list.unshift(data)
-          //     }
-          //   } else {
-          //     this.list.splice(this.index, 1, data)
-          //   }
-          //   // 刷新表单
-          //   this.resetForm()
-          // })
+      getAccountMakeList(params).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.currPage = orderData.currPage
+            this.pageSize = orderData.pageSize
+            this.totalCount = orderData.totalCount
+            this.totalPage = orderData.totalPage
+            this.tableData = orderData.list
+            this.query.orderNo = null
+            this.query.enterName = null
+            this.query.enterContact = null
+            this.query.enterTel = null
+            this.query.openType = null
+            this.query.orderState = null
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
         }
       })
     },
-    // 删除
-    handleDel(index, row) {
-      if (row.id) {
-        this.$confirm('确认删除该记录吗?', '提示', {
-          type: 'warning'
+    pageChildFn(currentPage) {
+      console.log(currentPage)
+      this.currPage = currentPage
+      this.getTableList()
+    },
+    btnSubmitData(titName, data) {
+      this.diaTitle = titName
+      if (titName === '新增') {
+        this.$router.push({
+          path: '/Operation/editAccount',
+          name: 'systemAdmin-editAccount',
+          params: {
+            userId: null
+          }
         })
-          .then(() => {
-            // const para = { id: row.id }
-            this.deleteLoading = true
-            // authAdminDelete(para)
-            //   .then(response => {
-            //     this.deleteLoading = false
-            //     if (response.code) {
-            //       this.$message.error(response.message)
-            //       return false
-            //     }
-            //     this.$message.success('操作成功')
-            //     // 刷新数据
-            //     this.list.splice(index, 1)
-            //   })
-            //   .catch(() => {
-            //     this.deleteLoading = false
-            //   })
-          })
-          .catch(() => {
-            this.$message.info('取消删除')
-          })
       }
+    },
+    searchSubData(selectMsg, searchMsg) {
+      switch (selectMsg) {
+        case 'username':
+          this.query.username = searchMsg
+          break
+        case 'mobile':
+          this.query.mobile = searchMsg
+          break
+      }
+      this.getTableList()
+    },
+    dialogPwdData(userId, repass) {
+      this.PaswdDialog = !this.PaswdDialog
+      getAccountResetPass(userId, repass).then(res => {
+        console.log(res)
+        this.$message({
+          type: 'success',
+          message: '重设密码成功!'
+        })
+      })
+      this.getTableList()
+    },
+    detailClick(orderId, type) {
+      this.$router.push({
+        path: '/Operation/editAccount',
+        name: 'systemAdmin-editAccount',
+        params: {
+          userId: orderId,
+          type: type
+        }
+      })
+    },
+    useAccount(userIds) {
+      if (userIds.length === 0) {
+        return this.$message.error('请选择一个数据选择操作！')
+      }
+      this.$confirm('此操作将启用选择用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        getAccountUseAccount(userIds).then(res => {
+          if (res.code === 0) {
+            const status = res.data.opreaState
+            if (status) {
+              this.$message({
+                type: 'success',
+                message: '启用成功!'
+              })
+              this.getTableList()
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消启用'
+        })
+      })
+    },
+    stopAccount(userIds) {
+      if (userIds.length === 0) {
+        return this.$message.error('请选择一个数据选择操作！')
+      }
+      this.$confirm('此操作将禁用选择用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        getAccountStopAccount(userIds).then(res => {
+          if (res.code === 0) {
+            const status = res.data.opreaState
+            if (status) {
+              this.$message({
+                type: 'success',
+                message: '禁用成功!'
+              })
+              this.getTableList()
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消禁用'
+        })
+      })
+    },
+    resetPaswd(userIds) {
+      if (userIds.length !== 1) {
+        return this.$message.error('请选择一个数据选择操作！')
+      }
+      this.PaswdDialog = !this.PaswdDialog
+      getAccountUserInfo(userIds).then(res => {
+        this.dialogInfo = res.data.data
+      })
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+      const ids = []
+      this.multipleSelection.map((item) => {
+        ids.push(item.userId)
+      })
+      if (ids.length > 1) {
+        this.upData = -99
+      } else {
+        this.upData = ids[0]
+      }
+      this.userIds = ids
     }
   }
 }
 </script>
-
-<style type="text/scss" lang="scss">
+<style lang="scss" scoped>
+.main-content{
+  margin:10px;
+  .show-container{
+    margin-top:15px;
+    .show-title{
+      font-size: 12px;
+      padding: 5px 0;
+      span{
+        color:#409EFF;
+      }
+    }
+  }
+}
 </style>

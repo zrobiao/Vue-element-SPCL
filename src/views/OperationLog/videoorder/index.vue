@@ -17,9 +17,6 @@
             stripe
             style="width:100%">
             <el-table-column
-              prop="id"
-              label="Id"/>
-            <el-table-column
               prop="orderId"
               label="订单Id"/>
             <el-table-column

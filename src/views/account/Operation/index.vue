@@ -185,7 +185,7 @@ export default {
           path: '/Operation/editAccount',
           name: 'systemAdmin-editAccount',
           params: {
-            userId: -11
+            userId: null
           }
         })
       }
@@ -232,11 +232,20 @@ export default {
         type: 'warning'
       }).then(() => {
         getAccountUseAccount(userIds).then(res => {
-          this.$message({
-            type: 'success',
-            message: '启用成功!'
-          })
-          this.getTableList()
+          if (res.code === 0) {
+            const status = res.data.opreaState
+            if (status) {
+              this.$message({
+                type: 'success',
+                message: '启用成功!'
+              })
+              this.getTableList()
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
         })
       }).catch(() => {
         this.$message({
@@ -255,11 +264,20 @@ export default {
         type: 'warning'
       }).then(() => {
         getAccountStopAccount(userIds).then(res => {
-          this.$message({
-            type: 'success',
-            message: '禁用成功!'
-          })
-          this.getTableList()
+          if (res.code === 0) {
+            const status = res.data.opreaState
+            if (status) {
+              this.$message({
+                type: 'success',
+                message: '禁用成功!'
+              })
+              this.getTableList()
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
         })
       }).catch(() => {
         this.$message({

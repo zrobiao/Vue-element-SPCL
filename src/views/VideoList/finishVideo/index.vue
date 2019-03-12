@@ -16,20 +16,12 @@
             stripe
             style="width: 100%">
             <el-table-column
-              type="selection"
-              width="55"
-              @change.native="getParentRow(scope.row.orderId)"/>
-            <el-table-column
               prop="orderId"
               label="订单ID"/>
             <el-table-column
               prop="orderNo"
-              label="视频订单号"
-              width="150"/>
-            <el-table-column
-              prop="makeTime"
-              label="制作完成日期"
-              width="150"/>
+              label="订单编号"
+              width="180"/>
             <el-table-column
               prop="enterName"
               label="企业名称"
@@ -53,32 +45,124 @@
             <el-table-column
               prop="qq"
               label="联系QQ"
-              width="80"/>
+              width="100"/>
             <el-table-column
               prop="weixin"
               label="联系微信"
-              width="80"/>
+              width="100"/>
+            <el-table-column
+              prop="attchmentId"
+              label="资料关联Id"
+              width="300"/>
             <el-table-column
               prop="needRemark"
               label="特需说明"
-              width="120"/>
+              width="300"/>
             <el-table-column
-              prop="agentId"
-              label="所属代理商"
-              width="100"/>
+              prop="makeFlag"
+              label="制作标识"
+              width="80">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.makeFlag===1">制作</el-tag>
+                <el-tag v-show="scoped.row.makeFlag===2">成品</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="repressFlag"
+              label="是否压标"
+              width="80">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.repressFlag===1">是</el-tag>
+                <el-tag v-show="scoped.row.repressFlag===2">否</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column
               prop="orderState"
               label="订单状态"
               width="100"/>
             <el-table-column
-              prop="orderResources"
-              label="订单来源"
-              width="100"/>
+              prop="openType"
+              label="开通类型"
+              width="80">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.openType===1">移动</el-tag>
+                <el-tag v-show="scoped.row.openType===2">电信</el-tag>
+                <el-tag v-show="scoped.row.openType===3">联通</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="openMoney"
+              label="资费"
+              width="80"/>
+            <el-table-column
+              prop="createTime"
+              label="创建日期"
+              width="150"/>
+            <el-table-column
+              prop="makeMoney"
+              label="制作费"
+              width="80"/>
+            <el-table-column
+              prop="agentId"
+              label="所属代理商"
+              width="150"/>
+            <el-table-column
+              prop="makeTime"
+              label="制作完成日期"
+              width="150"/>
+            <el-table-column
+              prop="makeUserId"
+              label="视频制作人Id"
+              width="150"/>
+            <el-table-column
+              prop="makeUserName"
+              label="视频制作账户"
+              width="150"/>
+            <el-table-column
+              prop="repressTime"
+              label="压标完成日期"
+              width="150"/>
+            <el-table-column
+              prop="repressUserId"
+              label="视频压标人Id"
+              width="150"/>
+            <el-table-column
+              prop="repressUserName"
+              label="视频压标人账户"
+              width="150"/>
+            <el-table-column
+              prop="openTime"
+              label="开通完成日期"
+              width="150"/>
+            <el-table-column
+              prop="openUserId"
+              label="开通完成人Id"
+              width="150"/>
+            <el-table-column
+              prop="openUserName"
+              label="开通人账户"
+              width="150"/>
+            <el-table-column
+              prop="opreaBz"
+              label="订单备注"
+              width="150"/>
+            <el-table-column
+              prop="nodeMaxtime"
+              label="当前节点最晚完成日期"
+              width="180"/>
+            <el-table-column
+              prop="agentTopId"
+              label="所属总代理商Id"
+              width="150"/>
+            <el-table-column
+              prop="changeFileId"
+              label="更换视频关联素材Id"
+              width="180"/>
             <el-table-column
               label="操作"
               width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="handleClick(scope.row.orderId)">查看</el-button>
+                <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
                 <el-button type="text" size="small">编辑</el-button>
               </template>
             </el-table-column>

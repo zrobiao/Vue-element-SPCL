@@ -14,26 +14,19 @@
         <el-col :span="24">
           <el-table
             :data="tableData"
-            border
-            stripe
-            style="width: 100%">
+            stripe>
             <el-table-column
-              type="selection"/>
+              prop="belongAgent"
+              label="渠道用户"/>
             <el-table-column
-              prop="date"
-              label="日期"/>
-            <el-table-column
-              prop="name"
-              label="视频制作人"/>
-            <el-table-column
-              prop="success"
+              prop="successNum"
               label="制作成功量"/>
             <el-table-column
-              prop="province"
-              label="待制作量"/>
+              prop="waitNum"
+              label="等待制作量"/>
             <el-table-column
-              prop="address"
-              label="总数"/>
+              prop="countNum"
+              label="总量"/>
             <el-table-column
               label="操作">
               <template slot-scope="scope">
@@ -55,6 +48,7 @@
 <script>
 import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
+import { getCountVedioMakeCurrentUser } from '@/api/reportForms'
 export default {
   components: {
     searchBar,
@@ -88,9 +82,27 @@ export default {
 
   },
   created() {
-
+    this.countVedioMakeCurrentUser()
   },
   methods: {
+    countVedioMakeCurrentUser() {
+      const obj = {
+        chooseDate: ''
+      }
+      getCountVedioMakeCurrentUser(obj).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const listData = res.data
+            this.tableData = listData.data
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
     // 子组件传输选择项目给父组件
     btnSubmitData() {},
     searchSubData(selectMsg, searchMsg) {
@@ -114,7 +126,7 @@ export default {
           this.query.openType = searchMsg
           break
       }
-      this.getTableList()
+      this.countVedioMakeCurrentUser()
     },
     handleClick(row) {
       alert(row)

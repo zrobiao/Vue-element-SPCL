@@ -164,7 +164,7 @@
             <el-table-column
               prop="nodeMaxtime"
               label="当前节点最晚完成日期"
-              width="150"/>
+              width="180"/>
             <el-table-column
               prop="agentTopId"
               label="所属总代理商Id"
@@ -281,6 +281,7 @@ export default {
           this.query.openType = searchMsg
           break
       }
+      this.WaitMakeList()
     },
     btnSubmitData() {},
     WaitMakeList() {

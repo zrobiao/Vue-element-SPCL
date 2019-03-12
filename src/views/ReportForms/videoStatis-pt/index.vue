@@ -14,26 +14,20 @@
         <el-col :span="24">
           <el-table
             :data="tableData"
-            border
             stripe
             style="width: 100%">
             <el-table-column
-              type="selection"/>
+              prop="belongAgent"
+              label="渠道用户"/>
             <el-table-column
-              prop="date"
-              label="日期"/>
-            <el-table-column
-              prop="name"
-              label="视频制作人"/>
-            <el-table-column
-              prop="success"
+              prop="successNum"
               label="制作成功量"/>
             <el-table-column
-              prop="province"
-              label="待制作量"/>
+              prop="waitNum"
+              label="等待制作量"/>
             <el-table-column
-              prop="address"
-              label="总数"/>
+              prop="countNum"
+              label="总量"/>
             <el-table-column
               label="操作">
               <template slot-scope="scope">
@@ -45,16 +39,12 @@
         </el-col>
       </el-row>
     </div>
-    <el-row type="flex" justify="end">
-      <el-col :span="9">
-        <paging-tabs/>
-      </el-col>
-    </el-row>
   </div>
 </template>
 <script>
 import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
+import { getCountVedioMake } from '@/api/reportForms'
 export default {
   components: {
     searchBar,
@@ -67,7 +57,13 @@ export default {
       isBtn: false,
       preParent: '',
       upData: 0,
-      preOptions: [], // 设置父级筛选项目
+      preOptions: [{
+        value: 'province',
+        label: '归属地'
+      }, {
+        value: 'makeUser',
+        label: '制作账户'
+      }], // 设置父级筛选项目
       tableData: [],
       currPage: 1,
       pageSize: 10,
@@ -75,12 +71,9 @@ export default {
       totalPage: 0,
       // 设置查询项目query
       query: {
-        orderId: null,
-        orderNo: null,
-        orderName: null,
-        opreaUserName: null,
-        minTime: null,
-        maxTime: null
+        chooseDate: null,
+        province: null,
+        makeUser: null
       }
     }
   },
@@ -88,33 +81,39 @@ export default {
 
   },
   created() {
-
+    this.countVedioMake()
   },
   methods: {
+    countVedioMake() {
+      const obj = {
+        chooseDate: ''
+      }
+      getCountVedioMake(obj).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const listData = res.data
+            this.tableData = listData.data
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
     // 子组件传输选择项目给父组件
     btnSubmitData() {},
     searchSubData(selectMsg, searchMsg) {
       switch (selectMsg) {
-        case 'orderNo':
-          this.query.orderNo = searchMsg
+        case 'province':
+          this.query.province = searchMsg
           break
-        case 'enterName':
-          this.query.enterName = searchMsg
-          break
-        case 'enterContact':
-          this.query.enterContact = searchMsg
-          break
-        case 'enterTel':
-          this.query.enterTel = searchMsg
-          break
-        case 'orderState':
-          this.query.orderState = searchMsg
-          break
-        case 'openType':
-          this.query.openType = searchMsg
+        case 'makeUser':
+          this.query.makeUser = searchMsg
           break
       }
-      this.getTableList()
+      this.countVedioMake()
     },
     handleClick(row) {
       alert(row)

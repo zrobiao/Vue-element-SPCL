@@ -94,7 +94,7 @@
       <el-col :span="6" class="ipt-box">
         <label>所属省/市：</label>
         <el-col :span="12">
-          <el-select v-model="value" placeholder="选择省份">
+          <el-select v-model="accountInfo.province" placeholder="选择省份">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -103,7 +103,7 @@
           </el-select>
         </el-col>
         <el-col :span="12">
-          <el-select v-model="value" placeholder="选择城市">
+          <el-select v-model="accountInfo.city" placeholder="选择城市">
             <el-option
               v-for="item in options"
               :key="item.value"

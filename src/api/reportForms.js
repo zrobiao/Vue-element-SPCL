@@ -47,10 +47,10 @@ export function getCountVedioYaBiao(params) {
 }
 
 // 压标数量统计（针对压标用户）
-// export function getCountVedioMakeCurrentUser(params) {
-//   return request({
-//     url: '/order/count/countVedioMakeCurrentUser',
-//     method: 'post',
-//     data: params
-//   })
-// }
+export function getCountVedioYaBiaoCurrentUser(params) {
+  return request({
+    url: '/order/count/countVedioYaBiaoCurrentUser',
+    method: 'post',
+    data: params
+  })
+}

@@ -11,6 +11,12 @@
       @listenBtn="btnSubmitData"/>
     <div class="show-container">
       <el-row>
+        <el-row class="show-title">
+          <el-col>成功用户量共有<span>{{ successNumber }}<span/></span></el-col>
+        </el-row>
+        <el-row class="show-title">
+          <el-col>失败用户量共有<span>{{ failNumber }}<span/></span></el-col>
+        </el-row>
         <el-col :span="24">
           <el-table
             :data="tableData"
@@ -73,6 +79,8 @@ export default {
       isBtn: false,
       preParent: '',
       upData: 0,
+      successNumber: 0,
+      failNumber: 0,
       preOptions: [{
         value: 'userType',
         label: '客户类型',
@@ -169,8 +177,10 @@ export default {
     .show-title{
       font-size: 12px;
       padding: 5px 0;
+      margin-left: 15px;
       span{
         color:#409EFF;
+        margin-left: 15px;
       }
     }
   }

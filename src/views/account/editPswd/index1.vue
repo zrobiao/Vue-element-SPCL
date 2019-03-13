@@ -93,7 +93,7 @@
       <el-col :span="6" class="ipt-box">
         <label>所属省/市：</label>
         <el-col :span="12">
-          <el-select v-model="value" placeholder="选择省份">
+          <el-select v-model="accountInfo.province" placeholder="选择省份">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -102,7 +102,7 @@
           </el-select>
         </el-col>
         <el-col :span="12">
-          <el-select v-model="value" placeholder="选择城市">
+          <el-select v-model="accountInfo.city" placeholder="选择城市">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -120,7 +120,7 @@
         <el-input v-model="accountInfo.weiXin" name="weiXin" type="text" clearable placeholder="请输入联系微信"/>
       </el-col>
     </el-row>
-    <el-row v-if="accountInfo.userType!==3" :gutter="15">
+    <!-- <el-row v-if="accountInfo.userType!==3" :gutter="15">
       <el-col :span="6" class="ipt-box">
         <label>真实姓名：</label>
         <el-input v-model="accountInfo.usename" name="username" type="text" clearable placeholder="请输入账户密码"/>
@@ -133,7 +133,7 @@
         <label>开户行：</label>
         <el-input v-model="accountInfo.username" name="username" type="text" clearable placeholder="请输入联系QQ"/>
       </el-col>
-    </el-row>
+    </el-row> -->
     <el-row :gutter="15">
       <el-col :span="12" class="ipt-box">
         <label>企业资质：</label>

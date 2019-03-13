@@ -110,6 +110,15 @@ const operationRouter = {
         icon: 'agentAccount'
       },
       hidden: true
+    }, {
+      path: 'checkDetail',
+      component: () => import('@/views/account/editPswd/checkDetail'),
+      name: 'systemAdmin-checkDetail',
+      meta: {
+        title: '审核操作',
+        icon: 'checkDetail'
+      },
+      hidden: true
     }
   ]
 }

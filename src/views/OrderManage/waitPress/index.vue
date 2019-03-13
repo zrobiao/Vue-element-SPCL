@@ -7,32 +7,35 @@
       :send-parent="preParent"
       :pre-options="preOptions"
       :send-data="upData"
-      @listenUp="chindData"/>
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
+    <el-row>
+      <el-col :span="24" class="btn">
+        <el-col v-show="showBtn">
+          <el-button type="danger" icon="el-icon-error" @click="orderInvalid">作废订单</el-button>
+          <el-button type="warning" icon="el-icon-back" @click="orderBack">订单回退</el-button>
+          <el-button type="success" icon="el-icon-upload" @click="videoUpload">上传成品视频</el-button>
+          <el-button type="primary" icon="el-icon-circle-check" @click="confirmVideo">客户确认视频</el-button>
+          <el-button type="primary" icon="el-icon-download" @click="downloadVideo">下载视频素材</el-button>
+        </el-col>
+      </el-col>
+    </el-row>
     <div class="show-container">
       <el-row>
         <el-col :span="24">
           <el-table
             :data="tableData"
-            border
             stripe
             style="width: 100%">
             <el-table-column
               type="selection"
               width="55"/>
-            <el-table-column
+            <!-- <el-table-column
               prop="orderId"
-              label="订单ID"/>
+              label="订单ID"/> -->
             <el-table-column
               prop="orderNo"
-              label="视频订单号"
-              width="150"/>
-            <el-table-column
-              prop="createTime"
-              label="订单创建日期"
-              width="150"/>
-            <el-table-column
-              prop="createTime"
-              label="订单压标完成日期"
+              label="订单编号"
               width="180"/>
             <el-table-column
               prop="enterName"
@@ -47,49 +50,142 @@
               label="企业联系电话"
               width="120"/>
             <el-table-column
+              prop="makeFlag"
+              label="制作标识"
+              width="80">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.makeFlag===1">制作</el-tag>
+                <el-tag v-show="scoped.row.makeFlag===2">成品</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="repressFlag"
+              label="是否压标"
+              width="80">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.repressFlag===1">是</el-tag>
+                <el-tag v-show="scoped.row.repressFlag===2">否</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
               prop="needRemark"
               label="特需说明"
-              width="120"/>
+              width="300"/>
+            <el-table-column
+              prop="orderState"
+              label="订单状态">
+              <template slot-scope="scope">
+                <order-state :order-stus="scope.row.orderState"/>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="openType"
+              label="开通类型"
+              width="80">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.openType===1">移动</el-tag>
+                <el-tag v-show="scoped.row.openType===2">电信</el-tag>
+                <el-tag v-show="scoped.row.openType===3">联通</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="openMoney"
+              label="资费"
+              width="80"/>
+            <el-table-column
+              prop="createTime"
+              label="创建日期"
+              width="150"/>
+            <el-table-column
+              prop="makeMoney"
+              label="制作费"
+              width="80"/>
+            <el-table-column
+              prop="agentId"
+              label="所属代理商"
+              width="150"/>
+            <el-table-column
+              prop="makeUserName"
+              label="视频制作账户"
+              width="150"/>
             <el-table-column
               label="操作"
-              width="100">
+              width="100"
+              fixed="right">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="handleClick(scope.row)">详情</el-button>
+                <el-button type="text" size="small" @click="detailClick(scope.row.orderId)">查看</el-button>
+                <el-button type="text" size="small">编辑</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-col>
       </el-row>
+      <el-row type="flex" justify="end">
+        <el-col :span="9">
+          <paging-tabs :curr-page="currPage" :page-size="pageSize" :total-count="totalCount" :total-page="totalPage"/>
+        </el-col>
+      </el-row>
     </div>
-    <el-row type="flex" justify="end">
-      <el-col :span="9">
-        <paging-tabs :curr-page="currPage" :page-size="pageSize" :total-count="totalCount" :total-page="totalPage"/>
-      </el-col>
-    </el-row>
+    <el-dialog :visible.sync="menuDialog" title="订单详情" width="90%" top="5vh">
+      <dia-log :dia-info="dialogInfo" @dialogChild="dialogData"/>
+    </el-dialog>
   </div>
 </template>
 <script>
 import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
-import { getWaitYaBiaoList } from '@/api/videoList'
+import { getWaitYaBiaoList, getOrderInfo } from '@/api/videoList'
+import orderState from '../../OrderManage/orderstate'
+import diaLog from './dialog'
 export default {
   components: {
     pagingTabs,
-    searchBar
+    searchBar,
+    diaLog,
+    orderState
   },
   data() {
     return {
       isSearch: true,
       isDate: true,
       isBtn: false,
+      showBtn: 'true',
       preParent: '',
       upData: 0,
-      preOptions: [], // 设置父级筛选项目
+      preOptions: [{
+        value: 'orderNo',
+        label: '订单编号'
+      }, {
+        value: 'enterName',
+        label: '企业名称'
+      }, {
+        value: 'enterContact',
+        label: '企业联系人'
+      }, {
+        value: 'enterTel',
+        label: '企业联系电话'
+      }, {
+        value: 'orderState',
+        label: '订单状态'
+      }, {
+        value: 'openType',
+        label: '开通类型',
+        children: [{
+          value: '1',
+          label: '移动'
+        }, {
+          value: '2',
+          label: '电信'
+        }, {
+          value: '3',
+          label: '联通'
+        }]
+      }], // 设置父级筛选项目
       tableData: [],
       currPage: 1,
       pageSize: 10,
-      totalCount: 0,
-      totalPage: 0,
+      totalCount: 10,
+      totalPage: 1,
       // 设置查询项目query
       query: {
         orderId: null,
@@ -102,11 +198,12 @@ export default {
     }
   },
   created() {
-    this.waitYaBiaoList()
+    this.WaitMakeList()
   },
   methods: {
     // 子组件传输选择项目给父组件
-    chindData(selectMsg, searchMsg) {
+
+    searchSubData(selectMsg, searchMsg) {
       switch (selectMsg) {
         case 'orderNo':
           this.query.orderNo = searchMsg
@@ -127,9 +224,10 @@ export default {
           this.query.openType = searchMsg
           break
       }
-      this.getTableList()
+      this.WaitMakeList()
     },
-    waitYaBiaoList() {
+    btnSubmitData() {},
+    WaitMakeList() {
       const obj = {
         pageSize: this.pageSize,
         currPage: this.currPage,
@@ -146,7 +244,7 @@ export default {
             this.totalPage = orderData.totalPage
             this.tableData = orderData.list
             // 以下数据根据查询项进行变换绑定
-            // this.query.orderNo = null
+            //  this.query.orderNo = null
             // this.query.enterName = null
             // this.query.enterContact = null
             // this.query.enterTel = null
@@ -160,10 +258,29 @@ export default {
         }
       })
     },
-    handleClick(row) {
-      console.log(row)
-      alert(row.orderId)
-    }
+    detailClick(orderId) {
+      this.menuDialog = !this.menuDialog
+      getOrderInfo(orderId).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.dialogInfo = orderData
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    orderInvalid: function() {
+      alert('作废订单')
+    },
+    orderBack: function() {},
+    videoUpload: function() {},
+    confirmVideo: function() {},
+    downloadVideo: function() {}
   }
 }
 </script>
@@ -174,12 +291,6 @@ export default {
     margin-bottom: 0;
   }
 }
-.dia-Title {
-  margin-top: 0.68rem;
-}
-// .btn-bottom {
-//   margin-left: -9.62rem;
-// }
 .show-container{
     margin-top:15px;
     .show-title{
@@ -189,5 +300,8 @@ export default {
         color:#409EFF;
       }
     }
+  }
+  .btn {
+    margin-top: 15px;
   }
 </style>

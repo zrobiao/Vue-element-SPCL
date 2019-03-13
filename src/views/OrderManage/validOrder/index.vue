@@ -101,7 +101,7 @@ import { orderStateStus } from '@/utils/index'
 import searchBar from '@/components/search'
 import pagiTabs from '@/components/pagination'
 import diaLog from './dialog'
-import orderState from './orderstate'
+import orderState from '../orderstate'
 export default {
   components: {
     searchBar,
@@ -243,7 +243,17 @@ export default {
     detailClick(orderId) {
       this.menuDialog = !this.menuDialog
       getOrderInfo(orderId).then(res => {
-        this.dialogInfo = res.data
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.dialogInfo = orderData
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     }
   }

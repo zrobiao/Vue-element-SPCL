@@ -98,18 +98,36 @@
         <p class="showhint">{{ diaInfo.opreaBz }}</p>
       </el-col>
     </el-row>
-    <!-- <el-row>
-      <el-col :span="6" :offset="6" class="el-col-dafine">
+    <el-row>
+      <el-col :span="6" :offset="18" class="el-col-dafine">
         <el-button type="warning" @click="closeDialog">返回</el-button>
+        <el-button v-if="diaInfo.orderState===1||diaInfo.orderState===11||diaInfo.orderState===13||diaInfo.orderState===14" type="warning" @click="sureDialog('accept',diaInfo.orderId)">接单制作</el-button>
+        <el-button v-if="diaInfo.orderState!==13||diaInfo.orderState!==14" type="primary" @click="openDialog('back')">订单回退</el-button>
+        <el-button type="primary" @click="openDialog('invalid')">订单作废</el-button>
+        <!-- <el-button type="primary"  @click="sureDialog('upvideo',diaInfo.orderId)">上传视频</el-button> -->
       </el-col>
-      <el-col :span="6" class="el-col-dafine">
-        <el-button type="primary" @click="sureDialog">确认</el-button>
-      </el-col>
-    </el-row> -->
+    </el-row>
+    <el-dialog
+      :visible.sync="hintVisible"
+      :before-close="handleClose"
+      title="操作备注"
+      width="30%"
+      append-to-body>
+      <el-row>
+        <el-col :span="24">
+          <label>填写备注：</label>
+          <el-input v-model="comitMsg" type="textarea"/>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="hintVisible = false">取 消</el-button>
+        <el-button type="primary" @click="sureDialog(operatTitle,diaInfo.orderId,comitMsg)">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import orderState from '../orderstate'
+import orderState from '../../OrderManage/orderstate'
 export default {
   components: {
     orderState
@@ -122,34 +140,31 @@ export default {
   },
   data() {
     return {
-      menuName: ''
+      menuName: '',
+      hintVisible: false,
+      backMsg: '',
+      comitMsg: '',
+      operatTitle: ''
     }
   },
   created() {},
   mounted() {
   },
   methods: {
-    // closeDialog() {
-    //   this.openTree = false
-    //   this.$emit('dialogChild')
-    // },
-    // sureDialog() {
-    //   if (!this.saveData.deptId) {
-    //     return this.$message.error('所属部门不能为空！')
-    //   }
-    //   this.saveData.menuIdList = this.$refs.menuTree.getCheckedKeys()
-    //   this.saveData.deptIdList = this.$refs.roleTree2.getCheckedKeys()
-    //   this.saveData.roleName = this.roleInfo.roleName
-    //   this.saveData.remark = this.roleInfo.remark
-    //   console.log(this.roleInfo)
-    //   console.log(this.saveData)
-    //   if (this.diaData === '新增') {
-    //     this.$emit('dialogChild', 0, this.saveData)
-    //   } else if (this.diaData === '修改') {
-    //     this.$emit('dialogChild', 1, this.saveData)
-    //   }
-    //   this.openTree = false
-    // }
+    handleClose() {
+      this.hintVisible = !this.hintVisible
+    },
+    openDialog(value) {
+      this.hintVisible = !this.hintVisible
+      this.operatTitle = value
+    },
+    closeDialog(value) {
+      this.$emit('dialogChild')
+    },
+    sureDialog(vlaue, orderId, data) {
+      this.hintVisible = !this.hintVisible
+      this.$emit('dialogChild', vlaue, orderId, data)
+    }
   }
 }
 </script>

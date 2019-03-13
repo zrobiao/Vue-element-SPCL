@@ -84,8 +84,16 @@ export const constantRouterMap = [
         component: () => import('@/views/VideoList/waitMake/index'),
         name: 'OrderManage-waitMake',
         meta: {
-          title: '等待制作',
+          title: '等待制作订单',
           icon: 'waitMake'
+        }
+      }, {
+        path: 'waitVerify',
+        component: () => import('@/views/OrderManage/waitVerify/index'),
+        name: 'OrderManage-waitVerify',
+        meta: {
+          title: '等待客户确认',
+          icon: 'waitVerify'
         }
       },
       {
@@ -93,7 +101,7 @@ export const constantRouterMap = [
         component: () => import('@/views/VideoList/finishVideo/index'),
         name: 'finishVideo',
         meta: {
-          title: '已完成制作',
+          title: '完成制作订单',
           icon: 'finishVideo'
         }
       }]

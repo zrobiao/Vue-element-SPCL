@@ -105,22 +105,22 @@ export default {
         query: this.query
       }
       logList(params).then(res => {
-        // if (res.code === 0) {
-        //   const status = res.data.opreaState
-        //   if (status) {
-        //     const resData = res.data.data
-        //     this.currPage = resData.currPage
-        //     this.pageSize = resData.pageSize
-        //     this.totalCount = resData.totalCount
-        //     this.totalPage = resData.totalPage
-        //     this.logData = resData.list
-        //     this.query.username = null
-        //   } else {
-        //     this.$message.error(res.data.msg)
-        //   }
-        // } else {
-        //   this.$message.error(res.msg)
-        // }
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const resData = res.data.data
+            this.currPage = resData.currPage
+            this.pageSize = resData.pageSize
+            this.totalCount = resData.totalCount
+            this.totalPage = resData.totalPage
+            this.logData = resData.list
+            this.query.username = null
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     }
     // getParentRow(id){

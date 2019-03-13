@@ -1,5 +1,4 @@
-﻿
-<template>
+﻿<template>
   <div class="main-content">
     <search-bar
       :show-search="isSearch"
@@ -12,35 +11,23 @@
       @listenBtn="btnSubmitData"/>
     <div class="show-container">
       <el-row>
-        <el-col class="show-title">订单列表显示数据<span>{{ number }}</span>条</el-col>
-      </el-row>
-      <el-row>
         <el-col :span="24">
           <el-table
             :data="tableData"
-            border
             stripe
             style="width: 100%">
             <el-table-column
-              type="selection"/>
+              prop="belongAgent"
+              label="渠道用户"/>
             <el-table-column
-              prop="date"
-              label="日期"/>
-            <el-table-column
-              prop="name"
-              label="压标账户名称"/>
-            <el-table-column
-              prop="number"
-              label="压标账户"/>
-            <el-table-column
-              prop="success"
+              prop="successNum"
               label="压标成功量"/>
             <el-table-column
-              prop="province"
-              label="待压标量"/>
+              prop="waitNum"
+              label="等待压标量"/>
             <el-table-column
-              prop="address"
-              label="总数"/>
+              prop="countNum"
+              label="总量"/>
             <el-table-column
               label="操作">
               <template slot-scope="scope">
@@ -62,6 +49,7 @@
 <script>
 import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
+import { getCountVedioYaBiaoCurrentUser } from '@/api/reportForms'
 export default {
   components: {
     searchBar,
@@ -74,7 +62,13 @@ export default {
       isBtn: false,
       preParent: '',
       upData: 0,
-      preOptions: [], // 设置父级筛选项目
+      preOptions: [{
+        value: 'province',
+        label: '归属地'
+      }, {
+        value: 'makeUser',
+        label: '压标账户'
+      }], // 设置父级筛选项目
       tableData: [],
       currPage: 1,
       pageSize: 10,
@@ -82,12 +76,9 @@ export default {
       totalPage: 0,
       // 设置查询项目query
       query: {
-        orderId: null,
-        orderNo: null,
-        orderName: null,
-        opreaUserName: null,
-        minTime: null,
-        maxTime: null
+        chooseDate: null,
+        province: null,
+        makeUser: null
       }
     }
   },
@@ -95,32 +86,35 @@ export default {
 
   },
   created() {
-
+    this.countVedioYaBiaoCurrentUser()
   },
   methods: {
+    countVedioYaBiaoCurrentUser() {
+      getCountVedioYaBiaoCurrentUser().then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const listData = res.data
+            this.tableData = listData.data
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
     // 子组件传输选择项目给父组件
     searchSubData(selectMsg, searchMsg) {
       switch (selectMsg) {
-        case 'orderNo':
-          this.query.orderNo = searchMsg
+        case 'province':
+          this.query.province = searchMsg
           break
-        case 'enterName':
-          this.query.enterName = searchMsg
-          break
-        case 'enterContact':
-          this.query.enterContact = searchMsg
-          break
-        case 'enterTel':
-          this.query.enterTel = searchMsg
-          break
-        case 'orderState':
-          this.query.orderState = searchMsg
-          break
-        case 'openType':
-          this.query.openType = searchMsg
+        case 'makeUser':
+          this.query.makeUser = searchMsg
           break
       }
-      // this.getTableList()
+      this.countVedioYaBiaoCurrentUser()
     },
     btnSubmitData() {},
     handleClick(row) {

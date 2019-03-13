@@ -159,12 +159,8 @@ export default {
             this.totalCount = orderData.totalCount
             this.totalPage = orderData.totalPage
             this.tableData = orderData.list
-            this.query.orderNo = null
-            this.query.enterName = null
-            this.query.enterContact = null
-            this.query.enterTel = null
-            this.query.openType = null
-            this.query.orderState = null
+            this.query.username = null
+            this.query.mobile = null
           } else {
             this.$message.error(res.data.msg)
           }
@@ -174,7 +170,6 @@ export default {
       })
     },
     pageChildFn(currentPage) {
-      console.log(currentPage)
       this.currPage = currentPage
       this.getTableList()
     },

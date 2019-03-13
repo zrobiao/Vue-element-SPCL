@@ -109,7 +109,7 @@
   </div>
 </template>
 <script>
-import orderState from './orderstate'
+import orderState from '../orderstate'
 export default {
   components: {
     orderState

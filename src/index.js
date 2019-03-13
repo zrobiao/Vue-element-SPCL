@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import axios from 'axios'
 import Qs from 'qs'
+// import jq from 'jquery'
+import webuploader from 'webuploader'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
@@ -24,6 +26,8 @@ import '@/permission' // permission control
 // Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(ElementUI, { locale })
 Vue.prototype.qs = Qs
+// Vue.prototype.$ = jq
+Vue.prototype.upFile = webuploader
 
 Vue.config.productionTip = false
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'

@@ -1,10 +1,27 @@
 import request from '@/utils/request'
 // import axios from 'axios'
 
+//  上传视频文件
+export function UpVideoFile(params) {
+  return request({
+    url: '/upload/upload',
+    method: 'post',
+    data: params
+  })
+}
+// 上传视频合并文件地址
+export function UpVideoFileMerge(params) {
+  return request({
+    url: '/upload/merge',
+    method: 'post',
+    data: params
+  })
+}
+
 //  获取等待制作视频列表
 export function getWaitMakeList(params) {
   return request({
-    url: 'order/yworderinfo/waitMakeList',
+    url: '/order/yworderinfo/waitMakeList',
     method: 'post',
     data: params
   })
@@ -34,17 +51,19 @@ export function getArchiveList(params) {
   })
 }
 //  订单作废
-export function getInvalidOrder(params) {
+export function getInvalidOrder(id, params) {
   return request({
-    url: 'order/yworderinfo/invalidOrder/' + params,
-    method: 'post'
+    url: 'order/yworderinfo/invalidOrder/' + id,
+    method: 'post',
+    data: params
   })
 }
 //  订单回退--制作打回,重新提交
-export function getBackOrder(params) {
+export function getBackOrder(id, params) {
   return request({
-    url: '/order/yworderinfo/backOrder/' + params,
-    method: 'post'
+    url: '/order/yworderinfo/backOrder/' + id,
+    method: 'post',
+    data: params
   })
 }
 // 视频制作--接单

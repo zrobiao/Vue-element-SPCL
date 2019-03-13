@@ -174,7 +174,6 @@ export default {
       })
     },
     pageChildFn(currentPage) {
-      console.log(currentPage)
       this.currPage = currentPage
       this.getTableList()
     },

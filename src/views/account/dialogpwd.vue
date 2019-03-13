@@ -54,10 +54,6 @@ export default {
           callback(new Error('密码不能小于5位'))
         }
         callback()
-        if (this.loginForm.newpass1 !== '') {
-          this.$refs.loginForm.validateField('newpass1')
-        }
-        callback()
       }
     }
     return {

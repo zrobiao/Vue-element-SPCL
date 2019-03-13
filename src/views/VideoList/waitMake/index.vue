@@ -9,9 +9,9 @@
       :send-data="upData"
       @listenSearch="searchSubData"
       @listenBtn="btnSubmitData"/>
-    <el-row>
+    <!-- <el-row>
       <el-col :span="24" class="btn">
-        <el-col v-show="showBtn" :span="24">
+        <el-col v-show="showBtn">
           <el-button type="danger" icon="el-icon-error" @click="orderInvalid">作废订单</el-button>
           <el-button type="warning" icon="el-icon-back" @click="orderBack">订单回退</el-button>
           <el-button type="success" icon="el-icon-upload" @click="videoUpload">上传成品视频</el-button>
@@ -19,7 +19,7 @@
           <el-button type="primary" icon="el-icon-download" @click="downloadVideo">下载视频素材</el-button>
         </el-col>
       </el-col>
-    </el-row>
+    </el-row> -->
     <div class="show-container">
       <el-row>
         <el-col :span="24">
@@ -30,9 +30,9 @@
             <el-table-column
               type="selection"
               width="55"/>
-            <el-table-column
+            <!-- <el-table-column
               prop="orderId"
-              label="订单ID"/>
+              label="订单ID"/> -->
             <el-table-column
               prop="orderNo"
               label="订单编号"
@@ -40,48 +40,38 @@
             <el-table-column
               prop="enterName"
               label="企业名称"
-              width="100"/>
+              width="120"/>
             <el-table-column
               prop="enterContact"
               label="企业联系人"
-              width="100"/>
+              width="120"/>
             <el-table-column
               prop="enterTel"
               label="企业联系电话"
               width="120"/>
             <el-table-column
-              prop="province"
-              label="归属省份"
-              width="80"/>
-            <el-table-column
-              prop="city"
-              label="归属城市"
-              width="80"/>
-            <el-table-column
-              prop="qq"
-              label="联系QQ"
-              width="100"/>
-            <el-table-column
-              prop="weixin"
-              label="联系微信"
-              width="100"/>
-            <el-table-column
-              prop="attchmentId"
-              label="资料关联Id"
-              width="300"/>
-            <el-table-column
-              prop="needRemark"
-              label="特需说明"
-              width="300"/>
-            <el-table-column
-              prop="makeFlag"
-              label="制作标识"
-              width="80">
-              <template slot-scope="scoped">
-                <el-tag v-show="scoped.row.makeFlag===1">制作</el-tag>
-                <el-tag v-show="scoped.row.makeFlag===2">成品</el-tag>
+              prop="orderState"
+              label="订单状态"
+              width="120">
+              <template slot-scope="scope">
+                <order-state :order-stus="scope.row.orderState"/>
               </template>
             </el-table-column>
+            <el-table-column
+              prop="makeFlag"
+              label="素材类型">
+              <template slot-scope="scoped">
+                <el-tag v-show="scoped.row.makeFlag===1">待制作素材</el-tag>
+                <el-tag v-show="scoped.row.makeFlag===2">成品视频</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="素材操作">
+              <template slot-scope="scoped">
+                <el-button type="button" size="small" @click="downVideo(scoped.row.orderId)">下载</el-button>
+              </template>
+            </el-table-column>
+
             <el-table-column
               prop="repressFlag"
               label="是否压标"
@@ -91,10 +81,6 @@
                 <el-tag v-show="scoped.row.repressFlag===2">否</el-tag>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="orderState"
-              label="订单状态"
-              width="100"/>
             <el-table-column
               prop="openType"
               label="开通类型"
@@ -110,96 +96,62 @@
               label="资费"
               width="80"/>
             <el-table-column
-              prop="createTime"
-              label="创建日期"
-              width="150"/>
-            <el-table-column
               prop="makeMoney"
               label="制作费"
               width="80"/>
             <el-table-column
-              prop="agentId"
-              label="所属代理商"
-              width="150"/>
-            <el-table-column
-              prop="makeTime"
-              label="制作完成日期"
-              width="150"/>
-            <el-table-column
-              prop="makeUserId"
-              label="视频制作人Id"
-              width="150"/>
-            <el-table-column
-              prop="makeUserName"
-              label="视频制作账户"
-              width="150"/>
-            <el-table-column
-              prop="repressTime"
-              label="压标完成日期"
-              width="150"/>
-            <el-table-column
-              prop="repressUserId"
-              label="视频压标人Id"
-              width="150"/>
-            <el-table-column
-              prop="repressUserName"
-              label="视频压标人账户"
-              width="150"/>
-            <el-table-column
-              prop="openTime"
-              label="开通完成日期"
-              width="150"/>
-            <el-table-column
-              prop="openUserId"
-              label="开通完成人Id"
-              width="150"/>
-            <el-table-column
-              prop="openUserName"
-              label="开通人账户"
-              width="150"/>
-            <el-table-column
-              prop="opreaBz"
-              label="订单备注"
-              width="150"/>
-            <el-table-column
-              prop="nodeMaxtime"
-              label="当前节点最晚完成日期"
-              width="180"/>
-            <el-table-column
-              prop="agentTopId"
-              label="所属总代理商Id"
-              width="150"/>
-            <el-table-column
-              prop="changeFileId"
-              label="更换视频关联素材Id"
-              width="180"/>
+              prop="createTime"
+              label="创建日期"/>
             <el-table-column
               label="操作"
-              width="100">
+              width="200"
+              fixed="right">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
-                <el-button type="text" size="small">编辑</el-button>
+                <el-button type="primary" size="small" @click="detailClick(scope.row.orderId)">查看</el-button>
+                <el-button
+                  v-if="scope.row.orderState===2||scope.row.orderState===21||scope.row.orderState===22||scope.row.orderState===23||scope.row.orderState===24"
+                  type="success"
+                  size="small"
+                  @click="upVideoFile">上传视频</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-col>
       </el-row>
+      <el-row type="flex" justify="end">
+        <el-col :span="9">
+          <paging-tabs :curr-page="currPage" :page-size="pageSize" :total-count="totalCount" :total-page="totalPage"/>
+        </el-col>
+      </el-row>
     </div>
-    <el-row type="flex" justify="end">
-      <el-col :span="9">
-        <paging-tabs :curr-page="currPage" :page-size="pageSize" :total-count="totalCount" :total-page="totalPage"/>
-      </el-col>
-    </el-row>
+    <el-dialog :visible.sync="menuDialog" title="订单详情" width="90%" top="5vh">
+      <dia-log :dia-info="dialogInfo" @dialogChild="dialogData"/>
+    </el-dialog>
+    <el-dialog :visible.sync="uploaderDialog" title="文件上传" width="70%" top="10vh">
+      <uploader-file/>
+    </el-dialog>
   </div>
 </template>
 <script>
+import {
+  getWaitMakeList,
+  getOrderInfo,
+  getMakeOrder,
+  getBackOrder,
+  getInvalidOrder
+} from '@/api/videoList'
 import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
-import { getWaitMakeList } from '@/api/videoList'
+import orderState from '../../OrderManage/orderstate'
+import diaLog from './dialog'
+import uploaderFile from '@/components/webuploader/uploaderFile'
 export default {
   components: {
     pagingTabs,
-    searchBar
+    searchBar,
+    diaLog,
+    orderState,
+    uploaderFile
   },
   data() {
     return {
@@ -243,6 +195,9 @@ export default {
       pageSize: 10,
       totalCount: 10,
       totalPage: 1,
+      dialogInfo: {},
+      menuDialog: false,
+      uploaderDialog: false,
       // 设置查询项目query
       query: {
         orderId: null,
@@ -259,7 +214,6 @@ export default {
   },
   methods: {
     // 子组件传输选择项目给父组件
-
     searchSubData(selectMsg, searchMsg) {
       switch (selectMsg) {
         case 'orderNo':
@@ -290,7 +244,6 @@ export default {
         currPage: this.currPage,
         query: this.query
       }
-      console.log(obj)
       getWaitMakeList(obj).then(res => {
         if (res.code === 0) {
           const status = res.data.opreaState
@@ -316,17 +269,77 @@ export default {
         }
       })
     },
-    handleClick(row) {
-      console.log(row)
-      alert(row.orderId)
+    detailClick(orderId) {
+      this.menuDialog = !this.menuDialog
+      getOrderInfo(orderId).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.dialogInfo = orderData
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
-    orderInvalid: function() {
-      alert('作废订单')
+    dialogData(value, orderId, data) {
+      if (value === 'accept') {
+        console.log('订单接受')
+        getMakeOrder(orderId).then(res => {
+          if (res.code === 0) {
+            const status = res.data.opreaState
+            if (status) {
+              this.$message.success('接单成功！')
+              this.WaitMakeList()
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else if (value === 'back') {
+        // console.log(value + ':' + orderId + ':' + data)
+        getBackOrder(orderId, data).then(res => {
+          if (res.code === 0) {
+            const status = res.data.opreaState
+            if (status) {
+              this.$message.success('回退成功！')
+              this.WaitMakeList()
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else if (value === 'invalid') {
+        console.log('订单作废')
+        getInvalidOrder(orderId).then(res => {
+          if (res.code === 0) {
+            const status = res.data.opreaState
+            if (status) {
+              this.$message.success('订单作废！')
+              this.WaitMakeList()
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+      this.menuDialog = !this.menuDialog
     },
-    orderBack: function() {},
-    videoUpload: function() {},
-    confirmVideo: function() {},
-    downloadVideo: function() {}
+    downVideo(fileId) {
+      console.log('开始下载素材' + fileId)
+    },
+    upVideoFile() {
+      this.uploaderDialog = !this.uploaderDialog
+    }
   }
 }
 </script>

@@ -101,7 +101,7 @@ import { getArchiveList, getOrderInfo } from '@/api/videoList'
 import searchBar from '@/components/search'
 import pagiTabs from '@/components/pagination'
 import diaLog from './dialog'
-import orderState from './orderstate'
+import orderState from '../orderstate'
 export default {
   components: {
     searchBar,

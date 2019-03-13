@@ -47,15 +47,6 @@ const ordermanageRouter = {
       }
     },
     {
-      path: 'waitVerify',
-      component: () => import('@/views/OrderManage/waitVerify/index'),
-      name: 'OrderManage-waitVerify',
-      meta: {
-        title: '等待确认',
-        icon: 'waitVerify'
-      }
-    },
-    {
       path: 'archiveOrder',
       component: () => import('@/views/OrderManage/archiveOrder/index'),
       name: 'OrderManage-archiveOrder',

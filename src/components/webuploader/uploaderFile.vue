@@ -1,7 +1,21 @@
 <template>
   <div class="page">
-    <div id="filePicker">选择文件</div>
-
+    <el-row v-show="upType===1">
+      <el-col :span="24">
+        <h3>1、格式</h3>
+        <p>视频格式：mpeg,vob,mp4,avi,mpg,wmv,mov,mkv；</p>
+        <p>图片格式： jpg ，jpeg ，gif ，png ，bmp。</p>
+        <p>分辨率：最低640*480，时长不低于30秒</p>
+        <h3>2、 内容</h3>
+        <p>视频及图片内容信息需真实有效，不得宣传虚假信息。内容不涉及计黄、赌、毒及违法，违规，涉政的敏感内容。内容不涉及辱骂谩骂、造谣传谣、版权侵犯、垃圾广告、邪教传播等内容。
+        内容不能出现模糊、音视频不同步、扭曲、不合理裁剪或改变片源比例等情况。</p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col>
+        <div id="filePicker">选择文件</div>
+      </el-col>
+    </el-row>
     <div class="file-panel">
       <h2>文件列表</h2>
       <div class="file-list">
@@ -20,7 +34,6 @@
         <div v-if="!fileList.length" class="no-file"><i class="iconfont icon-empty-file"/> 暂无待上传文件</div>
       </div>
     </div>
-
     <vue-upload
       ref="uploader"
       :url="upFileUrl"
@@ -30,10 +43,9 @@
       @fileChange="fileChange"
       @progress="onProgress"
       @success="onSuccess"
-    />
+      @error="onError"/>
   </div>
 </template>
-
 <script>
 import vueUpload from './index'
 import $ from 'jquery'
@@ -42,6 +54,16 @@ import { UpVideoFileMerge } from '@/api/videoList'
 export default {
   components: {
     vueUpload
+  },
+  props: {
+    upType: {
+      type: Number,
+      default: 0
+    },
+    upHintmsg: {
+      type: String,
+      default: '操作成功'
+    }
   },
   data() {
     return {
@@ -63,26 +85,32 @@ export default {
     fileChange(file) {
       if (!file.size) return
       this.fileList.push(file)
-      console.log(file)
     },
     onProgress(file, percent) {
       $(`.file-${file.id} .progress`).css('width', percent * 100 + '%')
       $(`.file-${file.id} .file-status`).html((percent * 100).toFixed(2) + '%')
     },
-    onSuccess(file, response) {
-      this.guid = this.upFile.Base.guid()
-      console.log('上传成功', response)
+    onSuccess(guid, file, response) {
       const params = {
-        guid: this.guid,
+        guid: guid,
         fileName: file.name,
-        uploadType: 1
+        uploadType: this.upType
+      }
+      if (this.upType === 0) {
+        return this.$message.error('请设置文件上传类型！')
       }
       UpVideoFileMerge(params).then(res => {
         if (res.code === 0) {
           const status = res.data.opreaState
           if (status) {
-            const orderData = res.data.data
-            this.dialogInfo = orderData
+            const BackData = res.data.data
+            this.$confirm('文件上传成功', '提示', {
+              confirmButtonText: '确定',
+              type: 'warning'
+            }).then(() => {
+              this.remove(file)
+              this.$emit('uploadeBackFn', BackData)
+            })
           } else {
             this.$message.error(res.data.msg)
           }
@@ -90,22 +118,9 @@ export default {
           this.$message.error(res.msg)
         }
       })
-      // if (response.needMerge) {
-      //   this.upFile.mergeUpload({
-      //     tempName: response.tempName,
-      //     fileName: file.name
-      //   }).then(res => {
-      //     const $fileStatus = $(`.file-${file.id} .file-status`)
-      //     console.log(res)
-      //     if (res.status === 0) {
-      //       $fileStatus.html('上传成功，转码中')
-      //     } else if (res.status === 1) {
-      //       $fileStatus.html('上传失败')
-      //     } else if (res.status === 2) {
-      //       $fileStatus.html('上传成功')
-      //     }
-      //   })
-      // }
+    },
+    onError(error) {
+      this.$message.error(error)
     },
     resume(file) {
       this.uploader.upload(file)
@@ -146,6 +161,16 @@ export default {
 
 <style lang="scss">
     $h-row: 50px;
+    .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .infotitle{
+      color:#409EFF;
+      padding: 12px 0;
+    }
+  }
     .file-panel {
         width: 840px;
         margin-top: 10px;

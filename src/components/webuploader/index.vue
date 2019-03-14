@@ -3,11 +3,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import JQ from 'jquery'
 export default {
   name: 'VueUpload',
   props: {
     accept: {
-      type: Object,
+      type: String,
       default: null
     },
     // 上传地址
@@ -55,6 +57,14 @@ export default {
       guid: null
     }
   },
+  computed: {
+    ...mapGetters([
+      'token'
+    ])
+  },
+  created() {
+    // this.guid = this.upFile.Base.guid()
+  },
   mounted() {
     this.initWebUpload()
   },
@@ -74,10 +84,19 @@ export default {
         threads: 3,
         fileNumLimit: this.fileNumLimit, // 限制上传个数
         // fileSingleSizeLimit: this.fileSingleSizeLimit, // 限制单个上传图片的大小
-        formData: { guid: this.GUID }, // 上传所需参数
+        formData: {
+          guid: this.guid
+        }, // 上传所需参数
         chunked: true, // 分片上传
-        chunkSize: 2048000, // 分片大小
+        chunkSize: 2 * 1024 * 1024, // 分片大小10M
         duplicate: true // 重复上传
+      })
+      // 使用token进行跨域解决
+      this.uploader.on('uploadBeforeSend', (obj, data, headers) => {
+        const token = this.token
+        JQ.extend(headers, {
+          token
+        })
       })
       // 当有文件被添加进队列的时候，添加到页面预览
       this.uploader.on('fileQueued', (file) => {
@@ -92,7 +111,7 @@ export default {
         this.$emit('progress', file, percentage)
       })
       this.uploader.on('uploadSuccess', (file, response) => {
-        this.$emit('success', file, response)
+        this.$emit('success', this.guid, file, response)
       })
       this.uploader.on('uploadError', (file, reason) => {
         console.error(reason)
@@ -136,22 +155,22 @@ export default {
             exteensions: 'doc,docx,xls,xlsx,ppt,pptx,pdf,txt',
             mimeTypes: '.doc,docx,.xls,.xlsx,.ppt,.pptx,.pdf,.txt'
           }
-          break
+          // break
         case 'video':
           return {
             title: 'Videos',
             exteensions: 'mpeg,vob,mp4,avi,mpg,wmv,mov,mkv',
             mimeTypes: '.mp4'
           }
-          break
+          // break
         case 'image':
           return {
             title: 'Images',
             exteensions: 'gif,jpg,jpeg,bmp,png',
             mimeTypes: '.gif,.jpg,.jpeg,.bmp,.png'
           }
-          break
-        default :return accept
+          // break
+        default : return accept
       }
     }
   }

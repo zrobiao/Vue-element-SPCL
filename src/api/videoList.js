@@ -14,7 +14,7 @@ export function UpVideoFileMerge(params) {
   return request({
     url: '/upload/merge',
     method: 'post',
-    data: params
+    params
   })
 }
 

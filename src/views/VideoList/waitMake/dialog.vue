@@ -102,20 +102,20 @@
       <el-col :span="6" :offset="18" class="el-col-dafine">
         <el-button type="warning" @click="closeDialog">返回</el-button>
         <el-button v-if="diaInfo.orderState===1||diaInfo.orderState===11||diaInfo.orderState===13||diaInfo.orderState===14" type="warning" @click="sureDialog('accept',diaInfo.orderId)">接单制作</el-button>
-        <el-button v-if="diaInfo.orderState!==13||diaInfo.orderState!==14" type="primary" @click="openDialog('back')">订单回退</el-button>
-        <el-button type="primary" @click="openDialog('invalid')">订单作废</el-button>
+        <el-button v-if="diaInfo.orderState!==13||diaInfo.orderState!==14" type="primary" @click="openDialog('back','回退备注')">订单回退</el-button>
+        <el-button type="primary" @click="openDialog('invalid','作废备注')">订单作废</el-button>
         <!-- <el-button type="primary"  @click="sureDialog('upvideo',diaInfo.orderId)">上传视频</el-button> -->
       </el-col>
     </el-row>
     <el-dialog
       :visible.sync="hintVisible"
       :before-close="handleClose"
-      title="操作备注"
+      :title="backMsg"
       width="30%"
       append-to-body>
       <el-row>
         <el-col :span="24">
-          <label>填写备注：</label>
+          <label>回馈原因：</label>
           <el-input v-model="comitMsg" type="textarea"/>
         </el-col>
       </el-row>
@@ -154,9 +154,10 @@ export default {
     handleClose() {
       this.hintVisible = !this.hintVisible
     },
-    openDialog(value) {
+    openDialog(value, msg) {
       this.hintVisible = !this.hintVisible
       this.operatTitle = value
+      this.backMsg = msg
     },
     closeDialog(value) {
       this.$emit('dialogChild')

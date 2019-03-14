@@ -127,8 +127,9 @@
     <el-dialog :visible.sync="menuDialog" title="订单详情" width="90%" top="5vh">
       <dia-log :dia-info="dialogInfo" @dialogChild="dialogData"/>
     </el-dialog>
-    <el-dialog :visible.sync="uploaderDialog" title="文件上传" width="70%" top="10vh">
-      <uploader-file/>
+    <el-dialog :visible.sync="uploaderDialog" title="文件上传" top="10vh">
+      <!-- uploadType:  uploadType: 1:用户素材  2:制作视频 3:压标视频  4:成品视频 5.企业资质 6:免责协议 7:其他文件 -->
+      <uploader-file :up-type="2" :up-hintmsg="upOkMsg" @uploadeBackFn="uploadeBackFn"/>
     </el-dialog>
   </div>
 </template>
@@ -198,6 +199,7 @@ export default {
       dialogInfo: {},
       menuDialog: false,
       uploaderDialog: false,
+      upOkMsg: '制作视频上传成功！确认通知用户确认订单',
       // 设置查询项目query
       query: {
         orderId: null,
@@ -287,7 +289,6 @@ export default {
     },
     dialogData(value, orderId, data) {
       if (value === 'accept') {
-        console.log('订单接受')
         getMakeOrder(orderId).then(res => {
           if (res.code === 0) {
             const status = res.data.opreaState
@@ -302,7 +303,6 @@ export default {
           }
         })
       } else if (value === 'back') {
-        // console.log(value + ':' + orderId + ':' + data)
         getBackOrder(orderId, data).then(res => {
           if (res.code === 0) {
             const status = res.data.opreaState
@@ -317,7 +317,6 @@ export default {
           }
         })
       } else if (value === 'invalid') {
-        console.log('订单作废')
         getInvalidOrder(orderId).then(res => {
           if (res.code === 0) {
             const status = res.data.opreaState
@@ -339,6 +338,10 @@ export default {
     },
     upVideoFile() {
       this.uploaderDialog = !this.uploaderDialog
+    },
+    uploadeBackFn(data) {
+      this.uploaderDialog = !this.uploaderDialog
+      console.log('backMsg：' + data)
     }
   }
 }

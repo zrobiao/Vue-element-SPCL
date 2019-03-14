@@ -13,6 +13,8 @@ import systemadminRouter from './modules/systemadmin'
 import operationRouter from './modules/operation'
 import ordermanageRouter from './modules/ordermanage'
 import reportformsRouter from './modules/reportforms'
+import makeVideoRouter from './modules/makeVideo'
+import pressVideoRouter from './modules/pressVideo'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -69,89 +71,8 @@ export const constantRouterMap = [
   },
   systemadminRouter,
   operationRouter,
-  {
-    path: '/VideoList',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'VideoList',
-    meta: {
-      title: '制作视频',
-      icon: 'VideoList'
-    },
-    children: [
-      {
-        path: 'waitMake',
-        component: () => import('@/views/VideoList/waitMake/index'),
-        name: 'OrderManage-waitMake',
-        meta: {
-          title: '等待制作订单',
-          icon: 'waitMake'
-        }
-      }, {
-        path: 'waitVerify',
-        component: () => import('@/views/OrderManage/waitVerify/index'),
-        name: 'OrderManage-waitVerify',
-        meta: {
-          title: '等待客户确认',
-          icon: 'waitVerify'
-        }
-      },
-      {
-        path: 'finishVideo',
-        component: () => import('@/views/VideoList/finishVideo/index'),
-        name: 'finishVideo',
-        meta: {
-          title: '完成制作订单',
-          icon: 'finishVideo'
-        }
-      }]
-  },
-  {
-    path: '/Pressmanage',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'PressList',
-    meta: {
-      title: '压标管理',
-      icon: 'VideoList'
-    },
-    children: [{
-      path: 'waitPress',
-      component: () => import('@/views/OrderManage/waitPress/index'),
-      name: 'OrderManage-waitPress',
-      meta: {
-        title: '待压标订单',
-        icon: 'waitPress'
-      }
-    },
-    {
-      path: 'pressVideo',
-      component: () => import('@/views/VideoList/pressVideo/index'),
-      name: 'pressVideo',
-      meta: {
-        title: '已完成压标',
-        icon: 'pressVideo'
-      }
-    },
-    {
-      path: 'pressStatis-pt',
-      component: () => import('@/views/reportforms/pressStatis-pt/index'),
-      name: 'reportforms-pressStatis-pt',
-      meta: {
-        title: '压标完成统计-平台',
-        icon: 'pressStatis'
-      }
-    }, {
-      path: 'pressStatis-yb',
-      component: () => import('@/views/reportforms/pressStatis-yb/index'),
-      name: 'reportforms-pressStatis-yb',
-      meta: {
-        title: '压标完成统计-人员',
-        icon: 'pressStatis'
-      }
-    }
-    ]
-  },
+  makeVideoRouter,
+  pressVideoRouter,
   ordermanageRouter,
   reportformsRouter,
   { path: '*', redirect: '/404', hidden: true }

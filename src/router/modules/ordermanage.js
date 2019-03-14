@@ -6,7 +6,7 @@ const ordermanageRouter = {
   redirect: 'noredirect',
   name: 'ordermanage',
   meta: {
-    title: '订单管理',
+    title: '订单管理列表',
     icon: 'ordermanage'
   },
   children: [
@@ -15,7 +15,7 @@ const ordermanageRouter = {
       component: () => import('@/views/OrderManage/validOrder/index'),
       name: 'OrderManage-validOrder',
       meta: {
-        title: '有效订单',
+        title: '有效订单列表',
         icon: 'validOrder'
       }
     },
@@ -24,7 +24,7 @@ const ordermanageRouter = {
       component: () => import('@/views/OrderManage/discardOrder/index'),
       name: 'OrderManage-discardOrder',
       meta: {
-        title: '废弃订单',
+        title: '废弃订单列表',
         icon: 'discardOrder'
       }
     },
@@ -33,7 +33,7 @@ const ordermanageRouter = {
       component: () => import('@/views/OrderManage/waitOpen/index'),
       name: 'OrderManage-waitOpen',
       meta: {
-        title: '等待开通',
+        title: '等待开通列表',
         icon: 'waitOpen'
       }
     },
@@ -42,7 +42,7 @@ const ordermanageRouter = {
       component: () => import('@/views/OrderManage/userOpen/index'),
       name: 'OrderManage-userOpen',
       meta: {
-        title: '开通用户',
+        title: '开通用户列表',
         icon: 'userOpen'
       }
     },
@@ -51,7 +51,7 @@ const ordermanageRouter = {
       component: () => import('@/views/OrderManage/archiveOrder/index'),
       name: 'OrderManage-archiveOrder',
       meta: {
-        title: '归档订单',
+        title: '归档订单列表',
         icon: 'archiveOrder'
       }
     },
@@ -60,7 +60,7 @@ const ordermanageRouter = {
       component: () => import('@/views/OrderManage/resetVideo/index'),
       name: 'OrderManage-resetVideo',
       meta: {
-        title: '重设视频',
+        title: '重设视频列表',
         icon: 'resetVideo'
       }
     }

@@ -124,12 +124,16 @@ export function orderStateStus() {
       label: '制作打回,重新提交'
     },
     {
+      value: '14',
+      label: '制作打回,视频更换'
+    },
+    {
       value: '2',
-      label: '制作中 '
+      label: '制作中，已接单 '
     },
     {
       value: '21',
-      label: '制作中，视频更换,'
+      label: '制作中，素材新增,视频更换'
     },
     {
       value: '22',
@@ -148,12 +152,16 @@ export function orderStateStus() {
       label: '等待客户确认'
     },
     {
+      value: '31',
+      label: '客户确认--更换视频'
+    },
+    {
       value: '4',
       label: '等待压标，制作视频 '
     },
     {
       value: '41',
-      label: '成品视频压标'
+      label: '等待视频压标,更换视频'
     },
     {
       value: '5',
@@ -161,27 +169,27 @@ export function orderStateStus() {
     },
     {
       value: '51',
-      label: '等待开通，更换视频'
+      label: '全部用户更换视频'
     },
     {
       value: '52',
-      label: '等待开通,重设全部用户 '
+      label: '重设全部用户视频'
     },
     {
       value: '53',
-      label: '等待开通，重设部分用户'
+      label: '重设部分用户视频'
     },
     {
       value: '54',
-      label: '等待开通，客户成品视频'
+      label: '成品视频开通用户'
     },
     {
       value: '55',
-      label: '等待开通,订单新增用户'
+      label: '新增用户'
     },
     {
       value: '56',
-      label: '等待开通,订单删除用户'
+      label: '删除用户'
     },
     {
       value: '6',

@@ -96,7 +96,10 @@
   </div>
 </template>
 <script>
-import { getDiscardList, getOrderInfo } from '@/api/videoList'
+import {
+  getUserPhoneOrderList,
+  getUserPhoneOrderInfo
+} from '@/api/videoList'
 // import { orderStateStus } from '@/utils/index'
 import searchBar from '@/components/search'
 import pagiTabs from '@/components/pagination'
@@ -116,20 +119,20 @@ export default {
       isBtn: false,
       preParent: 'menu',
       preOptions: [{
+        value: null,
+        label: '全部搜索'
+      }, {
         value: 'orderNo',
         label: '订单编号'
       }, {
         value: 'enterName',
         label: '企业名称'
       }, {
-        value: 'enterContact',
-        label: '企业联系人'
+        value: 'phone',
+        label: '开通电话'
       }, {
-        value: 'enterTel',
-        label: '企业联系电话'
-      }, {
-        value: 'orderState',
-        label: '订单状态',
+        value: 'phoneState',
+        label: '用户状态',
         children: [{
           value: '7',
           label: '订单作废'
@@ -144,8 +147,8 @@ export default {
           label: '订单作废,客户成品视频运营商视频不通过'
         }]
       }, {
-        value: 'openType',
-        label: '开通类型',
+        value: 'phoneType',
+        label: '用户类型',
         children: [{
           value: '1',
           label: '移动'
@@ -171,10 +174,11 @@ export default {
       query: {
         orderNo: null,
         enterName: null,
-        enterContact: null,
-        enterTel: null,
-        orderState: null,
-        openType: null
+        phone: null,
+        phoneState: null,
+        phoneType: null
+        // minTime: null,
+        // maxTime: null
       }
     }
   },
@@ -191,7 +195,7 @@ export default {
         currPage: this.currPage,
         query: this.query
       }
-      getDiscardList(params).then(res => {
+      getUserPhoneOrderList(params).then(res => {
         if (res.code === 0) {
           const status = res.data.opreaState
           if (status) {
@@ -203,10 +207,11 @@ export default {
             this.tableData = orderData.list
             this.query.orderNo = null
             this.query.enterName = null
-            this.query.enterContact = null
-            this.query.enterTel = null
-            this.query.openType = null
-            this.query.orderState = null
+            this.query.phone = null
+            this.query.phoneType = null
+            this.query.phoneState = null
+            // this.query.minTime = null
+            // this.query.maxTime = null
           } else {
             this.$message.error(res.data.msg)
           }
@@ -229,18 +234,16 @@ export default {
         case 'enterName':
           this.query.enterName = searchMsg
           break
-        case 'enterContact':
-          this.query.enterContact = searchMsg
+        case 'phone':
+          this.query.phone = searchMsg
           break
-        case 'enterTel':
-          this.query.enterTel = searchMsg
-          break
-        case 'orderState':
+        case 'phoneState':
           this.query.orderState = searchMsg
           break
-        case 'openType':
+        case 'phoneType':
           this.query.openType = searchMsg
           break
+        default:this.getTableList()
       }
       this.getTableList()
     },
@@ -254,7 +257,7 @@ export default {
     },
     detailClick(orderId) {
       this.menuDialog = !this.menuDialog
-      getOrderInfo(orderId).then(res => {
+      getUserPhoneOrderInfo(orderId).then(res => {
         this.dialogInfo = res.data
       })
     }

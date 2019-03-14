@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row :gutter="15">
-      <el-col v-if="showDate" :span="5">
-        <div class="block">
+      <el-col v-if="showDate" :span="8">
+        <!-- <div class="block">
           <span class="demonstration">起始日期</span>
           <el-date-picker
             v-model="time1"
@@ -19,7 +19,17 @@
             align="right"
             type="date"
             placeholder="选择日期"/>
-        </div>
+        </div> -->
+        <el-date-picker
+          v-model="time1"
+          type="daterange"
+          clearable
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @change="selectTime"/>
       </el-col>
       <el-col v-show="showSearch" :span="5" class="search">
         <el-cascader
@@ -110,6 +120,9 @@ export default {
         return this.$message.error('请选择一个数据选择操作！')
       }
       this.$emit('listenBtn', titName, sendData)
+    },
+    selectTime(val) {
+      console.log(val)
     },
     changeHandle(val) {
       this.searchMsg = ''

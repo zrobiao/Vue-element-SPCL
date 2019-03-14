@@ -116,6 +116,9 @@ export default {
       isBtn: false,
       preParent: 'menu',
       preOptions: [{
+        value: null,
+        label: '全部搜索'
+      }, {
         value: 'orderNo',
         label: '订单编号'
       }, {
@@ -169,7 +172,9 @@ export default {
         enterContact: null,
         enterTel: null,
         orderState: null,
-        openType: null
+        openType: null,
+        minTime: null,
+        maxTime: null
       }
     }
   },
@@ -202,6 +207,8 @@ export default {
             this.query.enterTel = null
             this.query.openType = null
             this.query.orderState = null
+            this.query.minTime = null
+            this.query.maxTime = null
           } else {
             this.$message.error(res.data.msg)
           }
@@ -236,6 +243,7 @@ export default {
         case 'openType':
           this.query.openType = searchMsg
           break
+        default:this.getTableList()
       }
       this.getTableList()
     },

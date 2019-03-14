@@ -115,49 +115,14 @@ export default {
       isSearch: true,
       isBtn: false,
       preParent: 'menu',
-      preOptions: [{
-        value: 'orderNo',
-        label: '订单编号'
-      }, {
-        value: 'enterName',
-        label: '企业名称'
-      }, {
-        value: 'enterContact',
-        label: '企业联系人'
-      }, {
-        value: 'enterTel',
-        label: '企业联系电话'
-      }, {
-        value: 'orderState',
-        label: '订单状态',
-        children: [{
-          value: '7',
-          label: '订单作废'
+      preOptions: [
+        {
+          value: null,
+          label: '全部搜索'
         }, {
-          value: '71',
-          label: '订单作废,客户作废'
-        }, {
-          value: '72',
-          label: '订单作废,制作人员作废'
-        }, {
-          value: '73',
-          label: '订单作废,客户成品视频运营商视频不通过'
-        }]
-      }, {
-        value: 'openType',
-        label: '开通类型',
-        children: [{
-          value: '1',
-          label: '移动'
-        }, {
-          value: '2',
-          label: '联通'
-        }, {
-          value: '3',
-          label: '电信'
-
-        }]
-      }],
+          value: 'orderNo',
+          label: '订单编号'
+        }],
       upData: 0,
       diaTitle: '',
       dialogInfo: {},
@@ -170,11 +135,8 @@ export default {
       tableData: [],
       query: {
         orderNo: null,
-        enterName: null,
-        enterContact: null,
-        enterTel: null,
-        orderState: null,
-        openType: null
+        minTime: null,
+        maxTime: null
       }
     }
   },
@@ -202,11 +164,8 @@ export default {
             this.totalPage = orderData.totalPage
             this.tableData = orderData.list
             this.query.orderNo = null
-            this.query.enterName = null
-            this.query.enterContact = null
-            this.query.enterTel = null
-            this.query.openType = null
-            this.query.orderState = null
+            this.query.minTime = null
+            this.query.maxTime = null
           } else {
             this.$message.error(res.data.msg)
           }
@@ -226,21 +185,7 @@ export default {
         case 'orderNo':
           this.query.orderNo = searchMsg
           break
-        case 'enterName':
-          this.query.enterName = searchMsg
-          break
-        case 'enterContact':
-          this.query.enterContact = searchMsg
-          break
-        case 'enterTel':
-          this.query.enterTel = searchMsg
-          break
-        case 'orderState':
-          this.query.orderState = searchMsg
-          break
-        case 'openType':
-          this.query.openType = searchMsg
-          break
+        default:this.getTableList()
       }
       this.getTableList()
     },

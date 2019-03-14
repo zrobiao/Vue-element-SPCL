@@ -96,12 +96,12 @@
   </div>
 </template>
 <script>
-import { getWaitOpenList, getOrderInfo } from '@/api/videoList'
+import { getWaitConfirmList, getOrderInfo } from '@/api/videoList'
 // import { orderStateStus } from '@/utils/index'
 import searchBar from '@/components/search'
 import pagiTabs from '@/components/pagination'
 import diaLog from './dialog'
-import orderState from '../orderstate'
+import orderState from '../../OrderManage/orderstate'
 export default {
   components: {
     searchBar,
@@ -115,67 +115,49 @@ export default {
       isSearch: true,
       isBtn: false,
       preParent: 'menu',
-      preOptions: [{
-        value: null,
-        label: '全部搜索'
-      }, {
-        value: 'orderNo',
-        label: '订单编号'
-      }, {
-        value: 'enterName',
-        label: '企业名称'
-      }, {
-        value: 'enterContact',
-        label: '企业联系人'
-      }, {
-        value: 'enterTel',
-        label: '企业联系电话'
-      }, {
-        value: 'orderState',
-        label: '订单状态',
-        children: [{
-          value: '5',
-          label: '等待开通 '
-        },
+      preOptions: [
         {
-          value: '51',
-          label: '等待开通，更换视频'
-        },
-        {
-          value: '52',
-          label: '等待开通,重设全部用户 '
-        },
-        {
-          value: '53',
-          label: '等待开通，重设部分用户'
-        },
-        {
-          value: '54',
-          label: '等待开通，客户成品视频'
-        },
-        {
-          value: '55',
-          label: '等待开通,订单新增用户'
-        },
-        {
-          value: '56',
-          label: '等待开通,订单删除用户'
-        }]
-      }, {
-        value: 'openType',
-        label: '开通类型',
-        children: [{
-          value: '1',
-          label: '移动'
+          value: null,
+          label: '全部搜索'
         }, {
-          value: '2',
-          label: '联通'
+          value: 'orderNo',
+          label: '订单编号'
         }, {
-          value: '3',
-          label: '电信'
+          value: 'enterName',
+          label: '企业名称'
+        }, {
+          value: 'enterContact',
+          label: '企业联系人'
+        }, {
+          value: 'enterTel',
+          label: '企业联系电话'
+        }, {
+          value: 'orderState',
+          label: '订单状态',
+          children: [
+            {
+              value: '3',
+              label: '等待客户确认'
+            },
+            {
+              value: '31',
+              label: '客户确认--更换视频'
+            }]
+        }, {
+          value: 'openType',
+          label: '开通类型',
+          children: [{
+            value: '1',
+            label: '移动'
+          }, {
+            value: '2',
+            label: '联通'
+          }, {
+            value: '3',
+            label: '电信'
 
-        }]
-      }],
+          }]
+        }],
       upData: 0,
       diaTitle: '',
       dialogInfo: {},
@@ -211,7 +193,7 @@ export default {
         currPage: this.currPage,
         query: this.query
       }
-      getWaitOpenList(params).then(res => {
+      getWaitConfirmList(params).then(res => {
         if (res.code === 0) {
           const status = res.data.opreaState
           if (status) {

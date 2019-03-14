@@ -170,3 +170,61 @@ export function getOrderInfo(params) {
     method: 'get'
   })
 }
+
+/* ---------------这里是分割线------------------------- */
+// 开通用户信息列表
+export function getUserPhoneOrderList(params) {
+  return request({
+    url: '/order/ywuserphone/list',
+    method: 'post',
+    data: params
+  })
+}
+// 视频订单用户详细信息
+export function getUserPhoneOrderInfo(params) {
+  return request({
+    url: '/order/ywuserphone/info/' + params,
+    method: 'get'
+    // data: params
+  })
+}
+// 开通用户成功
+export function getUserPhoneOrderOpenPhone(phoneId) {
+  return request({
+    url: '/order/ywuserphone/openPhone/' + phoneId,
+    method: 'post'
+    // data: params
+  })
+}
+// 开通用户失败
+export function getUserPhoneOrderFailPhone(phoneId, state) {
+  return request({
+    url: '/order/ywuserphone/failPhone/' + phoneId + '/' + state,
+    method: 'post'
+    // data: params
+  })
+}
+// 取消用户--删除用户
+export function getUserPhoneOrderConcelPhone(phoneId) {
+  return request({
+    url: '/order/ywuserphone/concelPhone/' + phoneId,
+    method: 'post'
+    // data: params
+  })
+}
+// 退订用户
+export function getUserPhoneBackUserPhone(phoneId) {
+  return request({
+    url: '/order/ywuserphone/unsubscribePhone/' + phoneId,
+    method: 'post'
+    // data: params
+  })
+}
+// 作废用户
+export function getUserPhoneInvalidPhone(phoneId) {
+  return request({
+    url: '/order/ywuserphone/invalidPhone/' + phoneId,
+    method: 'post'
+    // data: params
+  })
+}

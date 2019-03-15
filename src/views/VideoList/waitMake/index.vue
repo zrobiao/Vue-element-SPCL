@@ -71,7 +71,6 @@
                 <el-button type="button" size="small" @click="downVideo(scoped.row.orderId)">下载</el-button>
               </template>
             </el-table-column>
-
             <el-table-column
               prop="repressFlag"
               label="是否压标"
@@ -112,7 +111,7 @@
                   v-if="scope.row.orderState===2||scope.row.orderState===21||scope.row.orderState===22||scope.row.orderState===23||scope.row.orderState===24"
                   type="success"
                   size="small"
-                  @click="upVideoFile">上传视频</el-button>
+                  @click="upVideoFile(scope.row.orderId)">上传视频</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -139,7 +138,8 @@ import {
   getOrderInfo,
   getMakeOrder,
   getBackOrder,
-  getInvalidOrder
+  getInvalidOrder,
+  getMakeFinish
 } from '@/api/videoList'
 import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
@@ -245,6 +245,7 @@ export default {
       menuDialog: false,
       uploaderDialog: false,
       upOkMsg: '制作视频上传成功！确认通知用户确认订单',
+      cuurOrderId: null,
       // 设置查询项目query
       query: {
         enterName: null,
@@ -253,8 +254,8 @@ export default {
         enterTel: null,
         orderState: null,
         openType: null,
-        minTime: null,
-        maxTime: null
+        startDate: null,
+        endDate: null
       }
     }
   },
@@ -386,12 +387,34 @@ export default {
     downVideo(fileId) {
       console.log('开始下载素材' + fileId)
     },
-    upVideoFile() {
+    upVideoFile(orderId) {
       this.uploaderDialog = !this.uploaderDialog
+      this.cuurOrderId = orderId
     },
     uploadeBackFn(data) {
       this.uploaderDialog = !this.uploaderDialog
-      console.log('backMsg：' + data)
+      const urlArr = data.split('/')
+      const urlArrLst = urlArr[urlArr.length - 1]
+      const fileName = urlArrLst.split('.')[0]
+      const fileType = urlArrLst.split('.')[1]
+      const fileParams = {
+        fileName: fileName,
+        fileUrl: data,
+        fileType: fileType
+      }
+      getMakeFinish(this.cuurOrderId, fileParams).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            this.$message.success('通知客服确认成功！')
+            this.WaitMakeList()
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   }
 }

@@ -23,7 +23,7 @@
         <span>微信：</span>&nbsp;&nbsp;&nbsp;<span class="showhint"> {{ diaInfo.weixin }}</span>
       </el-col>
       <el-col :span="6" class="el-col-dafine">
-        <span>所属代理商：</span>&nbsp;&nbsp;&nbsp;<span class="showhint"> {{ diaInfo.agentId }}</span>
+        <span>所属代理商：</span>&nbsp;&nbsp;&nbsp;<span class="showhint"> {{ diaInfo.agentName }}</span>
       </el-col>
     </el-row>
     <el-row :gutter="15">
@@ -78,18 +78,18 @@
     <el-row :gutter="15">
       <el-col v-if="diaInfo.makeFlag ===1" :span="6" class="el-col-dafine">
         <span>制作完成人&nbsp;/&nbsp;完成时间:</span>&nbsp;&nbsp;&nbsp;
-        <span class="showhint">{{ diaInfo.makeUserName===null?'...':diaInfo.makeUserName }}&nbsp;/&nbsp;{{ diaInfo.makeTime===null?'...':diaInfo.makeTime }}</span>
+        <span class="showhint">{{ diaInfo.makeUserName===null?'暂无':diaInfo.makeUserName }}&nbsp;/&nbsp;{{ diaInfo.makeTime===null?'暂无':diaInfo.makeTime }}</span>
       </el-col>
       <el-col v-if="diaInfo.repressFlag ===1" :span="6" class="el-col-dafine">
         <span>压标完成人&nbsp;/&nbsp;完成时间:</span>&nbsp;&nbsp;&nbsp;
-        <span class="showhint">{{ diaInfo.repressUserName===null?'...':diaInfo.repressUserName }}&nbsp;/&nbsp;{{ diaInfo.repressTime===null?'...':diaInfo.repressTime }}</span>
+        <span class="showhint">{{ diaInfo.repressUserName===null?'暂无':diaInfo.repressUserName }}&nbsp;/&nbsp;{{ diaInfo.repressTime===null?'暂无':diaInfo.repressTime }}</span>
       </el-col>
       <el-col :span="6" class="el-col-dafine">
         <span>开通完成人&nbsp;/&nbsp;完成时间:</span>&nbsp;&nbsp;&nbsp;
-        <span class="showhint">{{ diaInfo.openUserName===null?'...':diaInfo.openUserName }}&nbsp;/&nbsp;{{ diaInfo.openTime===null?'...':diaInfo.openTime }}</span>
+        <span class="showhint">{{ diaInfo.openUserName===null?'暂无':diaInfo.openUserName }}&nbsp;/&nbsp;{{ diaInfo.openTime===null?'暂无':diaInfo.openTime }}</span>
       </el-col>
       <el-col :span="6" class="el-col-dafine">
-        <span>当前节点最晚完成时间:</span>&nbsp;&nbsp;&nbsp;<span class="showhint">{{ diaInfo.nodeMaxtime===null?'...':diaInfo.nodeMaxtime }}</span>
+        <span>当前节点最晚完成时间:</span>&nbsp;&nbsp;&nbsp;<span class="showhint">{{ diaInfo.nodeMaxtime===null?'暂无':diaInfo.nodeMaxtime }}</span>
       </el-col>
     </el-row>
     <el-row :gutter="15">
@@ -178,7 +178,7 @@ $gray-color:#909399;
       color: #909399;
       padding: 8px 20px;
       border-radius: 5px;
-      border:1px solid #dcdfe6;
+      border-bottom:1px solid #dcdfe6;
     }
   }
 </style>

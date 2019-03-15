@@ -14,8 +14,7 @@ export function UpVideoFileMerge(params) {
   return request({
     url: '/upload/merge',
     method: 'post',
-    params
-  })
+    params })
 }
 
 //  获取等待制作视频列表
@@ -129,17 +128,19 @@ export function getYaBiaoFail(params) {
   })
 }
 // 视频制作完成-制作完成，通知客户确认
-export function getMakeFinish(params) {
+export function getMakeFinish(orderId, params) {
   return request({
-    url: '/order/yworderinfo/makeFinish/' + params,
-    method: 'post'
+    url: '/order/yworderinfo/makeFinish/' + orderId,
+    method: 'post',
+    data: params
   })
 }
 // 视频压标通过
-export function getYaBiaoSuccess(params) {
+export function getYaBiaoSuccess(orderId, params) {
   return request({
-    url: '/order/yworderinfo/yaBiaoSuccess/' + params,
-    method: 'post'
+    url: '/order/yworderinfo/yaBiaoSuccess/' + orderId,
+    method: 'post',
+    data: params
   })
 }
 // 视频订单归档---订单归档,全部开通
@@ -185,7 +186,7 @@ export function getUserPhoneOrderInfo(params) {
   return request({
     url: '/order/ywuserphone/info/' + params,
     method: 'get'
-    // data: params
+  // data: params
   })
 }
 // 开通用户成功
@@ -193,7 +194,7 @@ export function getUserPhoneOrderOpenPhone(phoneId) {
   return request({
     url: '/order/ywuserphone/openPhone/' + phoneId,
     method: 'post'
-    // data: params
+  // data: params
   })
 }
 // 开通用户失败
@@ -201,7 +202,7 @@ export function getUserPhoneOrderFailPhone(phoneId, state) {
   return request({
     url: '/order/ywuserphone/failPhone/' + phoneId + '/' + state,
     method: 'post'
-    // data: params
+  // data: params
   })
 }
 // 取消用户--删除用户
@@ -209,7 +210,7 @@ export function getUserPhoneOrderConcelPhone(phoneId) {
   return request({
     url: '/order/ywuserphone/concelPhone/' + phoneId,
     method: 'post'
-    // data: params
+  // data: params
   })
 }
 // 退订用户
@@ -217,7 +218,7 @@ export function getUserPhoneBackUserPhone(phoneId) {
   return request({
     url: '/order/ywuserphone/unsubscribePhone/' + phoneId,
     method: 'post'
-    // data: params
+  // data: params
   })
 }
 // 作废用户
@@ -225,6 +226,32 @@ export function getUserPhoneInvalidPhone(phoneId) {
   return request({
     url: '/order/ywuserphone/invalidPhone/' + phoneId,
     method: 'post'
+  // data: params
+  })
+}
+
+/* -------------------------------------这里是分割线---------------------------------- */
+// 视频制作完成信息列表
+export function getFinishMakeVideoList(params) {
+  return request({
+    url: 'order/yworderfile/makeFinishList',
+    method: 'post',
+    data: params
+  })
+}
+// 视频压标完成信息列表
+export function getFinishPressVideoList(params) {
+  return request({
+    url: 'order/yworderfile/yaBiaoFinishList',
+    method: 'post',
+    data: params
+  })
+}
+// 获取视频详细信息
+export function getFinishVideoListInfo(fileId) {
+  return request({
+    url: 'order/yworderfile/info/' + fileId,
+    method: 'get'
     // data: params
   })
 }

@@ -176,9 +176,9 @@ export default {
         enterName: null,
         phone: null,
         phoneState: null,
-        phoneType: null
-        // minTime: null,
-        // maxTime: null
+        phoneType: null,
+        startDate: null,
+        endDate: null
       }
     }
   },

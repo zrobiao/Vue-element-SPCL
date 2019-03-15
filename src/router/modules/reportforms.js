@@ -27,6 +27,38 @@ const reportformsRouter = {
         title: '用户统计-运营商',
         icon: 'userStatis'
       }
+    }, {
+      path: 'videoStatis-zz',
+      component: () => import('@/views/reportforms/videoStatis-zz/index'),
+      name: 'videoStatis-zz/index',
+      meta: {
+        title: '视频制作数量统计-制作',
+        icon: 'videoStatis'
+      }
+    }, {
+      path: 'videoStatis-pt',
+      component: () => import('@/views/reportforms/videoStatis-pt/index'),
+      name: 'videoStatis-pt/index',
+      meta: {
+        title: '视频制作数量统计-平台',
+        icon: 'videoStatis'
+      }
+    }, {
+      path: 'pressStatis-pt',
+      component: () => import('@/views/reportforms/pressStatis-pt/index'),
+      name: 'reportforms-pressStatis-pt',
+      meta: {
+        title: '压标完成统计-平台',
+        icon: 'pressStatis'
+      }
+    }, {
+      path: 'pressStatis-yb',
+      component: () => import('@/views/reportforms/pressStatis-yb/index'),
+      name: 'reportforms-pressStatis-yb',
+      meta: {
+        title: '压标完成统计-人员',
+        icon: 'pressStatis'
+      }
     }
   ]
 }

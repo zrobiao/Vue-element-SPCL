@@ -5,6 +5,7 @@
     <span v-show="orderStus ===12" type="warning" disable-transitions>客户成品视频，压标不通过</span>
     <span v-show="orderStus ===13" type="warning" disable-transitions>制作打回，重新提交</span>
     <span v-show="orderStus ===14" type="warning" disable-transitions>制作打回,视频更换</span>
+    <span v-show="orderStus ===15" type="warning" disable-transitions>客户成品视频,运营商审核不通过</span>
     <span v-show="orderStus ===2" type="warning" disable-transitions>制作中，已接单</span>
     <span v-show="orderStus ===21" type="warning" disable-transitions>制作中，素材新增,视频更换</span>
     <span v-show="orderStus ===22" type="warning" disable-transitions>制作中,压标审核不通过</span>
@@ -15,6 +16,7 @@
     <span v-show="orderStus ===4" type="warning" disable-transitions>等待压标，制作视频</span>
     <span v-show="orderStus ===41" type="warning" disable-transitions>等待视频压标,更换视频</span>
     <span v-show="orderStus ===42" type="warning" disable-transitions>客户成品视频压标</span>
+    <span v-show="orderStus ===43" type="warning" disable-transitions>等待视频压标,运营商审核不通过</span>
     <span v-show="orderStus ===5" type="warning" disable-transitions>等待开通用户</span>
     <span v-show="orderStus ===51" type="warning" disable-transitions>全部用户更换视频</span>
     <span v-show="orderStus ===52" type="warning" disable-transitions>重设全部用户视频</span>

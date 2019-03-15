@@ -1,6 +1,6 @@
 <template>
   <!-- 登陆界面 -->
-  <div class="login-container">
+  <div class>
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -73,7 +73,9 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+// import { isvalidUsername } from '@/utils/validate'
+import { login } from '@/api/userData'
+import md5 from 'js-md5'
 // import util from '@/utils/index'
 
 const testUrl = 'http://192.168.0.119:8082/qycl.web'
@@ -81,7 +83,7 @@ export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
+      if (!value) {
         callback(new Error('请输入正确的用户名'))
       } else {
         callback()
@@ -96,7 +98,7 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
+        username: '',
         password: '',
         captcha: ''
       },
@@ -135,7 +137,8 @@ export default {
       }
     },
     handleLogin() {
-      this.$router.push('main')
+      console.log('点击登陆')
+      // this.$router.push('main')
       // this.$refs.loginForm.validate(valid => {
       //   if (valid) {
       //     this.loading = true
@@ -150,7 +153,30 @@ export default {
       //     this.refreshCode()
       //     return false
       //   }
+      // })\
+
+      this.t()
+      // .then(response => {
+      //   console.log(response)
+      //   // const Token = response.token
+      //   // setToken(Token)
+      //   // commit('SET_TOKEN', Token)
+      //   // resolve()
       // })
+      // .catch(error => {
+      //   console.log(error)
+      //   // reject(error)
+      // })
+    },
+    t() {
+      // console.log(t)
+      login(this.loginForm.username, md5(this.loginForm.password), this.loginForm.captcha).then(res => {
+        // console.log(res.code)
+        if (res) {
+          console.log('登陆成功')
+          this.$router.push('main/noticeList')
+        }
+      })
     }
   }
 }
@@ -194,56 +220,57 @@ $light_gray: #eee;
 </style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
-.login-container {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  background-color: $bg;
-  .login-form {
-    position: absolute;
-    left: 0;
-    right: 0;
-    width: 520px;
-    max-width: 100%;
-    padding: 35px 35px 15px 35px;
-    margin: 120px auto;
-  }
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
-  }
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-  .title {
-    font-size: 26px;
-    font-weight: 400;
-    color: $light_gray;
-    margin: 0px auto 40px auto;
-    text-align: center;
-    font-weight: bold;
-  }
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
-  }
-}
+// $bg: #2d3a4b;
+// $dark_gray: #889aa4;
+// $light_gray: #eee;
+// .login-container {
+//   position: fixed;
+//   height: 100%;
+//   width: 100%;
+//   background-color: $bg;
+//   .login-form {
+//     position: absolute;
+//     left: 0;
+//     right: 0;
+//     width: 520px;
+//     max-width: 100%;
+//     padding: 35px 35px 15px 35px;
+//     margin: 120px auto;
+//   }
+//   .tips {
+//     font-size: 14px;
+//     color: #fff;
+//     margin-bottom: 10px;
+//     span {
+//       &:first-of-type {
+//         margin-right: 16px;
+//       }
+//     }
+//   }
+//   .svg-container {
+//     padding: 6px 5px 6px 15px;
+//     color: $dark_gray;
+//     vertical-align: middle;
+//     width: 30px;
+//     display: inline-block;
+//   }
+//   .title {
+//     font-size: 26px;
+//     font-weight: 400;
+//     color: $light_gray;
+//     margin: 0px auto 40px auto;
+//     text-align: center;
+//     font-weight: bold;
+//   }
+//   .show-pwd {
+//     position: absolute;
+//     right: 10px;
+//     top: 7px;
+//     font-size: 16px;
+//     color: $dark_gray;
+//     cursor: pointer;
+//     user-select: none;
+//   }
+// }
+//
 </style>

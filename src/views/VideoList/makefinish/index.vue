@@ -1,5 +1,5 @@
 ﻿<template>
-  <div>
+  <div class="main-content">
     <search-bar
       :show-search="isSearch"
       :show-date="isDate"
@@ -7,233 +7,153 @@
       :send-parent="preParent"
       :pre-options="preOptions"
       :send-data="upData"
-      @listenUp="chindData"/>
+      @listenSearch="searchSubData"
+      @listenBtn="btnSubmitData"/>
     <div class="show-container">
       <el-row>
         <el-col :span="24">
           <el-table
+            ref="parentMenu"
             :data="tableData"
             stripe
             style="width: 100%">
+            <!-- <el-table-column label="选择" width="65">
+              <template slot-scope="scope">
+                <el-radio :label="scope.row.order_no" v-model="radioStatus" @change.native="getParentRow(scope.row.order_id)"> &nbsp; </el-radio>
+              </template>
+            </el-table-column> -->
             <el-table-column
               prop="orderId"
+              width="80px"
               label="订单ID"/>
             <el-table-column
               prop="orderNo"
-              label="订单编号"
-              width="180"/>
+              label="订单编号"/>
             <el-table-column
               prop="enterName"
-              label="企业名称"
-              width="100"/>
+              label="企业名称"/>
             <el-table-column
               prop="enterContact"
-              label="企业联系人"
-              width="100"/>
+              label="企业联系人"/>
             <el-table-column
               prop="enterTel"
-              label="企业联系电话"
-              width="120"/>
+              label="企业联系电话"/>
             <el-table-column
-              prop="province"
-              label="归属省份"
-              width="80"/>
-            <el-table-column
-              prop="city"
-              label="归属城市"
-              width="80"/>
-            <el-table-column
-              prop="qq"
-              label="联系QQ"
-              width="100"/>
-            <el-table-column
-              prop="weixin"
-              label="联系微信"
-              width="100"/>
-            <el-table-column
-              prop="attchmentId"
-              label="资料关联Id"
-              width="300"/>
-            <el-table-column
-              prop="needRemark"
-              label="特需说明"
-              width="300"/>
+              prop="orderState"
+              label="订单状态">
+              <template slot-scope="scope">
+                <order-state :order-stus="scope.row.orderState"/>
+              </template>
+            </el-table-column>
             <el-table-column
               prop="makeFlag"
-              label="制作标识"
-              width="80">
-              <template slot-scope="scoped">
-                <el-tag v-show="scoped.row.makeFlag===1">制作</el-tag>
-                <el-tag v-show="scoped.row.makeFlag===2">成品</el-tag>
+              label="素材类型">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.makeFlag ===1" type="success" disable-transitions>待制作</el-tag>
+                <el-tag v-show="scope.row.makeFlag ===2" type="warning" disable-transitions>成品</el-tag>
               </template>
             </el-table-column>
             <el-table-column
               prop="repressFlag"
-              label="是否压标"
-              width="80">
-              <template slot-scope="scoped">
-                <el-tag v-show="scoped.row.repressFlag===1">是</el-tag>
-                <el-tag v-show="scoped.row.repressFlag===2">否</el-tag>
+              label="是否压标">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.repressFlag ===1" type="success" disable-transitions>是</el-tag>
+                <el-tag v-show="scope.row.repressFlag ===2" type="warning" disable-transitions>否</el-tag>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="orderState"
-              label="订单状态"
-              width="100"/>
             <el-table-column
               prop="openType"
-              label="开通类型"
-              width="80">
-              <template slot-scope="scoped">
-                <el-tag v-show="scoped.row.openType===1">移动</el-tag>
-                <el-tag v-show="scoped.row.openType===2">电信</el-tag>
-                <el-tag v-show="scoped.row.openType===3">联通</el-tag>
+              label="开通类型">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.openType ===1" type="primary" disable-transitions>移动</el-tag>
+                <el-tag v-show="scope.row.openType ===2" type="success" disable-transitions>联通</el-tag>
+                <el-tag v-show="scope.row.openType ===3" type="warning" disable-transitions>电信</el-tag>
               </template>
             </el-table-column>
             <el-table-column
-              prop="openMoney"
-              label="资费"
-              width="80"/>
-            <el-table-column
               prop="createTime"
-              label="创建日期"
-              width="150"/>
+              label="创建日期"/>
             <el-table-column
-              prop="makeMoney"
-              label="制作费"
-              width="80"/>
-            <el-table-column
-              prop="agentId"
-              label="所属代理商"
-              width="150"/>
-            <el-table-column
-              prop="makeTime"
-              label="制作完成日期"
-              width="150"/>
-            <el-table-column
-              prop="makeUserId"
-              label="视频制作人Id"
-              width="150"/>
-            <el-table-column
-              prop="makeUserName"
-              label="视频制作账户"
-              width="150"/>
-            <el-table-column
-              prop="repressTime"
-              label="压标完成日期"
-              width="150"/>
-            <el-table-column
-              prop="repressUserId"
-              label="视频压标人Id"
-              width="150"/>
-            <el-table-column
-              prop="repressUserName"
-              label="视频压标人账户"
-              width="150"/>
-            <el-table-column
-              prop="openTime"
-              label="开通完成日期"
-              width="150"/>
-            <el-table-column
-              prop="openUserId"
-              label="开通完成人Id"
-              width="150"/>
-            <el-table-column
-              prop="openUserName"
-              label="开通人账户"
-              width="150"/>
-            <el-table-column
-              prop="opreaBz"
-              label="订单备注"
-              width="150"/>
-            <el-table-column
-              prop="nodeMaxtime"
-              label="当前节点最晚完成日期"
-              width="180"/>
-            <el-table-column
-              prop="agentTopId"
-              label="所属总代理商Id"
-              width="150"/>
-            <el-table-column
-              prop="changeFileId"
-              label="更换视频关联素材Id"
-              width="180"/>
-            <el-table-column
+              fixed="right"
               label="操作"
               width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
-                <el-button type="text" size="small">编辑</el-button>
+                <el-button type="text" size="small" @click="detailClick(scope.row.orderId)">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-col>
       </el-row>
+      <el-row type="flex" justify="end">
+        <el-col :span="9">
+          <pagi-tabs :curr-page="currPage" :page-size="pageSize" :total-count="totalCount" :total-page="totalPage" @pageChild="pageChildFn"/>
+        </el-col>
+      </el-row>
     </div>
-    <el-row type="flex" justify="end">
-      <el-col :span="9">
-        <paging-tabs/>
-      </el-col>
-    </el-row>
+    <el-dialog :visible.sync="menuDialog" title="订单详情" width="90%" top="5vh">
+      <dia-log :dia-info="dialogInfo" @dialogChild="dialogData"/>
+    </el-dialog>
   </div>
 </template>
 <script>
+import { getFinishMakeList, getOrderInfo } from '@/api/videoList'
+// import { orderStateStus } from '@/utils/index'
 import searchBar from '@/components/search'
-import pagingTabs from '@/components/pagination'
-import { getFinishMakeList } from '@/api/videoList'
+import pagiTabs from '@/components/pagination'
+import diaLog from './dialog'
+import orderState from '../../OrderManage/orderstate'
 export default {
   components: {
-    pagingTabs,
-    searchBar
+    searchBar,
+    pagiTabs,
+    diaLog,
+    orderState
   },
   data() {
     return {
-      isSearch: true,
       isDate: true,
+      isSearch: true,
       isBtn: false,
-      preParent: '',
+      preParent: 'menu',
+      preOptions: [
+        {
+          value: null,
+          label: '全部搜索'
+        }, {
+          value: 'orderNo',
+          label: '订单编号'
+        }],
       upData: 0,
-      preOptions: [{
-        value: null,
-        label: '全部搜索'
-      }, {
-        value: 'orderNo',
-        label: '订单编号'
-      }], // 设置父级筛选项目
-      tableData: [],
+      diaTitle: '',
+      dialogInfo: {},
+      menuDialog: false,
       currPage: 1,
       pageSize: 10,
-      totalCount: 0,
-      totalPage: 0,
-      // 设置查询项目query
+      totalCount: 5,
+      totalPage: 1,
+      radioStatus: '单选框',
+      tableData: [],
       query: {
         orderNo: null,
-        minTime: null,
-        maxTime: null
+        startDate: null,
+        endDate: null
       }
     }
   },
+  computed: {
+
+  },
   created() {
-    this.finishMakeList()
+    this.getTableList()
   },
   methods: {
-    // 子组件传输选择项目给父组件
-    chindData(selectMsg, searchMsg) {
-      switch (selectMsg) {
-        case 'orderNo':
-          this.query.orderNo = searchMsg
-          break
-        default:this.finishMakeList()
-      }
-      this.finishMakeList()
-    },
-    finishMakeList: function() {
-      const obj = {
+    getTableList() {
+      const params = {
         pageSize: this.pageSize,
         currPage: this.currPage,
         query: this.query
       }
-      getFinishMakeList(obj).then(res => {
+      getFinishMakeList(params).then(res => {
         if (res.code === 0) {
           const status = res.data.opreaState
           if (status) {
@@ -243,13 +163,9 @@ export default {
             this.totalCount = orderData.totalCount
             this.totalPage = orderData.totalPage
             this.tableData = orderData.list
-            // 以下数据根据查询项进行变换绑定
-            // this.query.orderNo = null
-            // this.query.enterName = null
-            // this.query.enterContact = null
-            // this.query.enterTel = null
-            // this.query.openType = null
-            // this.query.orderState = null
+            this.query.orderNo = null
+            this.query.minTime = null
+            this.query.maxTime = null
           } else {
             this.$message.error(res.data.msg)
           }
@@ -258,31 +174,74 @@ export default {
         }
       })
     },
-    getParentRow: function(orderId) {
-      alert(orderId)
+    pageChildFn(currentPage) {
+      console.log(currentPage)
+      this.currPage = currentPage
+      this.getTableList()
     },
-    handleClick(orderId) {
-      alert(orderId)
-
-      // this.$router.push({path:"./../waitMake/detail.vue", query: {} })
+    btnSubmitData() {},
+    searchSubData(selectMsg, searchMsg) {
+      switch (selectMsg) {
+        case 'orderNo':
+          this.query.orderNo = searchMsg
+          break
+        case 'enterName':
+          this.query.enterName = searchMsg
+          break
+        case 'enterContact':
+          this.query.enterContact = searchMsg
+          break
+        case 'enterTel':
+          this.query.enterTel = searchMsg
+          break
+        case 'orderState':
+          this.query.orderState = searchMsg
+          break
+        case 'openType':
+          this.query.openType = searchMsg
+          break
+        default:this.getTableList()
+      }
+      this.getTableList()
+    },
+    dialogData(upOrsave, params) {
+      if (upOrsave === 0) {
+        console.log('新增保存')
+      } else if (upOrsave === 1) {
+        console.log('更新保存')
+      }
+      this.menuDialog = !this.menuDialog
+    },
+    detailClick(orderId) {
+      this.menuDialog = !this.menuDialog
+      getOrderInfo(orderId).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.dialogInfo = orderData
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.el-row {
-  margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-.show-container {
-  margin-top: 15px;
-  .show-title {
-    font-size: 12px;
-    padding: 5px 0;
-    span {
-      color: #409eff;
+.main-content{
+  margin:10px;
+  .show-container{
+    margin-top:15px;
+    .show-title{
+      font-size: 12px;
+      padding: 5px 0;
+      span{
+        color:#409EFF;
+      }
     }
   }
 }

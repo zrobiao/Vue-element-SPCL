@@ -28,12 +28,6 @@
             stripe
             style="width: 100%">
             <el-table-column
-              type="selection"
-              width="55"/>
-            <!-- <el-table-column
-              prop="orderId"
-              label="订单ID"/> -->
-            <el-table-column
               prop="orderNo"
               label="订单编号"
               width="180"/>
@@ -50,12 +44,18 @@
               label="企业联系电话"
               width="120"/>
             <el-table-column
+              prop="orderState"
+              label="订单状态">
+              <template slot-scope="scope">
+                <order-state :order-stus="scope.row.orderState"/>
+              </template>
+            </el-table-column>
+            <el-table-column
               prop="makeFlag"
-              label="制作标识"
-              width="80">
+              label="素材类型">
               <template slot-scope="scoped">
-                <el-tag v-show="scoped.row.makeFlag===1">制作</el-tag>
-                <el-tag v-show="scoped.row.makeFlag===2">成品</el-tag>
+                <el-tag v-show="scoped.row.makeFlag===1">待制作</el-tag>
+                <el-tag v-show="scoped.row.makeFlag===2">成品视频</el-tag>
               </template>
             </el-table-column>
             <el-table-column
@@ -68,14 +68,9 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="needRemark"
-              label="特需说明"
-              width="300"/>
-            <el-table-column
-              prop="orderState"
-              label="订单状态">
-              <template slot-scope="scope">
-                <order-state :order-stus="scope.row.orderState"/>
+              label="压标操作">
+              <template slot-scope="scoped">
+                <el-button type="button" size="small" @click="downVideo(scoped.row.orderId)">下载</el-button>
               </template>
             </el-table-column>
             <el-table-column
@@ -93,28 +88,22 @@
               label="资费"
               width="80"/>
             <el-table-column
-              prop="createTime"
-              label="创建日期"
-              width="150"/>
-            <el-table-column
               prop="makeMoney"
               label="制作费"
               width="80"/>
             <el-table-column
-              prop="agentId"
-              label="所属代理商"
-              width="150"/>
-            <el-table-column
               prop="makeUserName"
-              label="视频制作账户"
-              width="150"/>
+              label="视频制作账户"/>
+            <el-table-column
+              prop="createTime"
+              label="创建日期"/>
             <el-table-column
               label="操作"
-              width="100"
+              width="200"
               fixed="right">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="detailClick(scope.row.orderId)">查看</el-button>
-                <el-button type="text" size="small">编辑</el-button>
+                <el-button type="primary" size="small" @click="detailClick(scope.row.orderId)">查看</el-button>
+                <el-button type="success" size="small" @click="upVideoFile(scope.row.orderId)">上传视频</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -129,20 +118,30 @@
     <el-dialog :visible.sync="menuDialog" title="订单详情" width="90%" top="5vh">
       <dia-log :dia-info="dialogInfo" @dialogChild="dialogData"/>
     </el-dialog>
+    <el-dialog :visible.sync="uploaderDialog" title="文件上传" top="10vh">
+      <!-- uploadType:  uploadType: 1:用户素材  2:制作视频 3:压标视频  4:成品视频 5.企业资质 6:免责协议 7:其他文件 -->
+      <uploader-file :up-type="2" :up-hintmsg="upOkMsg" @uploadeBackFn="uploadeBackFn"/>
+    </el-dialog>
   </div>
 </template>
 <script>
 import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
-import { getWaitYaBiaoList, getOrderInfo } from '@/api/videoList'
 import orderState from '../../OrderManage/orderstate'
 import diaLog from './dialog'
+import uploaderFile from '@/components/webuploader/uploaderFile'
+import {
+  getWaitYaBiaoList,
+  getOrderInfo,
+  getBackOrder,
+  getYaBiaoSuccess } from '@/api/videoList'
 export default {
   components: {
     pagingTabs,
     searchBar,
     diaLog,
-    orderState
+    orderState,
+    uploaderFile
   },
   data() {
     return {
@@ -198,6 +197,11 @@ export default {
       pageSize: 10,
       totalCount: 10,
       totalPage: 1,
+      dialogInfo: {},
+      menuDialog: false,
+      uploaderDialog: false,
+      upOkMsg: '制作视频上传成功！确认通知用户确认订单',
+      cuurOrderId: null,
       // 设置查询项目query
       query: {
         orderNo: null,
@@ -206,8 +210,8 @@ export default {
         enterTel: null,
         orderState: null,
         openType: null,
-        minTime: null,
-        maxTime: null
+        startDate: null,
+        endDate: null
       }
     }
   },
@@ -216,7 +220,6 @@ export default {
   },
   methods: {
     // 子组件传输选择项目给父组件
-
     searchSubData(selectMsg, searchMsg) {
       switch (selectMsg) {
         case 'orderNo':
@@ -275,6 +278,9 @@ export default {
         }
       })
     },
+    downVideo(fileId) {
+      console.log('开始下载素材' + fileId)
+    },
     detailClick(orderId) {
       this.menuDialog = !this.menuDialog
       getOrderInfo(orderId).then(res => {
@@ -291,13 +297,53 @@ export default {
         }
       })
     },
-    orderInvalid: function() {
-      alert('作废订单')
+    dialogData(value, orderId, data) {
+      if (value === 'back') {
+        getBackOrder(orderId, data).then(res => {
+          if (res.code === 0) {
+            const status = res.data.opreaState
+            if (status) {
+              this.$message.success('回退成功！')
+              this.WaitMakeList()
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+      this.menuDialog = !this.menuDialog
     },
-    orderBack: function() {},
-    videoUpload: function() {},
-    confirmVideo: function() {},
-    downloadVideo: function() {}
+    upVideoFile(orderId) {
+      this.uploaderDialog = !this.uploaderDialog
+      this.cuurOrderId = orderId
+    },
+    uploadeBackFn(data) {
+      this.uploaderDialog = !this.uploaderDialog
+      const urlArr = data.split('/')
+      const urlArrLst = urlArr[urlArr.length - 1]
+      const fileName = urlArrLst.split('.')[0]
+      const fileType = urlArrLst.split('.')[1]
+      const fileParams = {
+        fileName: fileName,
+        fileUrl: data,
+        fileType: fileType
+      }
+      getYaBiaoSuccess(this.cuurOrderId, fileParams).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            this.$message.success('通知客服确认成功！')
+            this.WaitMakeList()
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    }
   }
 }
 </script>

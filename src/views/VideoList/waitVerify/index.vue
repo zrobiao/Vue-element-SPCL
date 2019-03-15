@@ -79,6 +79,7 @@
               width="100">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="detailClick(scope.row.orderId)">查看</el-button>
+                <el-button type="text" size="small" @click="openPlayVideo(scope.row.orderId)">播放</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -175,8 +176,8 @@ export default {
         enterTel: null,
         orderState: null,
         openType: null,
-        minTime: null,
-        maxTime: null
+        startDate: null,
+        endDate: null
       }
     }
   },
@@ -260,8 +261,21 @@ export default {
     detailClick(orderId) {
       this.menuDialog = !this.menuDialog
       getOrderInfo(orderId).then(res => {
-        this.dialogInfo = res.data
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.dialogInfo = orderData
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
       })
+    },
+    openPlayVideo(orderId) {
+      console.log('开始播放：' + orderId)
     }
   }
 }

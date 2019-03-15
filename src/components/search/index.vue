@@ -20,6 +20,7 @@
             type="date"
             placeholder="选择日期"/>
         </div> -->
+        <label>选择日期：</label>
         <el-date-picker
           v-model="time1"
           type="daterange"
@@ -32,6 +33,7 @@
           @change="selectTime"/>
       </el-col>
       <el-col v-show="showSearch" :span="5" class="search">
+        <label>选择搜索项：</label>
         <el-cascader
           v-model="searchSelect"
           :options="preOptions"
@@ -40,6 +42,7 @@
           @change="changeHandle"/>
       </el-col>
       <el-col v-show="showSearch&&showInput" :span="6">
+        <label>输入内容：</label>
         <div class="demo-input-suffix">
           <el-input
             v-model="searchMsg"
@@ -98,7 +101,7 @@ export default {
     }
   },
   created() {
-    console.log(this.sendParent)
+    // console.log(this.sendParent)
   },
   methods: {
     getSearchMsg() {
@@ -143,6 +146,14 @@ export default {
     margin-bottom: 20px;
     &:last-child {
       margin-bottom: 0;
+    }
+    .el-col{
+      display: flex;
+      label{
+        color: #606266;
+        font-size:14px;
+        line-height: 40px;
+      }
     }
   }
 </style>

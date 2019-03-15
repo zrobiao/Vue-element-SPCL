@@ -35,20 +35,12 @@ const makeVideoRouter = {
       icon: 'finishVideo'
     }
   }, {
-    path: 'videoStatis-zz',
-    component: () => import('@/views/reportforms/videoStatis-zz/index'),
-    name: 'videoStatis-zz/index',
+    path: 'makeVideo',
+    component: () => import('@/views/OrderManage/makeVideo/index'),
+    name: 'makeVideo',
     meta: {
-      title: '视频制作数量统计-制作',
-      icon: 'videoStatis'
-    }
-  }, {
-    path: 'videoStatis-pt',
-    component: () => import('@/views/reportforms/videoStatis-pt/index'),
-    name: 'videoStatis-pt/index',
-    meta: {
-      title: '视频制作数量统计-平台',
-      icon: 'videoStatis'
+      title: '已制作视频',
+      icon: 'pressVideo'
     }
   }
   ]

@@ -101,7 +101,9 @@
     <el-row>
       <el-col :span="6" :offset="18" class="el-col-dafine">
         <el-button type="warning" @click="closeDialog">返回</el-button>
-        <el-button type="primary" @click="openDialog('back','回退备注')">订单回退</el-button>
+        <el-button v-if="diaInfo.orderState===1||diaInfo.orderState===11||diaInfo.orderState===13||diaInfo.orderState===14" type="warning" @click="sureDialog('accept',diaInfo.orderId)">接单制作</el-button>
+        <el-button v-if="diaInfo.orderState!==13||diaInfo.orderState!==14" type="primary" @click="openDialog('back','回退备注')">订单回退</el-button>
+        <el-button type="primary" @click="openDialog('invalid','作废备注')">订单作废</el-button>
       </el-col>
     </el-row>
     <el-dialog

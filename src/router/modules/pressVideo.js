@@ -21,27 +21,18 @@ const pressVideoRouter = {
   {
     path: 'pressfinish',
     component: () => import('@/views/VideoList/pressfinish/index'),
-    name: 'pressVideo',
+    name: 'pressfinish',
     meta: {
       title: '已完成压标',
       icon: 'pressVideo'
     }
-  },
-  {
-    path: 'pressStatis-pt',
-    component: () => import('@/views/reportforms/pressStatis-pt/index'),
-    name: 'reportforms-pressStatis-pt',
-    meta: {
-      title: '压标完成统计-平台',
-      icon: 'pressStatis'
-    }
   }, {
-    path: 'pressStatis-yb',
-    component: () => import('@/views/reportforms/pressStatis-yb/index'),
-    name: 'reportforms-pressStatis-yb',
+    path: 'pressVideo',
+    component: () => import('@/views/OrderManage/pressVideo/index'),
+    name: 'pressVideo',
     meta: {
-      title: '压标完成统计-人员',
-      icon: 'pressStatis'
+      title: '已压标视频',
+      icon: 'pressVideo'
     }
   }
   ]

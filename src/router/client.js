@@ -34,52 +34,64 @@ const clientRouters = [
     meta: { titile: '测试客户端_主页' },
     children: [
       {
-        path: 'enroll',
-        component: () => import('@/client/view/enroll.vue'),
-        name: 'enroll'
-        // 注册页面
-      },
-      {
         path: 'noticeList',
-        component: () => import('@/client/view/noticeList.vue'),
+        component: () => import('@/client/view/main/noticeList.vue'),
         name: 'noticeList'
         // 公告页面
       },
       {
         path: 'complaint',
-        component: () => import('@/client/view/complaint.vue'),
+        component: () => import('@/client/view/main/complaint.vue'),
         name: 'complaint'
         // 投诉页面
       },
       {
         path: 'personal',
-        component: () => import('@/client/view/personal.vue'),
+        component: () => import('@/client/view/main/personal.vue'),
         name: 'personal'
         // 个人中心
       },
       {
         path: 'merchantRule',
-        component: () => import('@/client/view/merchantRule.vue'),
+        component: () => import('@/client/view/agent/merchantRule.vue'),
         name: 'merchantRule'
         // 商户管理
       },
       {
-        path: 'materialRule',
-        component: () => import('@/client/view/materialRule.vue'),
-        name: 'materialRule'
-        // 素材管理
+        path: 'materialList',
+        component: () => import('@/client/view/file/materialList.vue'),
+        name: 'materialList'
+        // 素材列表
       },
       {
         path: 'newOrder',
-        component: () => import('@/client/view/newOrder.vue'),
+        component: () => import('@/client/view/video/newOrder.vue'),
         name: 'newOrder'
         // 新建订单
       },
       {
         path: 'orderList',
-        component: () => import('@/client/view/orderList.vue'),
+        component: () => import('@/client/view/video/orderList.vue'),
         name: 'orderList'
-        // 素材管理
+        // 订单列表
+      },
+      {
+        path: 'merchantDetails',
+        component: () => import('@/client/view/agent/merchantDetails.vue'),
+        name: 'merchantDetails'
+        // 商户详情
+      },
+      {
+        path: 'materialAdd',
+        component: () => import('@/client/view/file/materialAdd.vue'),
+        name: 'materialAdd'
+        // 新增素材
+      },
+      {
+        path: 'orderDetails',
+        component: () => import('@/client/view/video/orderDetails.vue'),
+        name: 'orderDetails'
+        // 视频订单详情
       }
     ]
   }

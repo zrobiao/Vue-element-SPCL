@@ -193,8 +193,8 @@ export default {
         enterTel: null,
         orderState: null,
         openType: null,
-        minTime: null,
-        maxTime: null
+        startDate: null,
+        endDate: null
       }
     }
   },

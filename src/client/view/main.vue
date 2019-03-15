@@ -1,16 +1,8 @@
 <template>
   <!-- 主界面 -->
-  <div class="login-container">
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      auto-complete="on"
-      label-position="left"
-    >
+  <div class>
+    <el-form class="login-form" auto-complete="on" label-position="left">
       <el-menu
-        :default-active="activeIndex2"
         class="el-menu-demo"
         mode="horizontal"
         background-color="#545c64"
@@ -38,7 +30,12 @@
         </el-submenu>
         <el-menu-item index="4" @click="test('complaint')">投诉管理</el-menu-item>
         <el-menu-item index="5" @click="test('merchantRule')">商户管理</el-menu-item>
-        <el-menu-item index="6" @click="test('materialRule')">素材管理</el-menu-item>
+        <!-- <el-submenu index="5">
+          <template slot="title">商户</template>
+          <el-menu-item index="5-1">视频数量统计</el-menu-item>
+          <el-menu-item index="5-2">用户数统计</el-menu-item>
+        </el-submenu>-->
+        <el-menu-item index="6" @click="test('materialList')">素材管理</el-menu-item>
         <el-menu-item index="7" @click="test('personal')">个人中心</el-menu-item>
         <!-- <el-menu-item index="3" disabled>消息中心</el-menu-item> -->
         <!-- <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item> -->
@@ -58,7 +55,7 @@ export default {
     //  this.open();
   },
   mounted() {
-    this.open()
+    // this.open()
     // this.test()
   },
   methods: {
@@ -74,7 +71,7 @@ export default {
       })
     },
     handleSelect(key, keyPath) {
-      console.log(key, keyPath)
+      // console.log(key, keyPath)
     },
     test(_url) {
       this.$router.push(_url)

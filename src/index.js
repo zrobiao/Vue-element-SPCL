@@ -9,10 +9,9 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
-// import { library } from '@fortawesome/fontawesome-svg-core'
-// import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-// import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import VueVideoPlayer from 'vue-video-player'
 
+import 'video.js/dist/video-js.css'
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -24,6 +23,7 @@ import '@/permission' // permission control
 
 // library.add(faCoffee)
 // Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.use(VueVideoPlayer)
 Vue.use(ElementUI, { locale })
 Vue.prototype.qs = Qs
 // Vue.prototype.$ = jq

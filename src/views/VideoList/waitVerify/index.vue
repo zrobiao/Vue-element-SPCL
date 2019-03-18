@@ -79,7 +79,7 @@
               width="100">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="detailClick(scope.row.orderId)">查看</el-button>
-                <el-button type="text" size="small" @click="openPlayVideo(scope.row.orderId)">播放</el-button>
+                <el-button type="text" size="small" @click="openPlayVideo(scope.row.changeVideoId)">播放</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -94,13 +94,22 @@
     <el-dialog :visible.sync="menuDialog" title="订单详情" width="90%" top="5vh">
       <dia-log :dia-info="dialogInfo" @dialogChild="dialogData"/>
     </el-dialog>
+    <el-dialog
+      :visible.sync="playVideoDialog"
+      :before-close="videoClose"
+      title="视频播放"
+      width="50%">
+      <!-- videoUrl:传递给组件的视频播放路径   clearvideo:当点击关闭时清除视频路径 -->
+      <video-play :video-url="videoPlayUrl" :clear-video="clearVideo"/>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getWaitConfirmList, getOrderInfo } from '@/api/videoList'
+import { getWaitConfirmList, getOrderInfo, getVideoInfoPlay } from '@/api/videoList'
 // import { orderStateStus } from '@/utils/index'
 import searchBar from '@/components/search'
 import pagiTabs from '@/components/pagination'
+import videoPlay from '@/components/videoPlay'
 import diaLog from './dialog'
 import orderState from '../../OrderManage/orderstate'
 export default {
@@ -108,7 +117,8 @@ export default {
     searchBar,
     pagiTabs,
     diaLog,
-    orderState
+    orderState,
+    videoPlay
   },
   data() {
     return {
@@ -163,12 +173,15 @@ export default {
       diaTitle: '',
       dialogInfo: {},
       menuDialog: false,
+      playVideoDialog: false,
       currPage: 1,
       pageSize: 10,
       totalCount: 5,
       totalPage: 1,
       radioStatus: '单选框',
       tableData: [],
+      videoPlayUrl: '',
+      clearVideo: true,
       query: {
         orderNo: null,
         enterName: null,
@@ -274,8 +287,32 @@ export default {
         }
       })
     },
-    openPlayVideo(orderId) {
-      console.log('开始播放：' + orderId)
+    openPlayVideo(setVideoId) {
+      const params = {
+        fileId: setVideoId
+      }
+      getVideoInfoPlay(params).then(res => {
+        if (res.code === 0) {
+          const status = res.data.opreaState
+          if (status) {
+            const orderData = res.data.data
+            this.clearVideo = false
+            this.videoPlayUrl = orderData
+            console.log('加载：' + orderData)
+            this.playVideoDialog = !this.playVideoDialog
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    videoClose() {
+      this.playVideoDialog = !this.playVideoDialog
+      this.videoPlayUrl = ''
+      this.clearVideo = true
+      console.log('清空：' + this.videoPlayUrl)
     }
   }
 }

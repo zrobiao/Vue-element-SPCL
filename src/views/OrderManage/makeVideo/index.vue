@@ -59,8 +59,9 @@
 import searchBar from '@/components/search'
 import pagingTabs from '@/components/pagination'
 import {
-  getFinishMakeVideoList
+  getFinishMakeVideoList,
   // getFinishVideoListInfo
+  getVideoInfoPlay
 } from '@/api/videoList'
 export default {
   components: {
@@ -155,10 +156,10 @@ export default {
       })
     },
     playVideo(fileId) {
-      // getFinishVideoListInfo(fileId).then(res => {
-      console.log('开始播放视频')
-      // console.log(res)
-      // })
+      getVideoInfoPlay(fileId).then(res => {
+        console.log('开始播放视频')
+        console.log(res)
+      })
     }
   }
 }

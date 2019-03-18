@@ -255,3 +255,11 @@ export function getFinishVideoListInfo(fileId) {
     // data: params
   })
 }
+// 获取播放视频地址
+export function getVideoInfoPlay(params) {
+  return request({
+    url: '/base/getFileUrl',
+    method: 'get',
+    params
+  })
+}
